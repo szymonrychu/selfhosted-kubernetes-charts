@@ -122,29 +122,49 @@ spec:
           emptyDir: {}
         - name: config
         {{- if .Values.persistence.config.enabled }}
+          {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "config")  }}
+          {{- else if eq .Values.persistence.config.type "hostPath" -}}
+          hostPath:
+            path: {{ .Values.persistence.config.hostPath }}
+          {{- end }}
         {{- else }}
           emptyDir: {}
         {{- end }}
         - name: movies
         {{- if .Values.persistence.movies.enabled }}
+          {{- if eq (.Values.persistence.movies.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "movies")  }}
+          {{- else if eq .Values.persistence.movies.type "hostPath" -}}
+          hostPath:
+            path: {{ .Values.persistence.movies.hostPath }}
+          {{- end }}
         {{- else }}
           emptyDir: {}
         {{- end }}
         - name: tvshows
         {{- if .Values.persistence.tvshows.enabled }}
+          {{- if eq (.Values.persistence.tvshows.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "tvshows")  }}
+          {{- else if eq .Values.persistence.tvshows.type "hostPath" -}}
+          hostPath:
+            path: {{ .Values.persistence.tvshows.hostPath }}
+          {{- end }}
         {{- else }}
           emptyDir: {}
         {{- end }}
         - name: music
         {{- if .Values.persistence.music.enabled }}
+          {{- if eq (.Values.persistence.music.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.music.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "music")  }}
+          {{- else if eq .Values.persistence.music.type "hostPath" -}}
+          hostPath:
+            path: {{ .Values.persistence.music.hostPath }}
+          {{- end }}
         {{- else }}
           emptyDir: {}
         {{- end }}

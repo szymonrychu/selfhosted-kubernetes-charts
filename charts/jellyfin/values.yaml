@@ -60,7 +60,14 @@ ingress:
 persistence:
   config:
     enabled: false
-    ## database data Persistent Volume Storage Class
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+
+    ## config data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
     ## If undefined (the default) or set to null, no storageClassName spec is
@@ -68,11 +75,20 @@ persistence:
     ##   GKE, AWS & OpenStack)
     ##
     # storageClass: "-"
+
+    
     accessMode: ReadWriteOnce
     size: 8Gi
     annotations: {}
   movies:
     enabled: false
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+    
     ## database data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -86,6 +102,13 @@ persistence:
     annotations: {}
   tvshows:
     enabled: false
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+
     ## database data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -99,6 +122,13 @@ persistence:
     annotations: {}
   music:
     enabled: false
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+    
     ## database data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
