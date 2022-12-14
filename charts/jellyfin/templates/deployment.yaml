@@ -84,6 +84,10 @@ spec:
           env:
             - name: JELLYFIN_PublishedServerUrl
               value: {{ (first .Values.ingress.hosts).host | quote }}
+            - name: PUID
+              value: {{ .Values.puid | quote }}
+            - name: PGID
+              value: {{ .Values.guid | quote }}
           volumeMounts:
             - name: cache
               mountPath: /cache
