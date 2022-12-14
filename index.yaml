@@ -1,5 +1,25 @@
 apiVersion: v1
 entries:
+  home-assistant:
+  - apiVersion: v2
+    appVersion: "2022.11"
+    created: "2022-12-14T12:24:26.785518851Z"
+    dependencies:
+    - condition: influxdb.enabled
+      name: influxdb
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.4.10
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.2
+    description: A Helm chart for Kubernetes
+    digest: b170f6bdab24314f1df304a89bb8025bc7d881aabbde436e1097e9b1816249bd
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/home-assistant-0.1.0/home-assistant-0.1.0.tgz
+    version: 0.1.0
   jellyfin:
   - apiVersion: v2
     appVersion: 10.8.8
@@ -11,4 +31,15 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.1.1/jellyfin-0.1.1.tgz
     version: 0.1.1
-generated: "2022-12-14T12:01:41.457142595Z"
+  ubuntu-apt-autoupgrade:
+  - apiVersion: v2
+    appVersion: jammy
+    created: "2022-12-14T12:24:26.896352696Z"
+    description: A Helm chart for Kubernetes
+    digest: 81c5f4a96b937f245c8d82614c7284a5267dcd1a97a3d1dca58b63ace4eb8561
+    name: ubuntu-apt-autoupgrade
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-12-14T12:24:26.896356996Z"
