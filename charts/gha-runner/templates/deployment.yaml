@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gha-runner.fullname" . }}
+  labels:
+    {{- include "gha-runner.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "gha-runner.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels: 
+        {{- include "gha-runner.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "gha-runner.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      initContainers:
+        - name: {{ .Chart.Name }}-init
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command:
+            - bash
+          args:
+            - -cex
+            - |
+              cp -Rf /home/github/* /home/github-new/
+              cp -Rf /home/github/.cache /home/github/.local /home/github-new/
+
+              gpg --import /secrets/private.rsa
+              cp -Rf /home/github/.gnupg /home/github-new/.gnupg
+
+              mkdir -p /home/github-new/.ssh
+              cp /secrets/id_rsa /home/github-new/.ssh/id_rsa
+              cp /secrets/id_rsa.pub /home/github-new/.ssh/id_rsa.pub
+              cp /secrets/known_hosts /home/github-new/.ssh/known_hosts
+
+              chmod 0600 /home/github-new/.ssh/id_rsa
+          volumeMounts:
+            - name: runtime-secrets
+              mountPath: "/secrets"
+              readOnly: true
+            - mountPath: /home/github-new
+              name: shared-data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: GITHUB_OWNER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "gha-runner.fullname" . }}
+                  key: github-owner
+            - name: GITHUB_REPOSITORY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "gha-runner.fullname" . }}
+                  key: github-repository
+            - name: GITHUB_PAT 
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "gha-runner.fullname" . }}
+                  key: github-personal-token
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /home/github
+              name: shared-data
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: Default
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+        - name: runtime-secrets
+          secret:
+            secretName: {{ include "gha-runner.fullname" . }}-runtime-secrets
+
