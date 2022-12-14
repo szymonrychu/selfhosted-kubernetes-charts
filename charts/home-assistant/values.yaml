@@ -1,0 +1,187 @@
+  # Default values for home-assistant.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+config:
+  default_config:
+  tts:
+    - platform: google_translate
+  group: '!include groups.yaml'
+  automation: '!include automations.yaml'
+  script: '!include scripts.yaml'
+  scene: '!include scenes.yaml'
+
+  recorder:
+    purge_keep_days: 30
+    commit_interval: 3
+    db_url: '!secret recorder_db_url'
+
+  http:
+    use_x_forwarded_for: true
+    trusted_proxies:
+      - 127.0.0.1/32
+      - 10.8.0.0/16
+      - 10.42.0.0/16
+      - 192.168.1.0/24
+
+  influxdb:
+    api_version: 2
+    host: home-assistant-influxdb
+    port: 8086
+    organization: home-assistant
+    bucket: home-assistant
+    precision: s
+    token: '!secret infuxdb_token'
+    max_retries: 3
+    ssl: false
+    verify_ssl: false
+
+  homeassistant:
+    auth_providers:
+      # - type: legacy_api_password
+      #   api_password: '!secret http_password'
+      - type: homeassistant
+
+  frontend:
+    themes: '!include_dir_merge_named themes'
+
+secrets:
+  recorder_db_url: psql://home-assistant:home-assistant%@home-assistant-postgresql-primary:5432/home-assistant
+  infuxdb_token: home-assistant
+
+initScript: |
+  #!/bin/bash
+  if [ ! -f /config/configuration.yaml ]; then
+    sed -re "s/'(\!.*?)'/\1/g" /initial-configuration/configuration.yaml > /config/configuration.yaml
+  fi
+  cp -f /secrets/secrets.yaml /config/secrets.yaml
+
+  if [ ! -d /config/custom_components/hacs ]; then
+    wget -O /tmp/hacs.zip https://github.com/hacs/integration/releases/latest/download/hacs.zip
+    mkdir -p /config/custom_components
+    unzip /tmp/hacs.zip -d /config/custom_components/hacs
+    rm /tmp/hacs.zip
+  fi
+  touch groups.yaml
+  touch automations.yaml
+  touch scripts.yaml
+  touch scenes.yaml
+
+image:
+  repository: ghcr.io/home-assistant/home-assistant
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+initSecurityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+initResources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+persistence:
+  enabled: false
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 8Gi
+  annotations: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+influxdb:
+  enabled: false
+
+postgresql:
+  enabled: false

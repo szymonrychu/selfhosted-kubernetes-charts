@@ -1,0 +1,179 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "home-assistant.fullname" . }}
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "home-assistant.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "home-assistant.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      dnsConfig:
+        nameservers:
+          - 1.1.1.1
+      serviceAccountName: {{ include "home-assistant.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init
+          securityContext:
+            {{- toYaml .Values.initSecurityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/bash
+          args:
+            - /initial-configuration/init.sh
+          resources:
+            {{- toYaml .Values.initResources | nindent 12 }}
+          volumeMounts:
+            - name: initial-config
+              mountPath: "/initial-configuration"
+              readOnly: true
+            - name: secrets
+              mountPath: "/secrets"
+              readOnly: true
+            - name: config
+              mountPath: "/config"
+        - name: wait-for-db
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.initResources | nindent 12 }}
+          command:
+            - /usr/local/bin/python
+          args:
+            - -c
+            - |
+              import yaml
+              import time
+              import psycopg2
+
+              configuration = None
+              secrets = None
+
+              with open('/config/configuration.yaml') as c:
+                  configuration = yaml.load(c, Loader=yaml.BaseLoader)
+              with open('/config/secrets.yaml') as s:
+                  secrets = yaml.load(s, Loader=yaml.BaseLoader)
+              
+              if not configuration or not secrets:
+                  exit(1)
+
+              db_url_key = configuration['recorder']['db_url']
+              raw_db_url = secrets[db_url_key]
+
+              creds_url = raw_db_url.split('://')[1]
+              creds, url =creds_url.split('@')
+              username, password = creds.split(':')
+              host_port, database = url.split('/')
+              host, port = host_port.split(':')
+
+              for _ in range(0, 60):
+                  try:
+                      conn = psycopg2.connect(
+                          dbname=database,
+                          user=username,
+                          host=host,
+                          password=password,
+                          port=port,
+                          connect_timeout=1)
+                      conn.close()
+                      exit(0)
+                  except psycopg2.OperationalError:
+                      print(f"Waiting for {host}:{port}/{database}")
+                  time.sleep(1)
+              exit(2)
+          volumeMounts:
+            - name: config
+              mountPath: "/config"
+      containers:
+        - name: main
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8123
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - sh
+              args:
+                - -c
+                - pgrep python3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - sh
+              args:
+                - -c
+                - |
+                  [[ "$(curl --write-out '%{http_code}' --silent --output /dev/null localhost:8123/api/)" == "401" ]]
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: PATH_TO_YOUR_CONFIG
+              value: /config/configuration.yaml
+            - name: TZ
+              value: "Poland"
+          volumeMounts:
+            - name: config
+              mountPath: "/config"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: initial-config
+          configMap:
+            name: {{ template "home-assistant.fullname" . }}
+        - name: secrets
+          secret:
+            secretName: {{ include "home-assistant.fullname" . }}
+        - name: config
+      {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "home-assistant.fullname" .) }}
+      {{- else }}
+          emptyDir: {}
+      {{- end -}}
+      {{- if .Values.extraVolumes }}
+{{ tpl .Values.extraVolumes . | indent 6 }}
+      {{- end }}
