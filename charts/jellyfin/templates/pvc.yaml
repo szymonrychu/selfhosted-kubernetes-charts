@@ -1,5 +1,5 @@
 ---
-{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) (eq .Values.persistence.config.type "pvc") }}
+{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) (eq (.Values.persistence.config.type | default "pvc") "pvc") }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -26,7 +26,7 @@ spec:
 {{- end }}
 {{- end }}
 ---
-{{- if and .Values.persistence.movies.enabled (not .Values.persistence.movies.existingClaim) (eq .Values.persistence.movies.type "pvc") }}
+{{- if and .Values.persistence.movies.enabled (not .Values.persistence.movies.existingClaim) (eq (.Values.persistence.movies.type | default "pvc") "pvc") }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -53,7 +53,7 @@ spec:
 {{- end }}
 {{- end }}
 ---
-{{- if and .Values.persistence.tvshows.enabled (not .Values.persistence.tvshows.existingClaim) (eq .Values.persistence.tvshows.type "pvc") }}
+{{- if and .Values.persistence.tvshows.enabled (not .Values.persistence.tvshows.existingClaim) (eq (.Values.persistence.tvshows.type | default "pvc") "pvc") }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -80,7 +80,7 @@ spec:
 {{- end }}
 {{- end }}
 ---
-{{- if and .Values.persistence.music.enabled (not .Values.persistence.music.existingClaim) (eq .Values.persistence.music.type "pvc") }}
+{{- if and .Values.persistence.music.enabled (not .Values.persistence.music.existingClaim) (eq (.Values.persistence.music.type | default "pvc") "pvc") }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
