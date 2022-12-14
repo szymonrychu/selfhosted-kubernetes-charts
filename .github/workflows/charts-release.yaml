@@ -18,6 +18,16 @@ jobs:
         run: |
           git config user.name "szymonrichert.pl bot"
           git config user.email "bot@szymonrichert.pl"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
+      - name: Add repo dependencies
+        run: |
+          .github/update_depenendent_repos.sh
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         env:
