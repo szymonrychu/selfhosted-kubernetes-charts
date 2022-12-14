@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  jellyfin:
+  - apiVersion: v2
+    appVersion: 10.8.8
+    created: "2022-12-14T12:01:41.457123495Z"
+    description: A Helm chart for Kubernetes
+    digest: fceea82cbf77accdcb9ed141384d2be4efcd2d56304ca1a1f077f4169bc504cd
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.1.1/jellyfin-0.1.1.tgz
+    version: 0.1.1
+generated: "2022-12-14T12:01:41.457142595Z"
