@@ -34,6 +34,16 @@ entries:
   jellyfin:
   - apiVersion: v2
     appVersion: build20221215122025
+    created: "2022-12-15T21:06:34.928142517Z"
+    description: A Helm chart for Kubernetes
+    digest: 5c40ce15379534f8adf9cd8ac72d1e79e04016323825ac3f0d3fb646e5d9f030
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.3.1/jellyfin-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: build20221215122025
     created: "2022-12-15T11:55:57.010270138Z"
     description: A Helm chart for Kubernetes
     digest: a81081c35bbe960976bf57e5586ec5237db731063063124a039d0215b2c146d7
@@ -102,6 +112,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.1.1/jellyfin-0.1.1.tgz
     version: 0.1.1
+  samba:
+  - apiVersion: v2
+    appVersion: build20221215165756
+    created: "2022-12-15T21:06:35.005687516Z"
+    description: A Helm chart for Kubernetes
+    digest: 9d8cf37a33882194cffb4a21445dd8e49667ca4c0badd4f0ada2ce2fbf89b00a
+    name: samba
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/samba-0.1.0/samba-0.1.0.tgz
+    version: 0.1.0
   ubuntu-apt-autoupgrade:
   - apiVersion: v2
     appVersion: jammy
@@ -113,4 +134,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-15T11:55:57.010585245Z"
+generated: "2022-12-15T21:06:35.005717417Z"
