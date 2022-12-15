@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "jellyfin.fullname" . }}
+  name: {{ include "samba.fullname" . }}
   labels:
-    {{- include "jellyfin.labels" . | nindent 4 }}
+    {{- include "samba.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "jellyfin.selectorLabels" . | nindent 6 }}
+      {{- include "samba.selectorLabels" . | nindent 6 }}
   strategy:
     type: {{ .Values.upgradeStrategy }}
   template:
@@ -18,17 +18,30 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "jellyfin.selectorLabels" . | nindent 8 }}
+        {{- include "samba.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "jellyfin.serviceAccountName" . }}
+      serviceAccountName: {{ include "samba.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-        {{- if .Values.initPermissions.enabled }}
       initContainers:
+        - name: initialize-config
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          restartPolicy: Always
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - |
+              cp /etc/samba/smb.conf /mounts/smb.conf
+          volumeMounts:
+            - name: config
+              mountPath: /mounts
+        {{- if .Values.initPermissions.enabled }}
         - name: init-permissions
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -44,8 +57,8 @@ spec:
           securityContext:
             allowPrivilegeEscalation: true
           volumeMounts:
-            - name: config
-              mountPath: /mountsconfig
+            - name: documents
+              mountPath: /mounts/documents
             - name: movies
               mountPath: /mounts/movies
             - name: tvshows
@@ -59,9 +72,22 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/bash
+          args:
+            - /usr/bin/samba.sh
           ports:
-            - name: http
-              containerPort: 8096
+            - name: samba1
+              containerPort: 137
+              protocol: UDP
+            - name: samba2
+              containerPort: 138
+              protocol: UDP
+            - name: samba3
+              containerPort: 139
+              protocol: TCP
+            - name: samba4
+              containerPort: 445
               protocol: TCP
           livenessProbe:
             failureThreshold: 5
@@ -69,7 +95,7 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
-              port: http
+              port: samba4
             timeoutSeconds: 5
           startupProbe:
             failureThreshold: 60
@@ -77,28 +103,46 @@ spec:
             periodSeconds: 5
             successThreshold: 1
             tcpSocket:
-              port: http
+              port: samba4
             timeoutSeconds: 2
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-            - name: JELLYFIN_PublishedServerUrl
-              value: {{ (first .Values.ingress.hosts).host | quote }}
+            - name: GLOBAL1
+              value: tls enabled=no
+            - name: GLOBAL2
+              value: bind interfaces only = yes
+            - name: USERID
+              value: {{ ( (.Values.securityContext | default .Values.podSecurityContext).runAsUser | default 0) | quote }}
+            - name: GROUPID
+              value: {{ ( (.Values.securityContext | default .Values.podSecurityContext).runAsGroup | default 0) | quote }}
+            - name: PERMISSIONS
+              value: 644:644
+            - name: NMDP
+              value: "true"
+            - name: RECYCLE
+              value: "true"
+            - name: SHARE1
+              value: media;/media;yes;no;yes
+            - name: TZ
+              value: UTC
           volumeMounts:
+            - name: config
+              mountPath: /etc/samba
             - name: cache
               mountPath: /cache
             - name: varlogs
-              mountPath: /var/logs
+              mountPath: /var/log/samba
             - name: tmp
               mountPath: /tmp
-            - name: config
-              mountPath: /config
             - name: movies
               mountPath: /media/movies
             - name: tvshows
               mountPath: /media/tvshows
             - name: music
               mountPath: /media/music
+            - name: documents
+              mountPath: /media/documents
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -111,7 +155,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      hostNetwork: true
       volumes:
+        - name: config
+          emptyDir: {}
         - name: cache
           emptyDir: {}
         - name: tmp
@@ -120,23 +167,11 @@ spec:
           emptyDir: {}
         - name: varlogs
           emptyDir: {}
-        - name: config
-        {{- if .Values.persistence.config.enabled }}
-          {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" -}}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "config")  }}
-          {{- else if eq .Values.persistence.config.type "hostPath" }}
-          hostPath:
-            path: {{ .Values.persistence.config.hostPath }}
-          {{- end }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
         - name: movies
         {{- if .Values.persistence.movies.enabled }}
           {{- if eq (.Values.persistence.movies.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "movies")  }}
+            claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "samba.fullname" .) "movies")  }}
           {{- else if eq .Values.persistence.movies.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.movies.hostPath }}
@@ -148,7 +183,7 @@ spec:
         {{- if .Values.persistence.tvshows.enabled }}
           {{- if eq (.Values.persistence.tvshows.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "tvshows")  }}
+            claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "samba.fullname" .) "tvshows")  }}
           {{- else if eq .Values.persistence.tvshows.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.tvshows.hostPath }}
@@ -160,10 +195,22 @@ spec:
         {{- if .Values.persistence.music.enabled }}
           {{- if eq (.Values.persistence.music.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.music.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "music")  }}
+            claimName: {{ .Values.persistence.music.existingClaim | default (printf "%s-%s" (include "samba.fullname" .) "music")  }}
           {{- else if eq .Values.persistence.music.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.music.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: documents
+        {{- if .Values.persistence.documents.enabled }}
+          {{- if eq (.Values.persistence.documents.type | default "pvc") "pvc" -}}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.documents.existingClaim | default (printf "%s-%s" (include "samba.fullname" .) "documents")  }}
+          {{- else if eq .Values.persistence.documents.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.documents.hostPath }}
           {{- end }}
         {{- else }}
           emptyDir: {}
