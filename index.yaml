@@ -33,6 +33,16 @@ entries:
     version: 0.1.0
   jellyfin:
   - apiVersion: v2
+    appVersion: build20221215122025
+    created: "2022-12-15T11:55:57.010270138Z"
+    description: A Helm chart for Kubernetes
+    digest: a81081c35bbe960976bf57e5586ec5237db731063063124a039d0215b2c146d7
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.3.0/jellyfin-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 10.8.8
     created: "2022-12-14T14:15:33.431642243Z"
     description: A Helm chart for Kubernetes
@@ -103,4 +113,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-14T14:15:33.431676845Z"
+generated: "2022-12-15T11:55:57.010585245Z"
