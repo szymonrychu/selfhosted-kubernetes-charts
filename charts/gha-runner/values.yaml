@@ -32,9 +32,9 @@ secrets:
    someprivatekey
 
 image:
-  repository: szymonrychu/gha-runner
-  pullPolicy: IfNotPresent
-  tag: ""
+  repository: ghcr.io/myoung34/docker-github-actions-runner
+  pullPolicy: Always
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
