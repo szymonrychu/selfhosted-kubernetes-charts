@@ -30,8 +30,8 @@ spec:
         {{- if .Values.initPermissions.enabled }}
       initContainers:
         - name: init-permissions
-          image: debian:bookworm-slim
-          imagePullPolicy: IfNotPresent
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           restartPolicy: Always
           command:
             - /bin/sh
