@@ -1,0 +1,210 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "code-server-oauth2.fullname" . }}
+  labels:
+    {{- include "code-server-oauth2.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "code-server-oauth2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "code-server-oauth2.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "code-server-oauth2.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: {{ .Values.codeServer.containerName }}-init
+          securityContext:
+            {{- toYaml .Values.codeServer.securityContext | nindent 12 }}
+          image: "{{ .Values.codeServer.image.repository }}:{{ .Values.codeServer.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.codeServer.image.pullPolicy }}
+          command:
+            - bash
+          args:
+            - -cex
+            - |
+              cd /secrets
+              gpg --import ./private.rsa
+              if [[ ! -e /home/code-new/.gnupg ]]; then
+                cp -R /config/.gnupg /home/code-new/.gnupg
+              fi
+              if [[ ! -e /home/code-new/.kube/config ]]; then
+                mkdir -p /home/code-new/.kube
+                cp ./kubeconfig /home/code-new/.kube/config
+                chmod 0600 /home/code-new/.kube/config
+              fi
+              if [[ ! -e /home/code-new/.ssh/id_rsa ]]; then
+                mkdir -p /home/code-new/.ssh
+                cp ./id_rsa /home/code-new/.ssh/id_rsa
+                chmod 0600 /home/code-new/.ssh/id_rsa
+              fi
+              if [[ ! -e /home/code-new/.ssh/id_rsa.pub ]]; then
+                mkdir -p /home/code-new/.ssh
+                cp ./id_rsa /home/code-new/.ssh/id_rsa.pub
+              fi
+              if [[ ! -e /home/code-new/.ssh/known_hosts ]]; then
+                mkdir -p /home/code-new/.ssh
+                cp ./id_rsa /home/code-new/.ssh/known_hosts
+              fi
+              if [[ ! -e /home/code-new/.profile ]] && [[ -e /config/.profile ]]; then
+                cp /config/.profile /home/code-new/.profile
+              fi
+              if [[ ! -e /home/code-new/.bashrc ]] && [[ -e /config/.bashrc ]]; then
+                cp /config/.bashrc /home/code-new/.bashrc
+              fi
+              if [[ ! -e /home/code-new/.bash_history ]] && [[ -e /home/code-new/.bash_history ]]; then
+                cp /config/.bash_history /home/code-new/.bash_history
+              fi
+              if [[ ! -e /home/code-new/.bash_profile ]] && [[ -e /config/.bash_profile ]]; then
+                cp /config/.bash_profile /home/code-new/.bash_profile
+              fi
+              sudo chown -R 1000:1000 /home/code-new
+          volumeMounts:
+            - name: code-secrets
+              mountPath: "/secrets"
+              readOnly: true
+            - mountPath: /home/code-new
+              name: shared-data
+      containers:
+        - name: {{ .Values.codeServer.containerName }}
+          securityContext:
+            {{- toYaml .Values.codeServer.securityContext | nindent 12 }}
+          image: "{{ .Values.codeServer.image.repository }}:{{ .Values.codeServer.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.codeServer.image.pullPolicy }}
+          env:
+            - name: PROXY_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: code-domain
+            - name: DEFAULT_WORKSPACE
+              value: /home/code/Documents
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          volumeMounts:
+            - mountPath: /home/code
+              name: shared-data
+            - mountPath: /config
+              name: config
+          ports:
+            - name: http
+              containerPort: 8443
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.oauth2Proxy.resources | nindent 12 }}
+        - name: {{ .Values.oauth2Proxy.containerName }}
+          securityContext:
+            {{- toYaml .Values.oauth2Proxy.securityContext | nindent 12 }}
+          image: "{{ .Values.oauth2Proxy.image.repository }}:{{ .Values.oauth2Proxy.image.tag }}"
+          imagePullPolicy: {{ .Values.oauth2Proxy.image.pullPolicy }}
+          env:
+            - name: OAUTH2_PROXY_PROVIDER
+              value: keycloak-oidc
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: keycloak-client-id
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: keycloak-client-secret
+            - name: OAUTH2_PROXY_REDIRECT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: keycloak-redirect-url
+            - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: keycloak-realm-url
+            - name: OAUTH2_PROXY_HTTP_ADDRESS
+              value: 0.0.0.0:4180
+            - name: OAUTH2_PROXY_REVERSE_PROXY
+              value: "true"
+            - name: OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER
+              value: "true"
+            - name: OAUTH2_PROXY_PASS_ACCESS_TOKEN
+              value: "true"
+            - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+              value: "true"
+            - name: OAUTH2_PROXY_UPSTREAMS
+              value: http://localhost:8443
+            - name: OAUTH2_PROXY_COOKIE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: cookie-name
+            - name: OAUTH2_PROXY_COOKIE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: cookie-domain
+            - name: OAUTH2_PROXY_EMAIL_DOMAINS
+              value: "*"
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: cookie-secret
+          ports:
+            - name: http-oidc
+              containerPort: 4180
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http-oidc
+          readinessProbe:
+            tcpSocket:
+              port: http-oidc
+          resources:
+            {{- toYaml .Values.oauth2Proxy.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: code-config-local-pvc
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: code-local-pvc
+        - name: code-secrets
+          secret:
+            secretName: {{ include "code-server-oauth2.fullname" . }}-code-secrets
