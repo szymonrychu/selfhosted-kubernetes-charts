@@ -29,7 +29,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       initContainers:
-        - name: {{ .Chart.Name }}-init
+        - name: init
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -38,23 +38,23 @@ spec:
           args:
             - -cex
             - |
-              cp -Rf /home/github/* /home/github-new/
-              cp -Rf /home/github/.cache /home/github/.local /home/github-new/
+              cp -Rf /home/github/* /new-home/
+              cp -Rf /home/github/.cache /home/github/.local /new-home/
 
               gpg --import /secrets/private.rsa
-              cp -Rf /home/github/.gnupg /home/github-new/.gnupg
+              cp -Rf /home/github/.gnupg /new-home/.gnupg
 
-              mkdir -p /home/github-new/.ssh
-              cp /secrets/id_rsa /home/github-new/.ssh/id_rsa
-              cp /secrets/id_rsa.pub /home/github-new/.ssh/id_rsa.pub
-              cp /secrets/known_hosts /home/github-new/.ssh/known_hosts
+              mkdir -p /new-home/.ssh
+              cp /secrets/id_rsa /new-home/.ssh/id_rsa
+              cp /secrets/id_rsa.pub /new-home/.ssh/id_rsa.pub
+              cp /secrets/known_hosts /new-home/.ssh/known_hosts
 
-              chmod 0600 /home/github-new/.ssh/id_rsa
+              chmod 0600 /new-home/.ssh/id_rsa
           volumeMounts:
             - name: runtime-secrets
               mountPath: "/secrets"
               readOnly: true
-            - mountPath: /home/github-new
+            - mountPath: /new-home
               name: shared-data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -80,6 +80,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "gha-runner.fullname" . }}
                   key: github-personal-token
+            - name: RUNNER_WORKDIR
+              value: /home/github
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
@@ -104,4 +106,11 @@ spec:
         - name: runtime-secrets
           secret:
             secretName: {{ include "gha-runner.fullname" . }}-runtime-secrets
+        - configMap:
+            name: {{ include "gha-runner.fullname" . }}
+            defaultMode: 0555
+            items:
+            - key: init-script
+              path: init-script.sh
+          name: init-script
 

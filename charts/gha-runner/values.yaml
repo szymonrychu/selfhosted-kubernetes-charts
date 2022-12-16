@@ -8,8 +8,8 @@ terminationGracePeriodSeconds: 600
 
 config:
   githubPersonalToken: ""
-  githubOwner: "szymonrychu"
-  githubRepository: "helmfile-cluster"
+  githubOwner: a-organization
+  githubRepository: a-repository
 
 secrets:
   privateKey: |
@@ -32,7 +32,7 @@ secrets:
    someprivatekey
 
 image:
-  repository: ghcr.io/myoung34/docker-github-actions-runner
+  repository: ghcr.io/szymonrychu/gha-runner
   pullPolicy: Always
   tag: latest
 
