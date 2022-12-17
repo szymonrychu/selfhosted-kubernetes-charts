@@ -43,11 +43,6 @@ spec:
               if [[ ! -e /home/code-new/.gnupg ]]; then
                 cp -R /config/.gnupg /home/code-new/.gnupg
               fi
-              if [[ ! -e /home/code-new/.kube/config ]]; then
-                mkdir -p /home/code-new/.kube
-                cp ./kubeconfig /home/code-new/.kube/config
-                chmod 0600 /home/code-new/.kube/config
-              fi
               if [[ ! -e /home/code-new/.ssh/id_rsa ]]; then
                 mkdir -p /home/code-new/.ssh
                 cp ./id_rsa /home/code-new/.ssh/id_rsa
@@ -200,11 +195,29 @@ spec:
       {{- end }}
       volumes:
         - name: config
+        {{- if .Values.persistence.config.enabled }}
+          {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
-            claimName: code-config-local-pvc
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "config")  }}
+          {{- else if eq .Values.persistence.config.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.config.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
         - name: shared-data
+        {{- if .Values.persistence.sharedData.enabled }}
+          {{- if eq (.Values.persistence.sharedData.type | default "pvc") "pvc" -}}
           persistentVolumeClaim:
-            claimName: code-local-pvc
+            claimName: {{ .Values.persistence.sharedData.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "sharedData")  }}
+          {{- else if eq .Values.persistence.sharedData.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.sharedData.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
         - name: code-secrets
           secret:
             secretName: {{ include "code-server-oauth2.fullname" . }}-code-secrets

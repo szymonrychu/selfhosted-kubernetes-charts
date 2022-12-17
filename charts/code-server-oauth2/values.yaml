@@ -21,7 +21,7 @@ config:
 codeServer:
   containerName: code-server
   image:
-    repository: szymonrychu/code-server
+    repository: ghcr.io/szymonrychu/code-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -76,9 +76,6 @@ oauth2Proxy:
   #   memory: 128Mi
   
 secrets:
-  kubeconfig: |
-    ---
-    empty
   privateKey: |
     someprivatekey
   publicKey: |
@@ -148,3 +145,48 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+persistence:
+  config:
+    enabled: false
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+
+    ## config data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+
+    
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+  sharedData:
+    enabled: false
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+    
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
