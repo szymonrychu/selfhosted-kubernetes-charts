@@ -172,6 +172,23 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.1.1/jellyfin-0.1.1.tgz
     version: 0.1.1
+  local-path-provisioner:
+  - apiVersion: v1
+    appVersion: v0.0.24-dev
+    created: "2023-01-22T20:02:52.43705772Z"
+    description: Use HostPath for persistent local storage with Kubernetes
+    digest: e1eed90e1a217dc01e91fd9ef67827017b78a94b836af1c212c7ba1332497a9a
+    home: https://github.com/rancher/local-path-provisioner
+    keywords:
+    - storage
+    - hostpath
+    kubeVersion: '>=1.12.0-r0'
+    name: local-path-provisioner
+    sources:
+    - https://github.com/rancher/local-path-provisioner.git
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/local-path-provisioner-0.0.24-dev/local-path-provisioner-0.0.24-dev.tgz
+    version: 0.0.24-dev
   metallb:
   - annotations:
       category: Infrastructure
@@ -232,4 +249,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-20T11:12:21.303188561Z"
+generated: "2023-01-22T20:02:52.437085621Z"
