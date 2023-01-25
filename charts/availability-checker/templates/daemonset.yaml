@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "availability-checker.fullname" . }}
+  labels:
+    {{- include "availability-checker.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "availability-checker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.nodeRebooter.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "availability-checker.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "availability-checker.nodeRebooter.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.nodeRebooter.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.nodeRebooter.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - -p
+            - {{ .Values.service.port | quote }}
+            - -t
+            - "1111"
+            - client
+            - -u
+            - {{ include "availability-checker.fullname" . }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeRebooter.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeRebooter.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeRebooter.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
