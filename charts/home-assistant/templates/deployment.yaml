@@ -158,7 +158,7 @@ spec:
             - TCP-LISTEN:{{ .Values.metrics.port }},fork,reuseaddr TCP:localhost:8123
           ports:
             - name: tcp-proxy
-              containerPort: {{ .Values.metrics.port | quote }}
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
           livenessProbe:
             tcpSocket:
