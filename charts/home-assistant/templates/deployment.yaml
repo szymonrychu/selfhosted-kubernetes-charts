@@ -150,15 +150,16 @@ spec:
           volumeMounts:
             - name: config
               mountPath: "/config"
-      {{- if .Values.metrics.enabled }}
+      {{- if .Values.metrics.token }}
         - name: tcp-proxy
           image: alpine/socat:latest
           imagePullPolicy: Always
           args:
-            - TCP-LISTEN:{{ .Values.metrics.port }},fork,reuseaddr TCP:localhost:8123
+            - TCP-LISTEN:{{ .Values.metrics.port }},fork,reuseaddr
+            - TCP:localhost:8123
           ports:
             - name: tcp-proxy
-              containerPort: {{ .Values.metrics.port | quote }}
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
           livenessProbe:
             tcpSocket:

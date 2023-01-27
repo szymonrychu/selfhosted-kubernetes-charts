@@ -41,12 +41,20 @@ config:
     ssl: false
     verify_ssl: false
 
-  homeassistant:
-    auth_providers:
-      - type: homeassistant
-      - type: trusted_networks
-        trusted_networks:
-          - 127.0.0.1/32
+homeassistant:
+  auth_providers:
+    - id: internal_networks
+      type: trusted_networks
+      trusted_networks:
+        - 10.8.0.0/16
+        - 10.42.0.0/16
+        - 192.168.1.0/24
+    - type: homeassistant
+    - id: locahost
+      type: trusted_networks
+      trusted_networks:
+        - 127.0.0.1/32
+      allow_bypass_login: true
 
   frontend:
     themes: '!include_dir_merge_named themes'
@@ -84,8 +92,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 metrics:
-  enabled: true
   port: 9652
+  token: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
