@@ -84,7 +84,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 metrics:
-  enabled: false
+  enabled: true
   port: 9652
 
 serviceAccount:
