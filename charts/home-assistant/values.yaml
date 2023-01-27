@@ -85,6 +85,7 @@ fullnameOverride: ""
 
 metrics:
   enabled: false
+  port: 9652
 
 serviceAccount:
   # Specifies whether a service account should be created

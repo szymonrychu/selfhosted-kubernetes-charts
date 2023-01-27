@@ -155,10 +155,10 @@ spec:
           image: alpine/socat:latest
           imagePullPolicy: Always
           args:
-            - TCP-LISTEN:8080,fork,reuseaddr TCP:localhost:8123
+            - TCP-LISTEN:{{ .Values.metrics.port }},fork,reuseaddr TCP:localhost:8123
           ports:
             - name: tcp-proxy
-              containerPort: 8080
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
           livenessProbe:
             tcpSocket:
