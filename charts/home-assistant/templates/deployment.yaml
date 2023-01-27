@@ -150,7 +150,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: "/config"
-      {{- if .Values.metrics.enabled -}}
+      {{- if .Values.metrics.enabled }}
         - name: tcp-proxy
           image: alpine/socat:latest
           imagePullPolicy: Always
