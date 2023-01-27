@@ -11,5 +11,11 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+{{- if .Values.metrics.enabled -}}
+    - port: {{ .Values.service.port }}
+      targetPort: tcp-proxy
+      protocol: TCP
+      name: tcp-proxy
+{{- end }}
   selector:
     {{- include "home-assistant.selectorLabels" . | nindent 4 }}

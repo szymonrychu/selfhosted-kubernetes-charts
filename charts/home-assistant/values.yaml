@@ -17,6 +17,9 @@ config:
     purge_keep_days: 30
     commit_interval: 3
     db_url: '!secret recorder_db_url'
+  
+  prometheus:
+    namespace: home-assistant
 
   http:
     use_x_forwarded_for: true
@@ -40,9 +43,10 @@ config:
 
   homeassistant:
     auth_providers:
-      # - type: legacy_api_password
-      #   api_password: '!secret http_password'
       - type: homeassistant
+      - type: trusted_networks
+        trusted_networks:
+          - 127.0.0.1/32
 
   frontend:
     themes: '!include_dir_merge_named themes'
@@ -53,7 +57,7 @@ secrets:
 
 initScript: |
   #!/bin/bash
-  if [ ! -f /config/configuration.yaml ]; then
+  if [ ! -f /config/configuration.yaml ] || cmp -s /initial-configuration/configuration.yaml /config/configuration.yaml ; then
     sed -re "s/'(\!.*?)'/\1/g" /initial-configuration/configuration.yaml > /config/configuration.yaml
   fi
   cp -f /secrets/secrets.yaml /config/secrets.yaml
@@ -78,6 +82,9 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+metrics:
+  enabled: false
 
 serviceAccount:
   # Specifies whether a service account should be created

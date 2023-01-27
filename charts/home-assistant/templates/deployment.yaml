@@ -126,8 +126,9 @@ spec:
                 - sh
               args:
                 - -c
-                - pgrep python3
-            initialDelaySeconds: 10
+                - |
+                  [[ "$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8123)" == "200" ]]
+            initialDelaySeconds: 1
             periodSeconds: 5
           livenessProbe:
             exec:
@@ -136,7 +137,8 @@ spec:
               args:
                 - -c
                 - |
-                  [[ "$(curl --write-out '%{http_code}' --silent --output /dev/null localhost:8123/api/)" == "401" ]]
+                  [[ "$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8123)" == "200" ]]
+            initialDelaySeconds: 1
             periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -148,6 +150,34 @@ spec:
           volumeMounts:
             - name: config
               mountPath: "/config"
+      {{- if .Values.metrics.enabled -}}
+        - name: tcp-proxy
+          image: alpine/socat:latest
+          imagePullPolicy: Always
+          args:
+            - TCP-LISTEN:8080,fork,reuseaddr TCP:localhost:8123
+          ports:
+            - name: tcp-proxy
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: tcp-proxy
+            initialDelaySeconds: 1
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: tcp-proxy
+            initialDelaySeconds: 1
+            periodSeconds: 5
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
