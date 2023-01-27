@@ -12,7 +12,7 @@ spec:
       protocol: TCP
       name: http
 {{- if .Values.metrics.enabled }}
-    - port: {{ .Values.service.port }}
+    - port: 8080
       targetPort: tcp-proxy
       protocol: TCP
       name: tcp-proxy
