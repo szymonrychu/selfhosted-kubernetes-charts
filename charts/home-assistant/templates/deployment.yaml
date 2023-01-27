@@ -150,34 +150,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: "/config"
-      {{- if .Values.metrics.enabled }}
-        - name: tcp-proxy
-          image: alpine/socat:latest
-          imagePullPolicy: Always
-          args:
-            - TCP-LISTEN:{{ .Values.metrics.port }},fork,reuseaddr TCP:localhost:8123
-          ports:
-            - name: tcp-proxy
-              containerPort: {{ .Values.metrics.port | quote }}
-              protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: tcp-proxy
-            initialDelaySeconds: 1
-            periodSeconds: 5
-          livenessProbe:
-            tcpSocket:
-              port: tcp-proxy
-            initialDelaySeconds: 1
-            periodSeconds: 5
-          securityContext:
-            capabilities:
-              drop:
-              - ALL
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            runAsUser: 1000
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
