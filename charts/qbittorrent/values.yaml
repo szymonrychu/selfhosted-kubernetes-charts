@@ -42,6 +42,7 @@ oauth2Proxy:
   cookieName: oauth2-authorization-cookie
   cookieDomain: example.com
   cookieSecret: super-secret-cookie-secret
+  allowedGroups: super-group
   image:
     repository: quay.io/oauth2-proxy/oauth2-proxy
     pullPolicy: IfNotPresent

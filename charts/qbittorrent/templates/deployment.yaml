@@ -157,6 +157,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "qbittorrent.fullname" . }}
                   key: cookie-secret
+            - name: OAUTH2_PROXY_ALLOWED_GROUPS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: allowed-groups
           ports:
             - name: http-oidc
               containerPort: 4180

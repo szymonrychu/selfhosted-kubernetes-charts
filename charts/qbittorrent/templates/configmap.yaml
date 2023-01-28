@@ -11,4 +11,5 @@ data:
   keycloak-realm-url: {{ .Values.oauth2Proxy.keycloakRealmUrl }}
   cookie-name: {{ .Values.oauth2Proxy.cookieName }}
   cookie-domain: {{ .Values.oauth2Proxy.cookieDomain }}
+  allowed-groups: {{ .Values.oauth2Proxy.allowedGroups }}
 {{- end }}
