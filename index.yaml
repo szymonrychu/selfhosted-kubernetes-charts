@@ -544,6 +544,16 @@ entries:
   qbittorrent:
   - apiVersion: v2
     appVersion: 4.5.0
+    created: "2023-01-28T21:38:55.426549327Z"
+    description: A Helm chart for Kubernetes
+    digest: bbf5afd1fcd605212b7b1789283bfafb580efbc1cd268c2631abbc6f81714411
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/qbittorrent-0.2.0/qbittorrent-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 4.5.0
     created: "2023-01-28T21:17:38.266741676Z"
     description: A Helm chart for Kubernetes
     digest: ddcf15fadfaebcb7585e07af925460d170516186d7f84c49f6be485d8201f075
@@ -594,4 +604,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-28T21:17:38.267087876Z"
+generated: "2023-01-28T21:38:55.426608327Z"
