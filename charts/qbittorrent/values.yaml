@@ -70,10 +70,10 @@ oauth2Proxy:
 initPermissions:
   enabled: false
   image:
-    repository: quay.io/oauth2-proxy/oauth2-proxy
+    repository: bash
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v7.4.0
+    tag: alpine3.16
   securityContext: {}
     # capabilities:
     #   drop:
