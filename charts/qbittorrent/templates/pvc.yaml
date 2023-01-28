@@ -3,14 +3,14 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "jellyfin.fullname" . }}-config
+  name: {{ template "qbittorrent.fullname" . }}-config
   namespace: {{ .Release.Namespace }}
 {{- with .Values.persistence.config.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "jellyfin.selectorLabels" . | nindent 4 }}
+    {{- include "qbittorrent.selectorLabels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.config.accessMode | quote }}
@@ -30,14 +30,14 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "jellyfin.fullname" . }}-movies
+  name: {{ template "qbittorrent.fullname" . }}-movies
   namespace: {{ .Release.Namespace }}
 {{- with .Values.persistence.movies.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "jellyfin.selectorLabels" . | nindent 4 }}
+    {{- include "qbittorrent.selectorLabels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.movies.accessMode | quote }}
@@ -57,14 +57,14 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "jellyfin.fullname" . }}-tvshows
+  name: {{ template "qbittorrent.fullname" . }}-tvshows
   namespace: {{ .Release.Namespace }}
 {{- with .Values.persistence.tvshows.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "jellyfin.selectorLabels" . | nindent 4 }}
+    {{- include "qbittorrent.selectorLabels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.tvshows.accessMode | quote }}
@@ -84,14 +84,14 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "jellyfin.fullname" . }}-music
+  name: {{ template "qbittorrent.fullname" . }}-music
   namespace: {{ .Release.Namespace }}
 {{- with .Values.persistence.music.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "jellyfin.selectorLabels" . | nindent 4 }}
+    {{- include "qbittorrent.selectorLabels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.persistence.music.accessMode | quote }}

@@ -196,7 +196,7 @@ spec:
         {{- if .Values.persistence.config.enabled }}
           {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "config")  }}
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "qbittorrent.fullname" .) "config")  }}
           {{- else if eq .Values.persistence.config.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.config.hostPath }}
@@ -208,7 +208,7 @@ spec:
         {{- if .Values.persistence.movies.enabled }}
           {{- if eq (.Values.persistence.movies.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "movies")  }}
+            claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "qbittorrent.fullname" .) "movies")  }}
           {{- else if eq .Values.persistence.movies.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.movies.hostPath }}
@@ -220,7 +220,7 @@ spec:
         {{- if .Values.persistence.tvshows.enabled }}
           {{- if eq (.Values.persistence.tvshows.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "tvshows")  }}
+            claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "qbittorrent.fullname" .) "tvshows")  }}
           {{- else if eq .Values.persistence.tvshows.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.tvshows.hostPath }}
@@ -232,7 +232,7 @@ spec:
         {{- if .Values.persistence.music.enabled }}
           {{- if eq (.Values.persistence.music.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.music.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "music")  }}
+            claimName: {{ .Values.persistence.music.existingClaim | default (printf "%s-%s" (include "qbittorrent.fullname" .) "music")  }}
           {{- else if eq .Values.persistence.music.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.music.hostPath }}
