@@ -372,6 +372,16 @@ entries:
   jellyfin:
   - apiVersion: v2
     appVersion: build20221215122025
+    created: "2023-01-28T21:09:14.384832494Z"
+    description: A Helm chart for Kubernetes
+    digest: 522afb37444fee06d1352a76c3d63972ef3ee1c493d05006b4bc6da09f1a9a03
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.3.3/jellyfin-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v2
+    appVersion: build20221215122025
     created: "2023-01-24T14:50:34.645622902Z"
     description: A Helm chart for Kubernetes
     digest: 30a2055bda8716e291feae1d3885da1ea253b6f564f98cd4646a992aeeb4efe8
@@ -531,6 +541,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/metallb-3.0.12/metallb-3.0.12.tgz
     version: 3.0.12
+  qbittorrent:
+  - apiVersion: v2
+    appVersion: 4.5.0
+    created: "2023-01-28T21:09:14.497236735Z"
+    description: A Helm chart for Kubernetes
+    digest: d72552d32abd8c5952985ed163f5efa958f94c0b61738f210e3dfcabef86f867
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/qbittorrent-0.1.1/qbittorrent-0.1.1.tgz
+    version: 0.1.1
   samba:
   - apiVersion: v2
     appVersion: build20221215165756
@@ -553,4 +574,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-27T10:06:54.897820679Z"
+generated: "2023-01-28T21:09:14.497320035Z"
