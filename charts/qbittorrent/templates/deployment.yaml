@@ -37,8 +37,7 @@ spec:
             - /bin/sh
           args:
             - -c
-            - |
-              su -c chown -R "$(id -u):$(id -g)" /mounts/*/
+            - chown -R "$(id -u):$(id -g)" /mounts/*/
           resources:
             {{- toYaml .Values.initPermissions.resources | nindent 12 }}
           securityContext:
