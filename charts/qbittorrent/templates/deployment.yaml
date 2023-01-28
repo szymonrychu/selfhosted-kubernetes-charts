@@ -1,0 +1,242 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qbittorrent.fullname" . }}
+  labels:
+    {{- include "qbittorrent.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "qbittorrent.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "qbittorrent.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qbittorrent.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.initPermissions.enabled }}
+      initContainers:
+        - name: init-permissions
+          image: "{{ .Values.initPermissions.image.repository }}:{{ .Values.initPermissions.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.initPermissions.image.pullPolicy }}
+          restartPolicy: Always
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - |
+              su -c chown -R "$(id -u):$(id -g)" /mounts/*/
+          resources:
+            {{- toYaml .Values.initPermissions.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: true
+          volumeMounts:
+            - name: config
+              mountPath: /mountsconfig
+            - name: movies
+              mountPath: /mounts/movies
+            - name: tvshows
+              mountPath: /mounts/tvshows
+            - name: music
+              mountPath: /mounts/music
+        {{- end }}
+      containers:
+        - name: main
+          securityContext:
+          image: "{{ .Values.qbittorrent.image.repository }}:{{ .Values.qbittorrent.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.qbittorrent.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.qbittorrent.resources | nindent 12 }}
+          env:
+            - name: TZ
+              value: {{ .Values.qbittorrent.timeZone | quote }}
+            - name: WEBUI_PORT
+              value: "8080"
+        {{- if .Values.qbittorrent.puid }}
+            - name: PUID
+              value: {{ .Values.qbittorrent.puid | quote }}
+        {{- end }}
+        {{- if .Values.qbittorrent.pgid }}
+            - name: PGID
+              value: {{ .Values.qbittorrent.pgid | quote }}
+        {{- end }}
+          volumeMounts:
+            - name: cache
+              mountPath: /cache
+            - name: varlogs
+              mountPath: /var/logs
+            - name: tmp
+              mountPath: /tmp
+            - name: config
+              mountPath: /config
+            - name: movies
+              mountPath: /media/movies
+            - name: tvshows
+              mountPath: /media/tvshows
+            - name: music
+              mountPath: /media/music
+      {{- if .Values.oauth2Proxy.enabled }}
+        - name: proxy
+          securityContext:
+            {{- toYaml .Values.oauth2Proxy.securityContext | nindent 12 }}
+          image: "{{ .Values.oauth2Proxy.image.repository }}:{{ .Values.oauth2Proxy.image.tag }}"
+          imagePullPolicy: {{ .Values.oauth2Proxy.image.pullPolicy }}
+          env:
+            - name: OAUTH2_PROXY_PROVIDER
+              value: keycloak-oidc
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: keycloak-client-id
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: keycloak-client-secret
+            - name: OAUTH2_PROXY_REDIRECT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: keycloak-redirect-url
+            - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: keycloak-realm-url
+            - name: OAUTH2_PROXY_HTTP_ADDRESS
+              value: 0.0.0.0:4180
+            - name: OAUTH2_PROXY_REVERSE_PROXY
+              value: "true"
+            - name: OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER
+              value: "true"
+            - name: OAUTH2_PROXY_PASS_ACCESS_TOKEN
+              value: "true"
+            - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+              value: "true"
+            - name: OAUTH2_PROXY_UPSTREAMS
+              value: http://localhost:8080
+            - name: OAUTH2_PROXY_COOKIE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: cookie-name
+            - name: OAUTH2_PROXY_COOKIE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: cookie-domain
+            - name: OAUTH2_PROXY_EMAIL_DOMAINS
+              value: "*"
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: cookie-secret
+          ports:
+            - name: http-oidc
+              containerPort: 4180
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http-oidc
+          readinessProbe:
+            tcpSocket:
+              port: http-oidc
+          resources:
+            {{- toYaml .Values.oauth2Proxy.resources | nindent 12 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: temp
+          emptyDir: {}
+        - name: varlogs
+          emptyDir: {}
+        - name: config
+        {{- if .Values.persistence.config.enabled }}
+          {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "config")  }}
+          {{- else if eq .Values.persistence.config.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.config.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: movies
+        {{- if .Values.persistence.movies.enabled }}
+          {{- if eq (.Values.persistence.movies.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "movies")  }}
+          {{- else if eq .Values.persistence.movies.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.movies.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: tvshows
+        {{- if .Values.persistence.tvshows.enabled }}
+          {{- if eq (.Values.persistence.tvshows.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "tvshows")  }}
+          {{- else if eq .Values.persistence.tvshows.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.tvshows.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: music
+        {{- if .Values.persistence.music.enabled }}
+          {{- if eq (.Values.persistence.music.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.music.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "music")  }}
+          {{- else if eq .Values.persistence.music.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.music.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}

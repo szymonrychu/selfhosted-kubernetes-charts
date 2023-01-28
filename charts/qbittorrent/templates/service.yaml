@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "qbittorrent.fullname" . }}
+  labels:
+    {{- include "qbittorrent.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+{{- if .Values.oauth2Proxy.enabled }}
+      targetPort: http-oidc
+{{- else }}
+      targetPort: http
+{{- end }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "qbittorrent.selectorLabels" . | nindent 4 }}
