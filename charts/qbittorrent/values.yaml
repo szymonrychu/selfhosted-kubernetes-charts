@@ -5,11 +5,8 @@
 replicaCount: 1
 
 qbittorrent:
-  puid: ""
-  pgid: ""
-  timeZone: "Europe/Warsaw"
   image:
-    repository: linuxserver/qbittorrent
+    repository: wernight/qbittorrent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""

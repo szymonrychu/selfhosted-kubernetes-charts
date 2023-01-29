@@ -41,14 +41,7 @@ spec:
           resources:
             {{- toYaml .Values.initPermissions.resources | nindent 12 }}
           securityContext:
-            allowPrivilegeEscalation: true
-        {{- if .Values.qbittorrent.puid }}
-            runAsUser: {{ .Values.qbittorrent.puid }}
-        {{- end }}
-        {{- if .Values.qbittorrent.pgid }}
-            runAsGroup: {{ .Values.qbittorrent.pgid }}
-        {{- end }}
-            runAsGroup: 1000
+            {{- toYaml .Values.init-permissions.securityContext | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /mountsconfig
@@ -62,6 +55,7 @@ spec:
       containers:
         - name: main
           securityContext:
+            {{- toYaml .Values.qbittorrent.securityContext | nindent 12 }}
           image: "{{ .Values.qbittorrent.image.repository }}:{{ .Values.qbittorrent.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.qbittorrent.image.pullPolicy }}
           ports:
@@ -78,19 +72,6 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.qbittorrent.resources | nindent 12 }}
-          env:
-            - name: TZ
-              value: {{ .Values.qbittorrent.timeZone | quote }}
-            - name: WEBUI_PORT
-              value: "8080"
-        {{- if .Values.qbittorrent.puid }}
-            - name: PUID
-              value: {{ .Values.qbittorrent.puid | quote }}
-        {{- end }}
-        {{- if .Values.qbittorrent.pgid }}
-            - name: PGID
-              value: {{ .Values.qbittorrent.pgid | quote }}
-        {{- end }}
           volumeMounts:
             - name: cache
               mountPath: /cache
