@@ -7,6 +7,8 @@ metadata:
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
   {{- end }}
   selector:
     matchLabels:
@@ -41,7 +43,7 @@ spec:
           resources:
             {{- toYaml .Values.initPermissions.resources | nindent 12 }}
           securityContext:
-            {{- toYaml .Values.init-permissions.securityContext | nindent 12 }}
+            {{- toYaml .Values.initPermissions.securityContext | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /mountsconfig
