@@ -42,6 +42,13 @@ spec:
             {{- toYaml .Values.initPermissions.resources | nindent 12 }}
           securityContext:
             allowPrivilegeEscalation: true
+        {{- if .Values.qbittorrent.puid }}
+            runAsUser: {{ .Values.qbittorrent.puid }}
+        {{- end }}
+        {{- if .Values.qbittorrent.pgid }}
+            runAsGroup: {{ .Values.qbittorrent.pgid }}
+        {{- end }}
+            runAsGroup: 1000
           volumeMounts:
             - name: config
               mountPath: /mountsconfig
