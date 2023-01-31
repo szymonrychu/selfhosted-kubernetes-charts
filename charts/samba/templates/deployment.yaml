@@ -28,19 +28,6 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: initialize-config
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          restartPolicy: Always
-          command:
-            - /bin/sh
-          args:
-            - -c
-            - |
-              cp /etc/samba/smb.conf /mounts/smb.conf
-          volumeMounts:
-            - name: config
-              mountPath: /mounts
         {{- if .Values.initPermissions.enabled }}
         - name: init-permissions
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -67,7 +54,7 @@ spec:
               mountPath: /mounts/music
         {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: main
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -107,28 +94,29 @@ spec:
             timeoutSeconds: 2
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          env:
-            - name: GLOBAL1
-              value: tls enabled=no
-            - name: GLOBAL2
-              value: bind interfaces only = yes
-            - name: USERID
-              value: {{ ( (.Values.securityContext | default .Values.podSecurityContext).runAsUser | default 0) | quote }}
-            - name: GROUPID
-              value: {{ ( (.Values.securityContext | default .Values.podSecurityContext).runAsGroup | default 0) | quote }}
-            - name: PERMISSIONS
-              value: 644:644
-            - name: NMDP
-              value: "true"
-            - name: RECYCLE
-              value: "true"
-            - name: SHARE1
-              value: media;/media;yes;no;yes
-            - name: TZ
-              value: UTC
+          envFrom:
+            - configMapRef:
+                name: {{ include "samba.fullname" . }}
+          # env:
+          #   - name: GLOBAL1
+          #     value: tls enabled=no
+          #   - name: GLOBAL2
+          #     value: bind interfaces only = yes
+          #   - name: USERID
+          #     value: {{ ( (.Values.securityContext | default .Values.podSecurityContext).runAsUser | default 0) | quote }}
+          #   - name: GROUPID
+          #     value: {{ ( (.Values.securityContext | default .Values.podSecurityContext).runAsGroup | default 0) | quote }}
+          #   - name: PERMISSIONS
+          #     value: 644:644
+          #   - name: NMDP
+          #     value: "true"
+          #   - name: RECYCLE
+          #     value: "true"
+          #   - name: SHARE1
+          #     value: media;/media;yes;no;yes
+          #   - name: TZ
+          #     value: UTC
           volumeMounts:
-            - name: config
-              mountPath: /etc/samba
             - name: cache
               mountPath: /cache
             - name: varlogs
@@ -157,8 +145,6 @@ spec:
       {{- end }}
       hostNetwork: true
       volumes:
-        - name: config
-          emptyDir: {}
         - name: cache
           emptyDir: {}
         - name: tmp

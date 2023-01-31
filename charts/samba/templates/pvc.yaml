@@ -1,31 +1,4 @@
 ---
-{{- if and .Values.persistence.documents.enabled (not .Values.persistence.documents.existingClaim) (eq (.Values.persistence.documents.type | default "pvc") "pvc") }}
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: {{ template "samba.fullname" . }}-documents
-  namespace: {{ .Release.Namespace }}
-{{- with .Values.persistence.documents.annotations  }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-  labels:
-    {{- include "samba.selectorLabels" . | nindent 4 }}
-spec:
-  accessModes:
-    - {{ .Values.persistence.documents.accessMode | quote }}
-  resources:
-    requests:
-      storage: {{ .Values.persistence.documents.size | quote }}
-{{- if .Values.persistence.documents.storageClass }}
-{{- if (eq "-" .Values.persistence.documents.storageClass) }}
-  storageClassName: ""
-{{- else }}
-  storageClassName: "{{ .Values.persistence.documents.storageClass }}"
-{{- end }}
-{{- end }}
-{{- end }}
----
 {{- if and .Values.persistence.movies.enabled (not .Values.persistence.movies.existingClaim) (eq (.Values.persistence.movies.type | default "pvc") "pvc") }}
 kind: PersistentVolumeClaim
 apiVersion: v1
