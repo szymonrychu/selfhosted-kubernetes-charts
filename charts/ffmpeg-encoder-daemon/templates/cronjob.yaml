@@ -1,0 +1,91 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ template "ffmpeg-encoder-daemon.fullname" . }}
+  labels:
+    {{- include "ffmpeg-encoder-daemon.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.cronSchedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "ffmpeg-encoder-daemon.selectorLabels" . | nindent 12 }}
+        spec:
+          restartPolicy: OnFailure
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "ffmpeg-encoder-daemon.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          containers:
+            - name: main
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              volumeMounts:
+                - name: cache
+                  mountPath: /cache
+                - name: varlogs
+                  mountPath: /var/log/ffmpeg-encoder-daemon
+                - name: tmp
+                  mountPath: /tmp
+                - name: movies
+                  mountPath: /media/movies
+                - name: tvshows
+                  mountPath: /media/tvshows
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumes:
+            - name: cache
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
+            - name: temp
+              emptyDir: {}
+            - name: varlogs
+              emptyDir: {}
+            - name: movies
+            {{- if .Values.persistence.movies.enabled }}
+              {{- if eq (.Values.persistence.movies.type | default "pvc") "pvc" -}}
+              persistentVolumeClaim:
+                claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "ffmpeg-encoder-daemon.fullname" .) "movies")  }}
+              {{- else if eq .Values.persistence.movies.type "hostPath" }}
+              hostPath:
+                path: {{ .Values.persistence.movies.hostPath }}
+              {{- end }}
+            {{- else }}
+              emptyDir: {}
+            {{- end }}
+            - name: tvshows
+            {{- if .Values.persistence.tvshows.enabled }}
+              {{- if eq (.Values.persistence.tvshows.type | default "pvc") "pvc" -}}
+              persistentVolumeClaim:
+                claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "ffmpeg-encoder-daemon.fullname" .) "tvshows")  }}
+              {{- else if eq .Values.persistence.tvshows.type "hostPath" }}
+              hostPath:
+                path: {{ .Values.persistence.tvshows.hostPath }}
+              {{- end }}
+            {{- else }}
+              emptyDir: {}
+            {{- end }}
