@@ -42,6 +42,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/code-server-oauth2-0.0.1/code-server-oauth2-0.0.1.tgz
     version: 0.0.1
+  ffmpeg-encoder-daemon:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2023-02-14T20:07:28.779826188Z"
+    description: A Helm chart for Kubernetes
+    digest: dbf4b700176eb2ea4b8a70829e7318e7b488aec4c3b4bba49861755cd6c3825a
+    name: ffmpeg-encoder-daemon
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/ffmpeg-encoder-daemon-0.1.0/ffmpeg-encoder-daemon-0.1.0.tgz
+    version: 0.1.0
   gha-runner:
   - apiVersion: v2
     appVersion: latest
@@ -625,6 +636,16 @@ entries:
   samba:
   - apiVersion: v2
     appVersion: build20221215165756
+    created: "2023-02-14T20:07:28.901592589Z"
+    description: A Helm chart for Kubernetes
+    digest: 108b92813fc4f3dcf8a79eb8c3aa8b08691314fd0b211b377df75cc612190146
+    name: samba
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/samba-0.1.2/samba-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: build20221215165756
     created: "2023-01-31T07:57:28.685669423Z"
     description: A Helm chart for Kubernetes
     digest: 90e51a8a9e817ed8dfd59bed0d219c5b3b0f856b63aef35547c053e2bd4f7b6b
@@ -654,4 +675,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-31T07:57:28.685732923Z"
+generated: "2023-02-14T20:07:28.901791686Z"
