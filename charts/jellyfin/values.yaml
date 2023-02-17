@@ -60,7 +60,7 @@ ingress:
 persistence:
   - name: config
     enabled: false
-    containerMountPath: /config
+    mountPath: /config
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc
@@ -81,7 +81,7 @@ persistence:
     annotations: {}
   - name: movies
     enabled: false
-    containerMountPath: /media/movies
+    mountPath: /media/movies
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc
@@ -102,7 +102,7 @@ persistence:
     annotations: {}
   - name: tvshows
     enabled: false
-    containerMountPath: /media/tvshows
+    mountPath: /media/tvshows
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc
@@ -123,7 +123,7 @@ persistence:
     annotations: {}
   - name: music
     enabled: false
-    containerMountPath: /media/music
+    mountPath: /media/music
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc

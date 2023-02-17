@@ -38,7 +38,7 @@ spec:
           args:
             - -c
             - |
-              su -c chown -R "$(id -u):$(id -g)" {{ range .Values.persistence }}{{ .containerMountPath }}/* {{end }}
+              su -c chown -R "$(id -u):$(id -g)" {{ range .Values.persistence }}{{ .mountPath }}/* {{ end }}
           resources:
             {{- toYaml .Values.initPermissions.resources | nindent 12 }}
           securityContext:
@@ -46,7 +46,7 @@ spec:
           volumeMounts:
       {{- range .Values.persistence }}
             - name: {{ .name }}
-              mountPath: {{ .containerMountPath }}
+              mountPath: {{ .mountPath }}
       {{- end }}
         {{- end }}
       containers:
@@ -102,7 +102,7 @@ spec:
               mountPath: /tmp
       {{- range .Values.persistence }}
             - name: {{ .name }}
-              mountPath: {{ .containerMountPath }}
+              mountPath: {{ .mountPath }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

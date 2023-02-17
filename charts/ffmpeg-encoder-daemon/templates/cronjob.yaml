@@ -41,9 +41,9 @@ spec:
                 - name: tmp
                   mountPath: /tmp
                 - name: movies
-                  mountPath: /media/movies
+                  mountPath: /workdir/movies
                 - name: tvshows
-                  mountPath: /media/tvshows
+                  mountPath: /workdir/tvshows
           {{- with .Values.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}
