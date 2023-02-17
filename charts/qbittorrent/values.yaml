@@ -68,10 +68,10 @@ oauth2Proxy:
 initPermissions:
   enabled: false
   image:
-    repository: bash
+    repository: busybox
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: alpine3.16
+    tag: 1.36.0
   securityContext: {}
     # capabilities:
     #   drop:

@@ -34,12 +34,11 @@ spec:
         - name: init-permissions
           image: "{{ .Values.initPermissions.image.repository }}:{{ .Values.initPermissions.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.initPermissions.image.pullPolicy }}
-          restartPolicy: Always
           command:
             - /bin/sh
           args:
             - -c
-              su -c chown -R "$(id -u):$(id -g)" {{ range .Values.persistence }}{{ .mountPath }}/* {{ end }}
+            - chown -R {{ .Values.qbittorrent.securityContext.runAsUser | default "1000" }}:{{ .Values.qbittorrent.securityContext.runAsGroup | default "1000" }} {{ range .Values.persistence }}{{ .mountPath }} {{ end }}            
           resources:
             {{- toYaml .Values.initPermissions.resources | nindent 12 }}
           securityContext:
