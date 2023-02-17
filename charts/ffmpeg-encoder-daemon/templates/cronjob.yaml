@@ -65,27 +65,17 @@ spec:
               emptyDir: {}
             - name: varlogs
               emptyDir: {}
-            - name: movies
-            {{- if .Values.persistence.movies.enabled }}
-              {{- if eq (.Values.persistence.movies.type | default "pvc") "pvc" -}}
+          {{- range .Values.persistence }}
+            - name: {{ .name }}
+            {{- if .enabled }}
+              {{- if eq (.type | default "pvc") "pvc" }}
               persistentVolumeClaim:
-                claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "ffmpeg-encoder-daemon.fullname" .) "movies")  }}
-              {{- else if eq .Values.persistence.movies.type "hostPath" }}
+                claimName: {{ .existingClaim | default (printf "%s-%s" (include "ffmpeg-encoder-daemon.fullname" $) .name ) }}
+              {{- else if eq .type "hostPath" }}
               hostPath:
-                path: {{ .Values.persistence.movies.hostPath }}
+                path: {{ .hostPath }}
               {{- end }}
             {{- else }}
               emptyDir: {}
             {{- end }}
-            - name: tvshows
-            {{- if .Values.persistence.tvshows.enabled }}
-              {{- if eq (.Values.persistence.tvshows.type | default "pvc") "pvc" -}}
-              persistentVolumeClaim:
-                claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "ffmpeg-encoder-daemon.fullname" .) "tvshows")  }}
-              {{- else if eq .Values.persistence.tvshows.type "hostPath" }}
-              hostPath:
-                path: {{ .Values.persistence.tvshows.hostPath }}
-              {{- end }}
-            {{- else }}
-              emptyDir: {}
-            {{- end }}
+          {{- end }}

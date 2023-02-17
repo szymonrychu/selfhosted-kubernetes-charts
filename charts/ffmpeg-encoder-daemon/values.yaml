@@ -40,56 +40,48 @@ securityContext: {}
 
 
 persistence:
-  movies:
-    enabled: true
-    type: hostPath
+  - name: movies
+    enabled: false
     mountPath: /media/movies
-    hostPath: /k8s-data/disk/movies
-  # movies:
-  #   enabled: false
-  #   ## type of the persistence
-  #   ## can be either "pvc" or "hostPath", default "pvc"
-  #   # type: pvc
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
 
-  #   ## if type == "hostPath", then hostPath will specify what path on host to use
-  #   # hostPath: /tmp
-    
-  #   ## database data Persistent Volume Storage Class
-  #   ## If defined, storageClassName: <storageClass>
-  #   ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  #   ## If undefined (the default) or set to null, no storageClassName spec is
-  #   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  #   ##   GKE, AWS & OpenStack)
-  #   ##
-  #   # storageClass: "-"
-  #   accessMode: ReadWriteOnce
-  #   size: 8Gi
-  #   annotations: {}
-  # tvshows:
-  #   enabled: false
-  #   ## type of the persistence
-  #   ## can be either "pvc" or "hostPath", default "pvc"
-  #   # type: pvc
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
 
-  #   ## if type == "hostPath", then hostPath will specify what path on host to use
-  #   # hostPath: /tmp
-
-  #   ## database data Persistent Volume Storage Class
-  #   ## If defined, storageClassName: <storageClass>
-  #   ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  #   ## If undefined (the default) or set to null, no storageClassName spec is
-  #   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  #   ##   GKE, AWS & OpenStack)
-  #   ##
-  #   # storageClass: "-"
-  #   accessMode: ReadWriteOnce
-  #   size: 8Gi
-  #   annotations: {}
-  tvshows:
-    enabled: true
-    type: hostPath
+    ## config data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+  - name: tvshows
+    enabled: false
     mountPath: /media/tvshows
-    hostPath: /k8s-data/disk/tvshows
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
 
 # resources: {}
 #   # We usually recommend not to specify default resources and to leave this as a conscious
