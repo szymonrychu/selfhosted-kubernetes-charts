@@ -58,8 +58,9 @@ ingress:
   #      - chart-example.local
 
 persistence:
-  config:
+  - name: config
     enabled: false
+    containerMountPath: /config
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc
@@ -75,20 +76,40 @@ persistence:
     ##   GKE, AWS & OpenStack)
     ##
     # storageClass: "-"
-
-    
     accessMode: ReadWriteOnce
     size: 8Gi
     annotations: {}
-  movies:
+  - name: movies
     enabled: false
+    containerMountPath: /media/movies
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc
 
     ## if type == "hostPath", then hostPath will specify what path on host to use
     # hostPath: /tmp
-    
+
+    ## config data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+  - name: tvshows
+    enabled: false
+    containerMountPath: /media/tvshows
+    ## type of the persistence
+    ## can be either "pvc" or "hostPath", default "pvc"
+    # type: pvc
+
+    ## if type == "hostPath", then hostPath will specify what path on host to use
+    # hostPath: /tmp
+
     ## database data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -100,28 +121,9 @@ persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
     annotations: {}
-  tvshows:
+  - name: music
     enabled: false
-    ## type of the persistence
-    ## can be either "pvc" or "hostPath", default "pvc"
-    # type: pvc
-
-    ## if type == "hostPath", then hostPath will specify what path on host to use
-    # hostPath: /tmp
-
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    annotations: {}
-  music:
-    enabled: false
+    containerMountPath: /media/music
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc

@@ -38,20 +38,16 @@ spec:
           args:
             - -c
             - |
-              su -c chown -R "$(id -u):$(id -g)" /mounts/*/
+              su -c chown -R "$(id -u):$(id -g)" {{ range .Values.persistence }}{{ .containerMountPath }}/* {{end }}
           resources:
             {{- toYaml .Values.initPermissions.resources | nindent 12 }}
           securityContext:
             allowPrivilegeEscalation: true
           volumeMounts:
-            - name: config
-              mountPath: /mountsconfig
-            - name: movies
-              mountPath: /mounts/movies
-            - name: tvshows
-              mountPath: /mounts/tvshows
-            - name: music
-              mountPath: /mounts/music
+      {{- range .Values.persistence }}
+            - name: {{ .name }}
+              mountPath: {{ .containerMountPath }}
+      {{- end }}
         {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -91,14 +87,10 @@ spec:
               mountPath: /var/logs
             - name: tmp
               mountPath: /tmp
-            - name: config
-              mountPath: /config
-            - name: movies
-              mountPath: /media/movies
-            - name: tvshows
-              mountPath: /media/tvshows
-            - name: music
-              mountPath: /media/music
+      {{- range .Values.persistence }}
+            - name: {{ .name }}
+              mountPath: {{ .containerMountPath }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -120,51 +112,17 @@ spec:
           emptyDir: {}
         - name: varlogs
           emptyDir: {}
-        - name: config
-        {{- if .Values.persistence.config.enabled }}
-          {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
+      {{- range .Values.persistence }}
+        - name: {{ .name }}
+        {{- if .enabled }}
+          {{- if eq (.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "config")  }}
-          {{- else if eq .Values.persistence.config.type "hostPath" }}
+            claimName: {{ .existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" $) .name ) }}
+          {{- else if eq .type "hostPath" }}
           hostPath:
-            path: {{ .Values.persistence.config.hostPath }}
+            path: {{ .hostPath }}
           {{- end }}
         {{- else }}
           emptyDir: {}
         {{- end }}
-        - name: movies
-        {{- if .Values.persistence.movies.enabled }}
-          {{- if eq (.Values.persistence.movies.type | default "pvc") "pvc" }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.movies.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "movies")  }}
-          {{- else if eq .Values.persistence.movies.type "hostPath" }}
-          hostPath:
-            path: {{ .Values.persistence.movies.hostPath }}
-          {{- end }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
-        - name: tvshows
-        {{- if .Values.persistence.tvshows.enabled }}
-          {{- if eq (.Values.persistence.tvshows.type | default "pvc") "pvc" }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.tvshows.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "tvshows")  }}
-          {{- else if eq .Values.persistence.tvshows.type "hostPath" }}
-          hostPath:
-            path: {{ .Values.persistence.tvshows.hostPath }}
-          {{- end }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
-        - name: music
-        {{- if .Values.persistence.music.enabled }}
-          {{- if eq (.Values.persistence.music.type | default "pvc") "pvc" }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.music.existingClaim | default (printf "%s-%s" (include "jellyfin.fullname" .) "music")  }}
-          {{- else if eq .Values.persistence.music.type "hostPath" }}
-          hostPath:
-            path: {{ .Values.persistence.music.hostPath }}
-          {{- end }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
+      {{- end }}
