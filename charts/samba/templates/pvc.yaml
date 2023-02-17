@@ -14,7 +14,7 @@ metadata:
     {{- include "samba.selectorLabels" $ | nindent 4 }}
 spec:
   accessModes:
-    - {{ .accessMode | quote }}
+    - {{ ( .accessMode | default "ReadWriteOnce" ) | quote }}
   resources:
     requests:
       storage: {{ .size | quote }}

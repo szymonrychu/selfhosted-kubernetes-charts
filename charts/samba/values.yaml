@@ -53,7 +53,7 @@ securityContext: {}
 persistence:
   - name: share
     enabled: false
-    containerMountPath: /share
+    mountPath: /share
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc
