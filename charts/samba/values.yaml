@@ -10,6 +10,15 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+env: {}
+  # TZ: UTC
+  # SHARE1: share;/media;yes;no;no
+  # NMDP: yes
+  # RECYCLE: yes
+  # PERMISSIONS: 644:644
+  # GLOBAL1: tls enabled=no
+  # GLOBAL2: bind interfaces only = yes
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -42,8 +51,9 @@ securityContext: {}
   # runAsGroup: 1000
 
 persistence:
-  documents:
+  - name: share
     enabled: false
+    containerMountPath: /share
     ## type of the persistence
     ## can be either "pvc" or "hostPath", default "pvc"
     # type: pvc
@@ -52,68 +62,6 @@ persistence:
     # hostPath: /tmp
 
     ## config data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-
-    
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    annotations: {}
-  movies:
-    enabled: false
-    ## type of the persistence
-    ## can be either "pvc" or "hostPath", default "pvc"
-    # type: pvc
-
-    ## if type == "hostPath", then hostPath will specify what path on host to use
-    # hostPath: /tmp
-    
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    annotations: {}
-  tvshows:
-    enabled: false
-    ## type of the persistence
-    ## can be either "pvc" or "hostPath", default "pvc"
-    # type: pvc
-
-    ## if type == "hostPath", then hostPath will specify what path on host to use
-    # hostPath: /tmp
-
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    annotations: {}
-  music:
-    enabled: false
-    ## type of the persistence
-    ## can be either "pvc" or "hostPath", default "pvc"
-    # type: pvc
-
-    ## if type == "hostPath", then hostPath will specify what path on host to use
-    # hostPath: /tmp
-    
-    ## database data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
     ## If undefined (the default) or set to null, no storageClassName spec is
