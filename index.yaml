@@ -45,6 +45,16 @@ entries:
   ffmpeg-encoder-daemon:
   - apiVersion: v2
     appVersion: 0.0.14
+    created: "2023-02-17T14:16:58.625835599Z"
+    description: A Helm chart for Kubernetes
+    digest: 1c1c7d7ae344a88d06b6ab57d0ca79261b1fb8e2e8d8bc6c9610adadc0cc70c1
+    name: ffmpeg-encoder-daemon
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/ffmpeg-encoder-daemon-0.2.1/ffmpeg-encoder-daemon-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 0.0.14
     created: "2023-02-17T14:15:34.096581201Z"
     description: A Helm chart for Kubernetes
     digest: 3b4c963c25f4fd4afa96ef8e5680ecd59132e752adb2ff10c21ab94dd53be70f
@@ -393,6 +403,16 @@ entries:
   jellyfin:
   - apiVersion: v2
     appVersion: build20221215122025
+    created: "2023-02-17T14:16:58.701653251Z"
+    description: A Helm chart for Kubernetes
+    digest: a68b38c6914b35e6a13989e80a594d6dfcdfd195bcb11c59fcaed722aec4f406
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/jellyfin-0.4.2/jellyfin-0.4.2.tgz
+    version: 0.4.2
+  - apiVersion: v2
+    appVersion: build20221215122025
     created: "2023-02-17T14:15:34.190435301Z"
     description: A Helm chart for Kubernetes
     digest: 3113af9c57fc9b4432bb48c2403fff7234d03006010a218c9470350a6c430c4c
@@ -585,6 +605,16 @@ entries:
   qbittorrent:
   - apiVersion: v2
     appVersion: 4.2.5
+    created: "2023-02-17T14:16:58.780973108Z"
+    description: A Helm chart for Kubernetes
+    digest: b435950b93a766c6158289a6c07c8d51f8c9f45d6fd743249d3994ac1622ccd5
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/qbittorrent-0.4.1/qbittorrent-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
+    appVersion: 4.2.5
     created: "2023-02-17T14:15:34.281108697Z"
     description: A Helm chart for Kubernetes
     digest: bb85c0e8930730c7119cd6d59600f27455b3aa16fb16f19c1ea542efb714b1eb
@@ -676,6 +706,16 @@ entries:
   samba:
   - apiVersion: v2
     appVersion: build20221215165756
+    created: "2023-02-17T14:16:58.85238303Z"
+    description: A Helm chart for Kubernetes
+    digest: c8ce861c17c7ebcea8a6436675cd397021ecf4c6fadc441e17291e513c749092
+    name: samba
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/samba-0.2.2/samba-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: build20221215165756
     created: "2023-02-17T14:15:34.365869887Z"
     description: A Helm chart for Kubernetes
     digest: e88595de71cded0f83cc4815793166510eec40c2ce5a76d9c1e3a8914185823d
@@ -745,4 +785,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-17T14:15:34.366243787Z"
+generated: "2023-02-17T14:16:58.852835043Z"
