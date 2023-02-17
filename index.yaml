@@ -636,6 +636,16 @@ entries:
   samba:
   - apiVersion: v2
     appVersion: build20221215165756
+    created: "2023-02-17T13:40:14.585786645Z"
+    description: A Helm chart for Kubernetes
+    digest: 6653b6e4dfe9612664c9fb998c931a1fdd2e9fd38c59335183ee18953489db17
+    name: samba
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/samba-0.2.0/samba-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: build20221215165756
     created: "2023-02-17T11:12:59.4568615Z"
     description: A Helm chart for Kubernetes
     digest: 66cd50a396b2b6d4dbe2852d240bbb03c952b7ca6e46afce5e72535bf8620787
@@ -685,4 +695,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-17T11:12:59.456931503Z"
+generated: "2023-02-17T13:40:14.585891347Z"
