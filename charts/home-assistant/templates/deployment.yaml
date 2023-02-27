@@ -65,7 +65,7 @@ spec:
           resources:
             {{- toYaml .Values.initWaitForPostgres.resources | nindent 12 }}
           command:
-            - /usr/bin/bash
+            - /usr/local/bin/bash
           args:
             - -c
             - |
