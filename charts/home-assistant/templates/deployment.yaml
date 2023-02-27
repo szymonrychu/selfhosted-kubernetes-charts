@@ -79,7 +79,7 @@ spec:
             - name: POSTGRES_HOST
               value: {{ .Values.initWaitForPostgres.host }}
             - name: POSTGRES_PORT
-              value: {{ .Values.initWaitForPostgres.port }}
+              value: {{ .Values.initWaitForPostgres.port | quote }}
           {{- end }}
       containers:
         - name: main
