@@ -31,7 +31,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       dnsConfig:
         nameservers:
-          - 1.1.1.1
+          {{- toYaml .Values.additionalDNSServers | nindent 10 }}
       serviceAccountName: {{ include "home-assistant.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -56,60 +56,31 @@ spec:
               readOnly: true
             - name: config
               mountPath: "/config"
+          {{- if .Values.initWaitForPostgres.enabled }}
         - name: wait-for-db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.initWaitForPostgres.image.repository }}:{{ .Values.initWaitForPostgres.image.tag }}"
+          imagePullPolicy: {{ .Values.initWaitForPostgres.image.pullPolicy }}
           resources:
-            {{- toYaml .Values.initResources | nindent 12 }}
+            {{- toYaml .Values.initWaitForPostgres.resources | nindent 12 }}
           command:
-            - /usr/local/bin/python
+            - /usr/bin/bash
           args:
             - -c
             - |
-              import yaml
-              import time
-              import psycopg2
-
-              configuration = None
-              secrets = None
-
-              with open('/config/configuration.yaml') as c:
-                  configuration = yaml.load(c, Loader=yaml.BaseLoader)
-              with open('/config/secrets.yaml') as s:
-                  secrets = yaml.load(s, Loader=yaml.BaseLoader)
-              
-              if not configuration or not secrets:
-                  exit(1)
-
-              db_url_key = configuration['recorder']['db_url']
-              raw_db_url = secrets[db_url_key]
-
-              creds_url = raw_db_url.split('://')[1]
-              creds, url =creds_url.split('@')
-              username, password = creds.split(':')
-              host_port, database = url.split('/')
-              host, port = host_port.split(':')
-
-              for _ in range(0, 60):
-                  try:
-                      conn = psycopg2.connect(
-                          dbname=database,
-                          user=username,
-                          host=host,
-                          password=password,
-                          port=port,
-                          connect_timeout=1)
-                      conn.close()
-                      exit(0)
-                  except psycopg2.OperationalError:
-                      print(f"Waiting for {host}:{port}/{database}")
-                  time.sleep(1)
-              exit(2)
-          volumeMounts:
-            - name: config
-              mountPath: "/config"
+                echo "Waiting for ${POSTGRES_HOST}:${POSTGRES_PORT}"
+                while ! timeout 1 bash -c "cat < /dev/null > /dev/tcp/${POSTGRES_HOST}/${POSTGRES_PORT}"; do
+                  sleep 1
+                  echo "."
+                done
+                echo "OK"
+          env:
+            - name: POSTGRES_HOST
+              value: {{ .Values.initWaitForPostgres.host }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.initWaitForPostgres.port }}
+          {{- end }}
       containers:
         - name: main
           securityContext:
