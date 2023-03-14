@@ -76,6 +76,16 @@ entries:
   gha-runner:
   - apiVersion: v2
     appVersion: latest
+    created: "2023-03-14T08:16:19.357157769Z"
+    description: A Helm chart for Kubernetes
+    digest: 02d4915d97e9d6272f7f829c1fc127f5a99a8ebe77d71c5ca1bd7553f72e39e3
+    name: gha-runner
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/gha-runner-1.0.3/gha-runner-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: latest
     created: "2023-01-25T15:03:06.132271696Z"
     description: A Helm chart for Kubernetes
     digest: 5d50f593e7bda38eab40a957f377144940bc4840aea49689b8649cbf75af2d7c
@@ -852,4 +862,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-27T08:39:04.704452713Z"
+generated: "2023-03-14T08:16:19.357263272Z"
