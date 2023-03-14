@@ -6,6 +6,10 @@ replicaCount: 1
 
 terminationGracePeriodSeconds: 600
 
+additionalDNSServers:
+  - 1.1.1.1
+  - 8.8.8.8
+
 config:
   githubPersonalToken: ""
   githubOwner: a-organization

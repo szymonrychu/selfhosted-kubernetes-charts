@@ -29,6 +29,11 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       restartPolicy: Always
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      dnsConfig:
+        nameservers:
+          {{- toYaml .Values.additionalDNSServers | nindent 10 }}
       initContainers:
         - name: init
           securityContext:
