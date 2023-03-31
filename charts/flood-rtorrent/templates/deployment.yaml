@@ -86,7 +86,7 @@ spec:
               mountPath: /tmp
             - name: config
               mountPath: /config
-            - name: samba
+            - name: media
               mountPath: /data
       {{- with .Values.nodeSelector }}
       nodeSelector:
