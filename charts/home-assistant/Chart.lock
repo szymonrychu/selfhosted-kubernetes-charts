@@ -1,9 +1,9 @@
 dependencies:
 - name: influxdb
   repository: https://charts.bitnami.com/bitnami
-  version: 5.4.13
+  version: 5.6.1
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 12.1.5
-digest: sha256:cd6313e9e0b654345757cf8d3b4854459ff927f46698938cf808afc537efd40f
-generated: "2022-12-20T01:17:07.61469569Z"
+  version: 12.5.5
+digest: sha256:1dfbaeec9a351ef759190fb13beafa1f8c68461f56b58f87e0d2644a47b5f243
+generated: "2023-05-23T12:29:16.018569039Z"
