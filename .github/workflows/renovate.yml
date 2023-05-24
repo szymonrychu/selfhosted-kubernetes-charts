@@ -8,11 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
-          token: ${{ secrets.BOT_TOKEN }}
+          token: ${{ secrets.RENOVATE_TOKEN }}
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@4cc203c40dc0eb6b356306893cabda6ff9d42f33 # v37.0.0
+          token: ${{ secrets.RENOVATE_TOKEN }}
+      - name: Renovate
+        uses: renovatebot/github-action@c56dbeca772b331ddf18eefad8b93f0f3c69d34a # v34.159.2
         with:
           configurationFile: .github/renovate-config.js
-          token: ${{ secrets.BOT_TOKEN }}
+          token: ${{ secrets.RENOVATE_TOKEN }}
+        env:
+          RENOVATE_AUTOMERGE: true
