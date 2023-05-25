@@ -24,6 +24,16 @@ entries:
   code-server-oauth2:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-05-25T21:12:21.045684892Z"
+    description: A Helm chart for Kubernetes
+    digest: cec79952514b3b29a701953782bd4ae1f239919362326e6da588e696b9dc3c62
+    name: code-server-oauth2
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/code-server-oauth2-0.0.3/code-server-oauth2-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2022-12-17T13:53:55.815038418Z"
     description: A Helm chart for Kubernetes
     digest: bbdffc1c30b3e2515391101410314a6a780156783fc3f621792723a7e7341426
@@ -74,6 +84,16 @@ entries:
     - https://github.com/szymonrychu/charts/releases/download/ffmpeg-encoder-daemon-0.1.0/ffmpeg-encoder-daemon-0.1.0.tgz
     version: 0.1.0
   flood-rtorrent:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2023-05-25T21:12:21.142364122Z"
+    description: A Helm chart for Kubernetes
+    digest: cb0c9aa42622c139e6c7652edf93d251f4ad072b64297c0e3b11ed810515fb67
+    name: flood-rtorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/flood-rtorrent-0.3.0/flood-rtorrent-0.3.0.tgz
+    version: 0.3.0
   - apiVersion: v2
     appVersion: 0.0.0
     created: "2023-03-31T09:48:26.781221037Z"
@@ -912,4 +932,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-25T12:22:35.986571104Z"
+generated: "2023-05-25T21:12:21.142481223Z"
