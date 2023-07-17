@@ -86,6 +86,16 @@ entries:
   flood-rtorrent:
   - apiVersion: v2
     appVersion: 0.0.0
+    created: "2023-07-17T19:30:51.402228755Z"
+    description: A Helm chart for Kubernetes
+    digest: 7b27a68df5c104777604591311baea28a2042f16d68899846594c2ccda71c3ac
+    name: flood-rtorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/flood-rtorrent-0.3.1/flood-rtorrent-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: 0.0.0
     created: "2023-05-25T21:12:21.142364122Z"
     description: A Helm chart for Kubernetes
     digest: cb0c9aa42622c139e6c7652edf93d251f4ad072b64297c0e3b11ed810515fb67
@@ -1027,4 +1037,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-04T19:14:48.039782762Z"
+generated: "2023-07-17T19:30:51.40268786Z"
