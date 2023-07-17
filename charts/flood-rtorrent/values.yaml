@@ -95,6 +95,7 @@ oauth2proxy:
     cookieName: oauth2-authorization-cookie
     cookieDomain: flood.domain.com
     cookieSecret: 8csecret
+    allowedGroup: flood
 
 
 persistence:

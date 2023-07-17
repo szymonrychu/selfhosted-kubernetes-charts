@@ -10,4 +10,4 @@ data:
   realm-url: {{ .Values.oauth2proxy.config.realmUrl }}
   cookie-name: {{ .Values.oauth2proxy.config.cookieName }}
   cookie-domain: {{ .Values.oauth2proxy.config.cookieDomain }}
-  allowed-group: grafana-admin
+  allowed-group: {{ .Values.oauth2proxy.config.allowedGroup }}
