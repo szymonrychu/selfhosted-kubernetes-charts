@@ -33,9 +33,9 @@ spec:
             - name: HOME
               value: /config
           args:
-            - --allowedpath /data 
-            - --rtsocket /config/.local/share/rtorrent/rtorrent.sock 
-            - --auth none
+            - --allowedpath="/media"
+            - --rtsocket="/config/.local/share/rtorrent/rtorrent.sock"
+            - --auth="none"
           securityContext:
             {{- toYaml .Values.flood.securityContext | nindent 12 }}
           image: "{{ .Values.flood.image.repository }}:{{ .Values.flood.image.tag }}"
@@ -65,8 +65,8 @@ spec:
               mountPath: /tmp
             - name: config
               mountPath: /config
-            - name: data
-              mountPath: /data
+            - name: media
+              mountPath: /media
         - name: rtorrent
           env:
             - name: HOME
@@ -91,7 +91,7 @@ spec:
             - name: config
               mountPath: /config
             - name: media
-              mountPath: /data
+              mountPath: /media
         - name: oauth2proxy
           env:
             - name: HOME
