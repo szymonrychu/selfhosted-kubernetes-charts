@@ -10,12 +10,6 @@ configuration_template: |
     name: {{ homeassistant.name }}
     auth_providers:
       - type: homeassistant
-      - type: trusted_networks
-        allow_bypass_login: true
-        trusted_networks:
-          {%- for network in network.trustedNetworks %}
-          - {{ network }}
-          {%- endfor %}
   influxdb:
     api_version: 2
     host: {{ influxdb.host }}
@@ -29,9 +23,9 @@ configuration_template: |
   http:
     use_x_forwarded_for: true
     trusted_proxies:
-        {%- for network in network.trustedProxies %}
-        - {{ network }}
-        {%- endfor %}
+      {%- for network in network.trustedProxies %}
+      - {{ network }}
+      {%- endfor %}
   recorder:
     purge_keep_days: 30
     commit_interval: 0
@@ -45,9 +39,6 @@ config:
   homeassistant:
     name: home-assistant
   network:
-    trustedNetworks:
-      - 192.168.1.0/24
-      - 10.42.0.0/16
     trustedProxies:
       - 192.168.1.0/24
       - 10.42.0.0/16
