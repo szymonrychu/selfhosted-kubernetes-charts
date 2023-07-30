@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
 data: 
-  configuration.yaml: |
+  config.yaml.j2: |
+{{- .Values.configuration_template | nindent 4 }}
+  variables.yaml: |
 {{- .Values.config | toYaml | nindent 4 }}
-  init.sh: |
-{{- .Values.initScript | nindent 4 }}

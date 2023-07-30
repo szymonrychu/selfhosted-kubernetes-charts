@@ -11,8 +11,8 @@ spec:
     path: /api/prometheus
     port: http
     bearerTokenSecret:
-      name: {{ include "home-assistant.fullname" . }}-servicemonitor
-      key: token
+      name: {{ include "home-assistant.fullname" . }}
+      key: prometheus_token
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}

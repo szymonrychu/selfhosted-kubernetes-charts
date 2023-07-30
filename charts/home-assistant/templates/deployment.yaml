@@ -36,23 +36,47 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: init
+        - name: config
           securityContext:
             {{- toYaml .Values.initSecurityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - /bin/bash
+          image: "{{ .Values.initConfig.image.repository }}:{{ .Values.initConfig.image.tag }}"
+          imagePullPolicy: {{ .Values.initConfig.image.pullPolicy }}
           args:
-            - /initial-configuration/init.sh
+            - /templates/config.yaml.j2
+            - /templates/variables.yaml
+            - -o
+            - /config/configuration.yaml
           resources:
             {{- toYaml .Values.initResources | nindent 12 }}
+          env:
+            - name: POSTGRESQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.zalandoPostgresql.enabled }}
+                  name: homeassistant.home-assistant-db.credentials.postgresql.acid.zalan.do
+                  key: username
+                  {{- else }}
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: postgresql_username
+                  {{- end }}
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.zalandoPostgresql.enabled }}
+                  name: homeassistant.home-assistant-db.credentials.postgresql.acid.zalan.do
+                  key: password
+                  {{- else }}
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: postgresql_password
+                  {{- end }}
+            - name: INFLUXDB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: influxdb_token
           volumeMounts:
-            - name: initial-config
-              mountPath: "/initial-configuration"
-              readOnly: true
-            - name: secrets
-              mountPath: "/secrets"
+            - name: config-template
+              mountPath: /templates
               readOnly: true
             - name: config
               mountPath: "/config"
@@ -77,9 +101,9 @@ spec:
                 echo "OK"
           env:
             - name: POSTGRES_HOST
-              value: {{ .Values.initWaitForPostgres.host }}
+              value: {{ .Values.config.postgresql.host }}
             - name: POSTGRES_PORT
-              value: {{ .Values.initWaitForPostgres.port | quote }}
+              value: {{ .Values.config.postgresql.port | quote }}
           {{- end }}
       containers:
         - name: main
@@ -134,12 +158,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: initial-config
+        - name: config-template
           configMap:
             name: {{ template "home-assistant.fullname" . }}
-        - name: secrets
-          secret:
-            secretName: {{ include "home-assistant.fullname" . }}
         - name: config
       {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

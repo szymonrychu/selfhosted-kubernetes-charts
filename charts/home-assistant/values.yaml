@@ -4,82 +4,69 @@
 
 replicaCount: 1
 
-config:
+configuration_template: |
   default_config:
-  tts:
-    - platform: google_translate
-  group: '!include groups.yaml'
-  automation: '!include automations.yaml'
-  script: '!include scripts.yaml'
-  scene: '!include scenes.yaml'
-
-  recorder:
-    purge_keep_days: 30
-    commit_interval: 3
-    db_url: '!secret recorder_db_url'
-  
-  prometheus:
-    namespace: hass
-
+  homeassistant:
+    name: {{ homeassistant.name }}
+    auth_providers:
+      - type: homeassistant
+      - type: trusted_networks
+        allow_bypass_login: true
+        trusted_networks:
+          {%- for network in network.trustedNetworks %}
+          - {{ network }}
+          {%- endfor %}
+  influxdb:
+    api_version: 2
+    host: {{ influxdb.host }}
+    port: {{ influxdb.port }}
+    organization: {{ influxdb.organization }}
+    bucket: {{ influxdb.bucket }}
+    precision: s
+    token: {{environ('INFLUXDB_TOKEN')}}
+    ssl: false
+    verify_ssl: false
   http:
     use_x_forwarded_for: true
     trusted_proxies:
-      - 127.0.0.1/32
-      - 10.8.0.0/16
-      - 10.42.0.0/16
-      - 192.168.1.0/24
+        {%- for network in network.trustedProxies %}
+        - {{ network }}
+        {%- endfor %}
+  recorder:
+    purge_keep_days: 30
+    commit_interval: 0
+    auto_purge: true
+    auto_repack: true
+    db_url: postgresql://{{environ('POSTGRESQL_USERNAME')}}:{{environ('POSTGRESQL_PASSWORD')}}@{{ postgresql.host }}:{{ postgresql.port }}/{{ postgresql.database }}
+  prometheus:
+    namespace: {{ prometheus.namespace }}
 
+config:
+  homeassistant:
+    name: home-assistant
+  network:
+    trustedNetworks:
+      - 192.168.1.0/24
+      - 10.42.0.0/16
+    trustedProxies:
+      - 192.168.1.0/24
+      - 10.42.0.0/16
   influxdb:
-    api_version: 2
     host: home-assistant-influxdb
     port: 8086
     organization: home-assistant
     bucket: home-assistant
-    precision: s
-    token: '!secret infuxdb_token'
-    max_retries: 3
-    ssl: false
-    verify_ssl: false
+    token: exampletoken
+  postgresql:
+    username:
+    password:
+    host: home-assistant-db
+    port: 5432
+    database: homeassistant
+  prometheus:
+    namespace: hass
+    token:
 
-homeassistant:
-  auth_providers:
-    - id: internal_networks
-      type: trusted_networks
-      trusted_networks:
-        - 10.8.0.0/16
-        - 10.42.0.0/16
-        - 192.168.1.0/24
-    - type: homeassistant
-    - id: locahost
-      type: trusted_networks
-      trusted_networks:
-        - 127.0.0.1/32
-      allow_bypass_login: true
-
-  frontend:
-    themes: '!include_dir_merge_named themes'
-
-secrets:
-  recorder_db_url: psql://home-assistant:home-assistant%@home-assistant-postgresql-primary:5432/home-assistant
-  infuxdb_token: home-assistant
-
-initScript: |
-  #!/bin/bash
-  if [ ! -f /config/configuration.yaml ] || cmp -s /initial-configuration/configuration.yaml /config/configuration.yaml ; then
-    sed -re "s/'(\!.*?)'/\1/g" /initial-configuration/configuration.yaml > /config/configuration.yaml
-  fi
-  cp -f /secrets/secrets.yaml /config/secrets.yaml
-
-  if [ ! -d /config/custom_components/hacs ]; then
-    wget -O /tmp/hacs.zip https://github.com/hacs/integration/releases/latest/download/hacs.zip
-    mkdir -p /config/custom_components
-    unzip /tmp/hacs.zip -d /config/custom_components/hacs
-    rm /tmp/hacs.zip
-  fi
-  touch groups.yaml
-  touch automations.yaml
-  touch scripts.yaml
-  touch scenes.yaml
 
 image:
   repository: ghcr.io/home-assistant/home-assistant
@@ -90,6 +77,12 @@ image:
 additionalDNSServers:
   - 1.1.1.1
   - 8.8.8.8
+
+initConfig:
+  image:
+    repository: dinutac/jinja2docker
+    pullPolicy: IfNotPresent
+    tag: 2.1.7
 
 initWaitForPostgres:
   image:
@@ -212,5 +205,16 @@ affinity: {}
 influxdb:
   enabled: false
 
-postgresql:
+zalandoPostgresql:
   enabled: false
+  annotations: {}
+  persistence:
+    size: 20Gi
+    storageClass: "-"
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 500m
+      memory: 500Mi
