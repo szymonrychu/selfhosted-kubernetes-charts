@@ -188,6 +188,21 @@ entries:
   home-assistant:
   - apiVersion: v2
     appVersion: 2023.7.3
+    created: "2023-08-01T11:32:27.881196715Z"
+    dependencies:
+    - condition: influxdb.enabled
+      name: influxdb
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.8.1
+    description: A Helm chart for Kubernetes
+    digest: c4afff0d662efb625510627596d11ab4de9e5a6be0e94af310f0159bf887164e
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/home-assistant-0.6.5/home-assistant-0.6.5.tgz
+    version: 0.6.5
+  - apiVersion: v2
+    appVersion: 2023.7.3
     created: "2023-07-31T06:16:24.946624586Z"
     dependencies:
     - condition: influxdb.enabled
@@ -1141,4 +1156,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-31T06:16:24.94692449Z"
+generated: "2023-08-01T11:32:27.881747621Z"
