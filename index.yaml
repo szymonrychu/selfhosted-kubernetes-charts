@@ -52,6 +52,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/code-server-oauth2-0.0.1/code-server-oauth2-0.0.1.tgz
     version: 0.0.1
+  esphome:
+  - apiVersion: v2
+    appVersion: 2023.7.1
+    created: "2023-08-14T20:18:49.200354422Z"
+    description: A Helm chart for Kubernetes
+    digest: 552cb1400fe89b8eb38a14d1366d67abe97a40502bbb56c10f4ddcf0c4f3752f
+    name: esphome
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/esphome-0.1.0/esphome-0.1.0.tgz
+    version: 0.1.0
   ffmpeg-encoder-daemon:
   - apiVersion: v2
     appVersion: 0.0.14
@@ -1156,4 +1167,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-01T11:32:27.881747621Z"
+generated: "2023-08-14T20:18:49.200845827Z"
