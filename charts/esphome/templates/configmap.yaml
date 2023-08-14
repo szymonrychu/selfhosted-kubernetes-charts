@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "esphome.fullname" . }}
+  labels:
+    {{- include "esphome.labels" . | nindent 4 }}
+data: 
+  dashboard_use_ping: {{ .Values.config.dashboard_use_ping | quote }}
+  dashboard_relative_url: {{ .Values.config.dashboard_relative_url | quote }}
+  disable_ha_authentication: {{ .Values.config.disable_ha_authentication | quote }}
