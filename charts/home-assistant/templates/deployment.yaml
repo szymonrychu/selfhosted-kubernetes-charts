@@ -81,6 +81,20 @@ spec:
             - name: config
               mountPath: "/config"
           {{- if .Values.initWaitForPostgres.enabled }}
+        - name: ensure-config-files-present
+          securityContext:
+            {{- toYaml .Values.initSecurityContext | nindent 12 }}
+          image: alpine:latest
+          imagePullPolicy: {{ .Values.initConfig.image.pullPolicy }}
+          args:
+            - sh
+            - -c
+            - touch /config/automations.yaml; touch /config/zone.yaml; touch /config/sensor.yaml; touch /config/switch.yaml; touch /config/device_tracker.yaml 
+          resources:
+            {{- toYaml .Values.initResources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: "/config"
         - name: wait-for-db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

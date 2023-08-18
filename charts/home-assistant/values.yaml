@@ -34,6 +34,11 @@ configuration_template: |
     db_url: postgresql://{{environ('POSTGRESQL_USERNAME')}}:{{environ('POSTGRESQL_PASSWORD')}}@{{ postgresql.host }}:{{ postgresql.port }}/{{ postgresql.database }}
   prometheus:
     namespace: {{ prometheus.namespace }}
+  automation: !include automations.yaml
+  zone: !include zone.yaml
+  sensor: !include sensor.yaml
+  switch: !include switch.yaml
+  device_tracker: !include device_tracker.yaml
 
 config:
   homeassistant:
