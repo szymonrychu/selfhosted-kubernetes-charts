@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: esphome
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -46,6 +46,9 @@ spec:
               path: /
               port: http
           env:
+            - name: HOME
+              value: /config
+      {{- if (not .Values.oauth2proxy.enabled) }}
             - name: USERNAME
               valueFrom:
                 secretKeyRef:
@@ -56,6 +59,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "esphome.fullname" . }}
                   key: password
+      {{- end }}
             - name: ESPHOME_DASHBOARD_USE_PING
               valueFrom:
                 configMapKeyRef:
@@ -76,6 +80,80 @@ spec:
           volumeMounts:
             - name: config
               mountPath: "/config"
+      {{- if .Values.oauth2proxy.enabled }}
+        - name: oauth2proxy
+          securityContext:
+            {{- toYaml .Values.oauth2proxy.securityContext | nindent 12 }}
+          image: "{{ .Values.oauth2proxy.image.repository }}:{{ .Values.oauth2proxy.image.tag }}"
+          imagePullPolicy: {{ .Values.oauth2proxy.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.oauth2proxy.resources | nindent 12 }}
+          env:
+            - name: OAUTH2_PROXY_PROVIDER
+              value: keycloak-oidc
+            - name: OAUTH2_PROXY_HTTP_ADDRESS
+              value: 0.0.0.0:4180
+            - name: OAUTH2_PROXY_REVERSE_PROXY
+              value: "true"
+            - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+              value: "true"
+            - name: OAUTH2_PROXY_UPSTREAMS
+              value: http://localhost:{{ .Values.service.port }}
+            - name: OAUTH2_PROXY_SESSION_COOKIE_MINIMAL
+              value: "true"
+            - name: OAUTH2_PROXY_EMAIL_DOMAINS
+              value: "*"
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: client-id
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: client-secret
+            - name: OAUTH2_PROXY_REDIRECT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: redirect-url
+            - name: OAUTH2_PROXY_ALLOWED_GROUP
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: allowed-group
+            - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: realm-url
+            - name: OAUTH2_PROXY_COOKIE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: cookie-name
+            - name: OAUTH2_PROXY_COOKIE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: cookie-domain
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "esphome.fullname" . }}
+                  key: cookie-secret
+          ports:
+            - name: oauth2-http
+              containerPort: 4180
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: oauth2-http
+          readinessProbe:
+            tcpSocket:
+              port: oauth2-http
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
