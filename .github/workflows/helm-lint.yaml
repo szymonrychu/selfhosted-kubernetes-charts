@@ -21,6 +21,8 @@ jobs:
         id: changed_files
         uses: tj-actions/changed-files@v38
         with:
+          files: |
+            charts/
           json: true
           escape_json: false
           dir_names: true
