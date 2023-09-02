@@ -1032,6 +1032,43 @@ entries:
   - annotations:
       category: Infrastructure
     apiVersion: v2
+    appVersion: 0.12.1-debian-11-r11
+    created: "2023-09-02T19:00:35.305183968Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: MetalLB is a load-balancer implementation for bare metal Kubernetes
+      clusters, using standard routing protocols.
+    digest: 2aa7bf19afa9f67b6a7541789278a419c69e6b6eea6ccf70da4ed1e923edc57d
+    home: https://github.com/bitnami/charts/tree/master/bitnami/metallb
+    icon: https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
+    keywords:
+    - load-balancer
+    - balancer
+    - lb
+    - bgp
+    - arp
+    - vrrp
+    - vip
+    maintainers:
+    - email: cellebyte@gmail.com
+      name: cellebyte
+    - name: Bitnami
+      url: https://github.com/bitnami/charts
+    name: metallb
+    sources:
+    - https://github.com/metallb/metallb
+    - https://github.com/bitnami/containers/tree/main/bitnami/metallb
+    - https://metallb.universe.tf
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/metallb-3.0.13/metallb-3.0.13.tgz
+    version: 3.0.13
+  - annotations:
+      category: Infrastructure
+    apiVersion: v2
     appVersion: 0.12.1
     created: "2022-12-20T09:18:07.402202544Z"
     dependencies:
@@ -1269,4 +1306,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-29T13:34:14.038116234Z"
+generated: "2023-09-02T19:00:35.305373669Z"
