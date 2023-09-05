@@ -19,7 +19,7 @@ jobs:
       
       - name: Get all test, doc and src files that have changed
         id: changed_files
-        uses: tj-actions/changed-files@2f7246cb26e8bb6709b6cbfc1fec7febfe82e96a # v38
+        uses: tj-actions/changed-files@1aee3621b1c10305ee778298fcf32324684e5448 # v38
         with:
           files: |
             charts/
