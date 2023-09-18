@@ -85,6 +85,10 @@ service:
   type: ClusterIP
   port: 6052
 
+additionalDNSServers:
+  - 1.1.1.1
+  - 8.8.8.8
+
 ingress:
   enabled: false
   className: ""
