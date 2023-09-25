@@ -15,11 +15,11 @@ jobs:
     outputs:
       changed_charts: ${{ steps.changed_files.outputs.all_changed_files }}
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
       
       - name: Get all test, doc and src files that have changed
         id: changed_files
-        uses: tj-actions/changed-files@48566bbcc22ceb7c5809ebdd27377309f2c3de8c # v39
+        uses: tj-actions/changed-files@8238a4103220c636f2dad328ead8a7c8dbe316a3 # v39
         with:
           files: |
             charts/
@@ -44,7 +44,7 @@ jobs:
         with:
           token: ${{ secrets.BOT_TOKEN }}
       
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
 
       - name: Helm Lint
         run: |

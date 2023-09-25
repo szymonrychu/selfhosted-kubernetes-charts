@@ -27,6 +27,11 @@ spec:
       serviceAccountName: {{ include "esphome.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      dnsConfig:
+        nameservers:
+          {{- toYaml .Values.additionalDNSServers | nindent 10 }}
       containers:
         - name: esphome
           securityContext:
