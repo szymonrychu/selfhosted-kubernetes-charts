@@ -6,8 +6,36 @@ on:
       - main
 
 jobs:
-  release:
+  list_changed_charts:
     runs-on: ubuntu-latest
+    name: List changed charts
+    outputs:
+      changed_charts: ${{ steps.changed_files.outputs.all_changed_files }}
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
+      
+      - name: Get all test, doc and src files that have changed
+        id: changed_files
+        uses: tj-actions/changed-files@8238a4103220c636f2dad328ead8a7c8dbe316a3 # v39
+        with:
+          files: |
+            charts/
+          json: true
+          escape_json: false
+          dir_names: true
+          dir_names_max_depth: 2
+
+  release:
+    name: release ${{ matrix.chart_path }}
+    runs-on: ubuntu-latest
+    needs: list_changed_charts
+    if: needs.list_changed_charts.outputs.changed_charts != '[]'
+    strategy:
+      fail-fast: true
+      matrix:
+        chart_path: ${{ fromJson(needs.list_changed_charts.outputs.changed_charts) }}
+    env:
+      CHART_DIR: "${{ matrix.chart_path }}"
     steps:
       - name: Checkout
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
@@ -23,17 +51,18 @@ jobs:
         uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3
         with:
           version: v3.10.0
-
-      - name: Add repo dependencies
+      
+      - name: Separate chart to it's own directory
         run: |
-          for CHART in `ls "./charts/"`; do
-            cd "./charts/${CHART}"
-            yq '.dependencies[] | ("helm repo add " + .name + " " + .repository)' Chart.yaml | bash -
-            cd -
-          done
+          CHART_NAME="$(echo "${CHART_DIR}" | basename)"
+          mkdir -p tmp_chart
+          cp -R "${CHART_DIR}" "tmp_chart/${CHART_NAME}"
+          yq '.dependencies[] | ("helm repo add " + .name + " " + .repository)' "tmp_chart/${CHART_NAME}/Chart.yaml" | bash -
           helm repo update
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968 # v1.5.0
+        with:
+          charts_dir: tmp_chart
         env:
           CR_TOKEN: "${{ secrets.BOT_TOKEN }}"
