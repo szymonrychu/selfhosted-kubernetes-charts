@@ -54,7 +54,7 @@ jobs:
       
       - name: Separate chart to it's own directory
         run: |
-          CHART_NAME="$(echo "${CHART_DIR}" | basename)"
+          CHART_NAME="$(basename "${CHART_DIR}")"
           mkdir -p tmp_chart
           cp -R "${CHART_DIR}" "tmp_chart/${CHART_NAME}"
           yq '.dependencies[] | ("helm repo add " + .name + " " + .repository)' "tmp_chart/${CHART_NAME}/Chart.yaml" | bash -
