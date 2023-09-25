@@ -54,14 +54,14 @@ config:
     bucket: home-assistant
     token: exampletoken
   postgresql:
-    username:
-    password:
+    username: change_me
+    password: change_me
     host: home-assistant-db
     port: 5432
     database: homeassistant
   prometheus:
     namespace: hass
-    token:
+    token: change_me
 
 
 image:
