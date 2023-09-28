@@ -155,6 +155,11 @@ spec:
                 configMapKeyRef:
                   name: {{ include "flood-rtorrent.fullname" . }}
                   key: cookie-domain
+            - name: OAUTH2_PROXY_SCOPE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "flood-rtorrent.fullname" . }}
+                  key: scope
             - name: OAUTH2_PROXY_COOKIE_SECRET
               valueFrom:
                 secretKeyRef:

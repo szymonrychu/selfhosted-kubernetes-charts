@@ -15,4 +15,5 @@ data:
   cookie-name: {{ .Values.oauth2proxy.config.cookieName | quote }}
   cookie-domain: {{ .Values.oauth2proxy.config.cookieDomain | quote }}
   allowed-group: {{ .Values.oauth2proxy.config.allowedGroup | quote }}
+  scope: {{ .Values.oauth2proxy.config.scope | quote }}
 {{- end }}

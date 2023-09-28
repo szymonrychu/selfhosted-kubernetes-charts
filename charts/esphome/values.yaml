@@ -54,6 +54,7 @@ oauth2proxy:
     cookieDomain: flood.domain.com
     cookieSecret: 8csecret
     allowedGroup: flood
+    scope: openid email profile
 
 imagePullSecrets: []
 nameOverride: ""
