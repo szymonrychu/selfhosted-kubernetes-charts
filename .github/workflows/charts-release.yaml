@@ -58,7 +58,7 @@ jobs:
           mkdir -p tmp_chart
           cp -R "${CHART_DIR}" "tmp_chart/${CHART_NAME}"
           yq '.dependencies[] | ("helm repo add " + .name + " " + .repository)' "tmp_chart/${CHART_NAME}/Chart.yaml" | bash -
-          helm repo update
+          helm repo update || true
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968 # v1.5.0
