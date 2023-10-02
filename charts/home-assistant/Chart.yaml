@@ -26,5 +26,5 @@ appVersion: "2023.7.3"
 dependencies:
 - condition: influxdb.enabled
   name: influxdb
-  version: 5.9.3
+  version: 5.9.4
   repository: https://charts.bitnami.com/bitnami
