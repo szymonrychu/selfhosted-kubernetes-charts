@@ -5,13 +5,9 @@ metadata:
   name: {{ include "home-assistant.fullname" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
-data: 
-  config.yaml.j2: |
-{{- .Values.configuration_template | nindent 4 }}
-  automations.yaml: ""
-  zone.yaml: ""
-  sensor.yaml: ""
-  switch.yaml: ""
-  device_tracker.yaml: ""
-  variables.yaml: |
-{{- .Values.config | toYaml | nindent 4 }}
+data:
+  inputs.yaml: |
+{{ .Values.config | toYaml | indent 4 }}
+{{- range $fname, $fcontents := .Values.templates }}
+  {{ $fname }}.j2: {{ $fcontents | toYaml | indent 2 }}
+{{- end }}

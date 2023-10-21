@@ -4,41 +4,6 @@
 
 replicaCount: 1
 
-configuration_template: |
-  default_config:
-  homeassistant:
-    name: {{ homeassistant.name }}
-    auth_providers:
-      - type: homeassistant
-  influxdb:
-    api_version: 2
-    host: {{ influxdb.host }}
-    port: {{ influxdb.port }}
-    organization: {{ influxdb.organization }}
-    bucket: {{ influxdb.bucket }}
-    precision: s
-    token: {{environ('INFLUXDB_TOKEN')}}
-    ssl: false
-    verify_ssl: false
-  http:
-    use_x_forwarded_for: true
-    trusted_proxies:
-      {%- for network in network.trustedProxies %}
-      - {{ network }}
-      {%- endfor %}
-  recorder:
-    purge_keep_days: 30
-    commit_interval: 0
-    auto_purge: true
-    auto_repack: true
-    db_url: postgresql://{{environ('POSTGRESQL_USERNAME')}}:{{environ('POSTGRESQL_PASSWORD')}}@{{ postgresql.host }}:{{ postgresql.port }}/{{ postgresql.database }}
-  prometheus:
-    namespace: {{ prometheus.namespace }}
-  automation: !include automations.yaml
-  zone: !include zone.yaml
-  sensor: !include sensor.yaml
-  switch: !include switch.yaml
-  device_tracker: !include device_tracker.yaml
 
 config:
   homeassistant:
@@ -48,6 +13,7 @@ config:
       - 192.168.1.0/24
       - 10.42.0.0/16
   influxdb:
+    enabled: false
     host: home-assistant-influxdb
     port: 8086
     organization: home-assistant
@@ -62,6 +28,61 @@ config:
   prometheus:
     namespace: hass
     token: change_me
+
+templates:
+  configuration.yaml: |
+    default_config:
+    homeassistant:
+      name: {{ homeassistant.name }}
+      auth_providers:
+        - type: homeassistant
+    {%- if config.influxdb.enabled %}
+    influxdb:
+      api_version: 2
+      host: {{ influxdb.host }}
+      port: {{ influxdb.port }}
+      organization: {{ influxdb.organization }}
+      bucket: {{ influxdb.bucket }}
+      precision: s
+      token: {{environ('INFLUXDB_TOKEN')}}
+      ssl: false
+      verify_ssl: false
+    {%- endif %}
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        {%- for network in network.trustedProxies %}
+        - {{ network }}
+        {%- endfor %}
+    recorder:
+      purge_keep_days: 30
+      commit_interval: 0
+      auto_purge: true
+      auto_repack: true
+      db_url: postgresql://{{environ('POSTGRESQL_USERNAME')}}:{{environ('POSTGRESQL_PASSWORD')}}@{{ postgresql.host }}:{{ postgresql.port }}/{{ postgresql.database }}
+    prometheus:
+      namespace: {{ prometheus.namespace }}
+    automation: !include automations.yaml
+    zone: !include zone.yaml
+    sensor: !include sensor.yaml
+    switch: !include switch.yaml
+    device_tracker: !include device_tracker.yaml
+
+  automations.yaml: ""
+  zone.yaml: ""
+  sensor.yaml: |
+    - platform: time_date
+      display_options:
+        - 'time'
+        - 'date'
+        - 'date_time'
+        - 'date_time_utc'
+        - 'date_time_iso'
+        - 'time_date'
+        - 'time_utc'
+        - 'beat'
+  switch.yaml: ""
+  device_tracker.yaml: ""
 
 
 image:
@@ -199,7 +220,23 @@ tolerations: []
 affinity: {}
 
 influxdb:
-  enabled: false
+  env:
+    - name: DOCKER_INFLUXDB_INIT_ORG
+      value: home-assistant
+    - name: DOCKER_INFLUXDB_INIT_BUCKET
+      value: home-assistant
+    - name: DOCKER_INFLUXDB_INIT_RETENTION
+      value: 1w
+    # - name: DOCKER_INFLUXDB_INIT_USERNAME
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: home-assistant-influxdb-auth
+    #       key: influxdb-user
+    # - name: DOCKER_INFLUXDB_INIT_PASSWORD
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: home-assistant-influxdb-auth
+    #       key: influxdb-password
 
 zalandoPostgresql:
   enabled: false
