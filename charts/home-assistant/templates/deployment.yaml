@@ -37,7 +37,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
           {{- range $fname, $fcontents := .Values.templates }}
-        - name: config-{{ $fname }}
+        - name: config-{{ trimSuffix '.yaml' $fname }}
           securityContext:
             {{- toYaml $.Values.initSecurityContext | nindent 12 }}
           image: "{{ $.Values.initConfig.image.repository }}:{{ $.Values.initConfig.image.tag }}"
