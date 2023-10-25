@@ -37,7 +37,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
           {{- range $fname, $fcontents := .Values.templates }}
-        - name: config-{{ trimSuffix '.yaml' $fname }}
+        - name: config-{{ regexReplaceAll "[_\\W]+" $fname "-" }}
           securityContext:
             {{- toYaml $.Values.initSecurityContext | nindent 12 }}
           image: "{{ $.Values.initConfig.image.repository }}:{{ $.Values.initConfig.image.tag }}"
@@ -79,9 +79,25 @@ spec:
             - name: config-template
               mountPath: /templates
               readOnly: true
-            - name: config
+            - name: config-tmp
               mountPath: "/config"
           {{- end }}
+        - name: copy-missing-configs
+          securityContext:
+            {{- toYaml $.Values.initSecurityContext | nindent 12 }}
+          image: bash:latest
+          resources:
+            {{- toYaml $.Values.initResources | nindent 12 }}
+          args:
+            - -c
+            - |
+                cp -n /config-tmp/* /config/
+          volumeMounts:
+            - name: config-tmp
+              mountPath: /config-tmp
+              readOnly: true
+            - name: config
+              mountPath: "/config"
           {{- if .Values.initWaitForPostgres.enabled }}
         - name: wait-for-db
           securityContext:
@@ -117,7 +133,7 @@ spec:
             - name: http
               containerPort: 8123
               protocol: TCP
-          livenessProbe:
+          readinessProbe:
             exec:
               command:
                 - sh
@@ -163,6 +179,8 @@ spec:
         - name: config-template
           configMap:
             name: {{ template "home-assistant.fullname" . }}
+        - name: config-tmp
+          emptyDir: {}
         - name: config
       {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

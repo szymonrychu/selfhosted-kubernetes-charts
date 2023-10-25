@@ -36,7 +36,7 @@ templates:
       name: {{ homeassistant.name }}
       auth_providers:
         - type: homeassistant
-    {%- if config.influxdb.enabled %}
+    {%- if influxdb.enabled %}
     influxdb:
       api_version: 2
       host: {{ influxdb.host }}
