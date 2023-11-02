@@ -7,6 +7,15 @@ module.exports = {
     repositories: [
       'szymonrychu/charts',
     ],
+    regexManagers: [
+      {
+          fileMatch: ['(^|/)Chart\\.yaml$'],
+          matchStrings: [
+              '#\\s?renovate: image=(?<depName>.*?)\\s?appVersion:\\s?\\"?(?<currentValue>[\\w+\\.\\-]*)',
+          ],
+          datasourceTemplate: 'docker',
+      },
+    ],
     packageRules: [
       {
         description: 'lockFileMaintenance',
