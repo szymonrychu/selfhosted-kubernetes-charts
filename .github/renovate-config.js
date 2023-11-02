@@ -34,6 +34,7 @@ module.exports = {
         matchManagers: [
           'helm-requirements',
           'helm-values',
+          'regex',
         ],
         postUpgradeTasks: {
           commands: [
