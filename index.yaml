@@ -64,6 +64,16 @@ entries:
     version: 0.0.1
   esphome:
   - apiVersion: v2
+    appVersion: 2023.10.5
+    created: "2023-11-02T12:36:27.021369359Z"
+    description: A Helm chart for Kubernetes
+    digest: 50d03be7e0523ac6fbce071848682b210cb3e6526b244c6ce27bdcc4e92403a7
+    name: esphome
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/esphome-1.2.3/esphome-1.2.3.tgz
+    version: 1.2.3
+  - apiVersion: v2
     appVersion: 2023.7.1
     created: "2023-09-28T19:32:07.660863935Z"
     description: A Helm chart for Kubernetes
@@ -267,6 +277,21 @@ entries:
     - https://github.com/szymonrychu/charts/releases/download/gha-runner-0.0.1/gha-runner-0.0.1.tgz
     version: 0.0.1
   home-assistant:
+  - apiVersion: v2
+    appVersion: 2023.11.0
+    created: "2023-11-02T12:36:27.216594006Z"
+    dependencies:
+    - condition: config.influxdb.enabled
+      name: influxdb
+      repository: https://charts.bitnami.com/bitnami
+      version: 5.10.0
+    description: A Helm chart for Kubernetes
+    digest: aea47329e4c6b684412ec59096b2abd9aba53786fb440e7e9a7cbae3713ddd24
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/charts/releases/download/home-assistant-0.8.3/home-assistant-0.8.3.tgz
+    version: 0.8.3
   - apiVersion: v2
     appVersion: 2023.7.3
     created: "2023-10-25T19:08:24.860567057Z"
@@ -1357,4 +1382,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-25T19:32:23.317966607Z"
+generated: "2023-11-02T12:36:27.217018511Z"
