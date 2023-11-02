@@ -15,6 +15,16 @@ module.exports = {
           ],
           datasourceTemplate: 'docker',
       },
+      {
+        description: "Update image in values.yaml",
+        fileMatch: ["^values.yaml$"],
+        matchStringsStrategy: "combination",
+        matchStrings: [
+          "image:\\s*\"(?<depName>.*)\"\\s*//",
+          "tag:\\s*\"(?<currentValue>.*)\"\\s*//"
+        ],
+        datasourceTemplate: 'docker',
+      },
     ],
     packageRules: [
       {
