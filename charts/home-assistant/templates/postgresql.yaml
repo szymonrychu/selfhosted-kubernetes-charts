@@ -32,9 +32,9 @@ spec:
   volume:
     size: {{ .Values.zalandoPostgresql.persistence.size | quote }}
   {{- if (eq "-" .Values.zalandoPostgresql.persistence.storageClass) }}
-    storageClassName: ""
+    storageClass: ""
   {{- else }}
-    storageClassName: "{{ .Values.zalandoPostgresql.persistence.storageClass }}"
+    storageClass: "{{ .Values.zalandoPostgresql.persistence.storageClass }}"
   {{- end }}
   enableShmVolume: true
   resources:
