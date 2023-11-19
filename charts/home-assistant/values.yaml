@@ -106,7 +106,7 @@ initWaitForPostgres:
     repository: bash
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "5.2.15"
+    tag: "5.2.21"
   enabled: false
   host: home-assistant-postgresql-primary
   port: 5432
