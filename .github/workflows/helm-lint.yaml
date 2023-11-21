@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3
         with:
-          token: ${{ secrets.BOT_TOKEN }}
+          token: ${{ secrets.SZYMONRYCHU_TOKEN }}
       
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
