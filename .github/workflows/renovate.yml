@@ -3,6 +3,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 */6 * * *"
+
+env:
+  LOG_LEVEL: debug
+
 jobs:
   renovate:
     runs-on: ubuntu-latest
