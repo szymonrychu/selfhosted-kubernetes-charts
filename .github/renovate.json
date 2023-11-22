@@ -48,7 +48,7 @@
       "matchManagers": ["helm-requirements", "helm-values", "regex"],
       "postUpgradeTasks": {
         "commands": [
-          "version=$(grep '^version:' {{{parentDir}}}/Chart.yaml | awk '{print $2}')\n            major=$(echo $version | cut -d. -f1)\n            minor=$(echo $version | cut -d. -f2)\n            patch=$(echo $version | cut -d. -f3)\n            minor=$(expr $minor + 1)\n            echo \"Replacing $version with $major.$minor.$patch\"\n            sed -i \"s/^version:.*/version: ${major}.${minor}.${patch}/g\" {{{parentDir}}}/Chart.yaml\n            cat {{{parentDir}}}/Chart.yaml\n            "
+          "version=$(grep '^version:' charts/{{{parentDir}}}/Chart.yaml | awk '{print $2}') && major=$(echo $version | cut -d. -f1) && minor=$(echo $version | cut -d. -f2) && minor=$(expr $minor + 1) && echo \"Replacing $version with $major.$minor.0\" && sed -i \"s/^version:.*/version: ${major}.${minor}.0/g\" charts/{{{parentDir}}}/Chart.yaml && sed -i \"s/^appVersion:.*/appVersion: \\\"{{newVersion}}\\\"/g\" charts/{{{parentDir}}}/Chart.yaml && cat charts/{{{parentDir}}}/Chart.yaml"
         ],
         "fileFilters": ["**/Chart.yaml"]
       }
