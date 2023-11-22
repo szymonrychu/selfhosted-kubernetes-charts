@@ -5,4 +5,4 @@ type: application
 version: 1.2.4
 
 # renovate: image=esphome/esphome
-appVersion: "2023.11.2"
+appVersion: "2023.11.3"
