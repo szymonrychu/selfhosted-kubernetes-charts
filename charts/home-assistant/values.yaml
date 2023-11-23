@@ -20,12 +20,14 @@ config:
     bucket: home-assistant
     token: exampletoken
   postgresql:
+    enabled: false
     username: change_me
     password: change_me
     host: home-assistant-db
     port: 5432
     database: homeassistant
   prometheus:
+    enabled: false
     namespace: hass
     token: change_me
 
@@ -33,35 +35,39 @@ templates:
   configuration.yaml: |
     default_config:
     homeassistant:
-      name: {{ homeassistant.name }}
+      name: {{ config.homeassistant.name }}
       auth_providers:
         - type: homeassistant
-    {%- if influxdb.enabled %}
+    {%- if config.influxdb.enabled %}
     influxdb:
       api_version: 2
-      host: {{ influxdb.host }}
-      port: {{ influxdb.port }}
-      organization: {{ influxdb.organization }}
-      bucket: {{ influxdb.bucket }}
+      host: {{ config.influxdb.host }}
+      port: {{ config.influxdb.port }}
+      organization: {{ config.influxdb.organization }}
+      bucket: {{ config.influxdb.bucket }}
       precision: s
-      token: {{environ('INFLUXDB_TOKEN')}}
+      token: {{ env.influxdb_token }}
       ssl: false
       verify_ssl: false
     {%- endif %}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
-        {%- for network in network.trustedProxies %}
+        {%- for network in config.network.trustedProxies %}
         - {{ network }}
         {%- endfor %}
+    {%- if config.postgresql.enabled %}
     recorder:
       purge_keep_days: 30
       commit_interval: 0
       auto_purge: true
       auto_repack: true
-      db_url: postgresql://{{environ('POSTGRESQL_USERNAME')}}:{{environ('POSTGRESQL_PASSWORD')}}@{{ postgresql.host }}:{{ postgresql.port }}/{{ postgresql.database }}
+      db_url: postgresql://{{ env.postgresql_username }}:{{ env.postgresql_password }}@{{ config.postgresql.host }}:{{ config.postgresql.port }}/{{ config.postgresql.database }}
+    {%- endif %}
+    {%- if config.prometheus.enabled %}
     prometheus:
-      namespace: {{ prometheus.namespace }}
+      namespace: {{ config.prometheus.namespace }}
+    {%- endif %}
     automation: !include automations.yaml
     zone: !include zone.yaml
     sensor: !include sensor.yaml
@@ -97,9 +103,9 @@ additionalDNSServers:
 
 initConfig:
   image:
-    repository: dinutac/jinja2docker
+    repository: ghcr.io/szymonrychu/jinja-renderer
     pullPolicy: IfNotPresent
-    tag: 2.1.7
+    tag: 0.0.4
 
 initWaitForPostgres:
   image:
@@ -239,7 +245,6 @@ influxdb:
     #       key: influxdb-password
 
 zalandoPostgresql:
-  enabled: false
   annotations: {}
   persistence:
     size: 20Gi

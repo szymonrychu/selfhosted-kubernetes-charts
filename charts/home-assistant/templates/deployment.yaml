@@ -36,21 +36,24 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-          {{- range $fname, $fcontents := .Values.templates }}
-        - name: config-{{ regexReplaceAll "[_\\W]+" $fname "-" }}
+        - name: config
           securityContext:
-            {{- toYaml $.Values.initSecurityContext | nindent 12 }}
-          image: "{{ $.Values.initConfig.image.repository }}:{{ $.Values.initConfig.image.tag }}"
-          imagePullPolicy: {{ $.Values.initConfig.image.pullPolicy }}
+            {{- toYaml .Values.initSecurityContext | nindent 12 }}
+          image: "{{ .Values.initConfig.image.repository }}:{{ .Values.initConfig.image.tag }}"
+          imagePullPolicy: {{ .Values.initConfig.image.pullPolicy }}
           args:
-            - /templates/{{ $fname }}.j2
-            - /templates/inputs.yaml
-            - -o
-            - /config/{{ $fname }}
+            - --values
+            - /values/*.yaml
+            - --templates-dir
+            - /templates
+            - --output-dir
+            - /config
           resources:
-            {{- toYaml $.Values.initResources | nindent 12 }}
+            {{- toYaml .Values.initResources | nindent 12 }}
+          {{- if or .Values.config.postgresql.enabled .Values.config.influxdb.enabled }}
           env:
-            - name: POSTGRESQL_USERNAME
+            {{- if .Values.config.postgresql.enabled }}
+            - name: JINJA_POSTGRESQL_USERNAME
               valueFrom:
                 secretKeyRef:
                   {{- if $.Values.zalandoPostgresql.enabled }}
@@ -60,7 +63,7 @@ spec:
                   name: {{ include "home-assistant.fullname" $ }}
                   key: postgresql_username
                   {{- end }}
-            - name: POSTGRESQL_PASSWORD
+            - name: JINJA_POSTGRESQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   {{- if $.Values.zalandoPostgresql.enabled }}
@@ -70,31 +73,21 @@ spec:
                   name: {{ include "home-assistant.fullname" $ }}
                   key: postgresql_password
                   {{- end }}
+            {{- end }}
+            {{- if .Values.config.influxdb.enabled }}
             - name: INFLUXDB_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ include "home-assistant.fullname" $ }}
                   key: influxdb_token
+            {{- end }}
+          {{- end }}
           volumeMounts:
-            - name: config-template
+            - name: templates
               mountPath: /templates
               readOnly: true
-            - name: config-tmp
-              mountPath: "/config"
-          {{- end }}
-        - name: copy-missing-configs
-          securityContext:
-            {{- toYaml $.Values.initSecurityContext | nindent 12 }}
-          image: bash:latest
-          resources:
-            {{- toYaml $.Values.initResources | nindent 12 }}
-          args:
-            - -c
-            - |
-                cp -n /config-tmp/* /config/
-          volumeMounts:
-            - name: config-tmp
-              mountPath: /config-tmp
+            - name: values
+              mountPath: /values
               readOnly: true
             - name: config
               mountPath: "/config"
@@ -176,11 +169,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: config-template
+        - name: templates
           configMap:
-            name: {{ template "home-assistant.fullname" . }}
-        - name: config-tmp
-          emptyDir: {}
+            name: {{ template "home-assistant.fullname" . }}-templates
+        - name: values
+          configMap:
+            name: {{ template "home-assistant.fullname" . }}-values
         - name: config
       {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
