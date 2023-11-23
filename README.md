@@ -3,5 +3,5 @@
 Add szymonrychu repository to Helm repos:
 
 ```console
-helm repo add szymonrychu https://szymonrychu.github.io/charts/
+helm repo add szymonrychu https://szymonrychu.github.io/selfhosted-kubernetes-charts/
 ```
