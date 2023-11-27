@@ -1,0 +1,54 @@
+---
+{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) (eq (.Values.persistence.config.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "qbittorrent.fullname" $ }}-config
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.config.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "qbittorrent.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.config.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size | quote }}
+{{- if .Values.persistence.config.storageClass }}
+{{- if (eq "-" .Values.persistence.config.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.config.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
+---
+{{- if and .Values.persistence.downloads.enabled (not .Values.persistence.downloads.existingClaim) (eq (.Values.persistence.downloads.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "qbittorrent.fullname" $ }}-downloads
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.downloads.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "qbittorrent.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.downloads.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.downloads.size | quote }}
+{{- if .Values.persistence.downloads.storageClass }}
+{{- if (eq "-" .Values.persistence.downloads.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.downloads.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

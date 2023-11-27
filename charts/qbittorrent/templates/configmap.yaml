@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "qbittorrent.fullname" . }}
+  labels:
+    {{- include "qbittorrent.labels" . | nindent 4 }}
+data:
+  redirect-url: {{ .Values.oauth2proxy.config.redirectUrl | quote }}
+  realm-url: {{ .Values.oauth2proxy.config.realmUrl | quote }}
+  cookie-name: {{ .Values.oauth2proxy.config.cookieName | quote }}
+  cookie-domain: {{ .Values.oauth2proxy.config.cookieDomain | quote }}
+  allowed-group: {{ .Values.oauth2proxy.config.allowedGroup | quote }}
+  scope: {{ .Values.oauth2proxy.config.scope | quote }}
