@@ -1,0 +1,29 @@
+{{- if and .Values.persistence.piper.enabled (not .Values.persistence.piper.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "home-assistant.fullname" . }}-piper
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.persistence.piper.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "home-assistant.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - {{ .Values.persistence.piper.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.piper.size | quote }}
+{{- if .Values.persistence.piper.storageClass }}
+{{- if (eq "-" .Values.persistence.piper.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.piper.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

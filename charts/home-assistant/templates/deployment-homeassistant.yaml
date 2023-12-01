@@ -4,13 +4,13 @@ metadata:
   name: {{ include "home-assistant.fullname" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
+    ha-component: homeassistant
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "home-assistant.selectorLabels" . | nindent 6 }}
+      ha-component: homeassistant
   template:
     metadata:
       annotations:
@@ -21,6 +21,7 @@ spec:
       {{- end }}
       labels:
         {{- include "home-assistant.selectorLabels" . | nindent 8 }}
+        ha-component: homeassistant
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -36,11 +37,11 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: config
+        - name: jinja-renderer
           securityContext:
-            {{- toYaml .Values.initSecurityContext | nindent 12 }}
-          image: "{{ .Values.initConfig.image.repository }}:{{ .Values.initConfig.image.tag }}"
-          imagePullPolicy: {{ .Values.initConfig.image.pullPolicy }}
+            {{- toYaml .Values.securityContexts.initJinjaRenderer | nindent 12 }}
+          image: "{{ .Values.images.initJinjaRenderer.repository }}:{{ .Values.images.initJinjaRenderer.tag }}"
+          imagePullPolicy: {{ .Values.images.initJinjaRenderer.pullPolicy }}
           args:
             - --values
             - /values/*.yaml
@@ -49,38 +50,39 @@ spec:
             - --output-dir
             - /config
           resources:
-            {{- toYaml .Values.initResources | nindent 12 }}
-          {{- if or .Values.config.postgresql.enabled .Values.config.influxdb.enabled }}
+            {{- toYaml .Values.resources.initJinjaRenderer | nindent 12 }}
+          {{- if or .Values.config.postgresql.enabled }}
           env:
-            {{- if .Values.config.postgresql.enabled }}
             - name: JINJA_POSTGRESQL_USERNAME
               valueFrom:
                 secretKeyRef:
-                  {{- if $.Values.zalandoPostgresql.enabled }}
+                  {{- if .Values.zalandoPostgresql.enabled }}
                   name: homeassistant.home-assistant-db.credentials.postgresql.acid.zalan.do
                   key: username
                   {{- else }}
-                  name: {{ include "home-assistant.fullname" $ }}
+                  name: {{ include "home-assistant.fullname" . }}
                   key: postgresql_username
                   {{- end }}
+            - name: JINJA_POSTGRESQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: postgresql-host
+            - name: JINJA_POSTGRESQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: postgresql-port
             - name: JINJA_POSTGRESQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  {{- if $.Values.zalandoPostgresql.enabled }}
+                  {{- if .Values.zalandoPostgresql.enabled }}
                   name: homeassistant.home-assistant-db.credentials.postgresql.acid.zalan.do
                   key: password
                   {{- else }}
-                  name: {{ include "home-assistant.fullname" $ }}
+                  name: {{ include "home-assistant.fullname" . }}
                   key: postgresql_password
                   {{- end }}
-            {{- end }}
-            {{- if .Values.config.influxdb.enabled }}
-            - name: INFLUXDB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "home-assistant.fullname" $ }}
-                  key: influxdb_token
-            {{- end }}
           {{- end }}
           volumeMounts:
             - name: templates
@@ -91,37 +93,43 @@ spec:
               readOnly: true
             - name: config
               mountPath: "/config"
-          {{- if .Values.initWaitForPostgres.enabled }}
-        - name: wait-for-db
+          {{- if .Values.config.postgresql.enabled }}
+        - name: wait-for-postgres
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.initWaitForPostgres.image.repository }}:{{ .Values.initWaitForPostgres.image.tag }}"
-          imagePullPolicy: {{ .Values.initWaitForPostgres.image.pullPolicy }}
+            {{- toYaml .Values.securityContexts.initWaitForPostgres | nindent 12 }}
+          image: "{{ .Values.images.initWaitForPostgres.repository }}:{{ .Values.images.initWaitForPostgres.tag }}"
+          imagePullPolicy: {{ .Values.images.initWaitForPostgres.pullPolicy }}
           resources:
-            {{- toYaml .Values.initWaitForPostgres.resources | nindent 12 }}
+            {{- toYaml .Values.resources.initWaitForPostgres | nindent 12 }}
           command:
             - /usr/local/bin/bash
           args:
             - -c
             - |
-                echo "Waiting for ${POSTGRES_HOST}:${POSTGRES_PORT}"
-                while ! timeout 1 bash -c "cat < /dev/null > /dev/tcp/${POSTGRES_HOST}/${POSTGRES_PORT}"; do
+                echo "Waiting for ${POSTGRESQL_HOST}:${POSTGRESQL_PORT}"
+                while ! timeout 1 bash -c "cat < /dev/null > /dev/tcp/${POSTGRESQL_HOST}/${POSTGRESQL_PORT}"; do
                   sleep 1
                   echo "."
                 done
                 echo "OK"
           env:
-            - name: POSTGRES_HOST
-              value: {{ .Values.config.postgresql.host }}
-            - name: POSTGRES_PORT
-              value: {{ .Values.config.postgresql.port | quote }}
+            - name: POSTGRESQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: postgresql-host
+            - name: POSTGRESQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: postgresql-port
           {{- end }}
       containers:
-        - name: main
+        - name: homeassistant
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.securityContexts.homeassistant | nindent 12 }}
+          image: "{{ .Values.images.homeassistant.repository }}:{{ .Values.images.homeassistant.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.images.homeassistant.pullPolicy }}
           ports:
             - name: http
               containerPort: 8123
@@ -147,7 +155,7 @@ spec:
             initialDelaySeconds: 1
             periodSeconds: 5
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.resources.homeassistant | nindent 12 }}
           env:
             - name: PATH_TO_YOUR_CONFIG
               value: /config/configuration.yaml
@@ -156,15 +164,15 @@ spec:
           volumeMounts:
             - name: config
               mountPath: "/config"
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.nodeSelector.homeassistant }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.affinity.homeassistant }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.tolerations.homeassistant }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -176,9 +184,9 @@ spec:
           configMap:
             name: {{ template "home-assistant.fullname" . }}-values
         - name: config
-      {{- if .Values.persistence.enabled }}
+      {{- if .Values.persistence.homeassistant.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "home-assistant.fullname" .) }}
+            claimName: {{ .Values.persistence.homeassistant.existingClaim | default (include "home-assistant.fullname" .) }}
       {{- else }}
           emptyDir: {}
       {{- end -}}

@@ -1,0 +1,29 @@
+{{- if and .Values.persistence.homeassistant.enabled (not .Values.persistence.homeassistant.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "home-assistant.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.persistence.homeassistant.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "home-assistant.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - {{ .Values.persistence.homeassistant.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.homeassistant.size | quote }}
+{{- if .Values.persistence.homeassistant.storageClass }}
+{{- if (eq "-" .Values.persistence.homeassistant.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.homeassistant.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

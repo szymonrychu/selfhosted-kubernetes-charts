@@ -22,7 +22,7 @@ oauth2proxy:
   image:
     repository: quay.io/oauth2-proxy/oauth2-proxy
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
+    # renovate: image=quay.io/oauth2-proxy/oauth2-proxy
     tag: v7.5.1
   
 

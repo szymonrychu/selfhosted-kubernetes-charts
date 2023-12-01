@@ -1,0 +1,29 @@
+{{- if and .Values.persistence.whisper.enabled (not .Values.persistence.whisper.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "home-assistant.fullname" . }}-whisper
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.persistence.whisper.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "home-assistant.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - {{ .Values.persistence.whisper.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.whisper.size | quote }}
+{{- if .Values.persistence.whisper.storageClass }}
+{{- if (eq "-" .Values.persistence.whisper.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.whisper.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

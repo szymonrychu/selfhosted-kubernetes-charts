@@ -1,0 +1,94 @@
+{{- if .Values.config.localVoiceProcessing.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-whisper
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+    ha-component: whisper
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "home-assistant.selectorLabels" . | nindent 6 }}
+      ha-component: whisper
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "home-assistant.selectorLabels" . | nindent 8 }}
+        ha-component: whisper
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      serviceAccountName: {{ include "home-assistant.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: whisper
+          securityContext:
+            {{- toYaml .Values.securityContexts.whisper | nindent 12 }}
+          image: "{{ .Values.images.whisper.repository }}:{{ .Values.images.whisper.tag }}"
+          imagePullPolicy: {{ .Values.images.whisper.pullPolicy }}
+          args:
+            - --data-dir
+            - /data
+            - --download-dir
+            - /data
+            - --uri
+            - tcp://0.0.0.0:10300
+            - --model
+            - {{ .Values.config.localVoiceProcessing.whisperModel | quote }}
+            - --language
+            - {{ .Values.config.localVoiceProcessing.whisperLanguage | quote }}
+          ports:
+            - name: whisper-http
+              containerPort: 10300
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: whisper-http
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: whisper-http
+            periodSeconds: 5
+          startupProbe:
+            tcpSocket:
+              port: whisper-http
+            failureThreshold: 240
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources.whisper | nindent 12 }}
+          volumeMounts:
+            - name: whisper-data
+              mountPath: "/data"
+      {{- with .Values.nodeSelector.whisper }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity.whisper }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations.whisper }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: whisper-data
+      {{- if .Values.persistence.whisper.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.whisper.existingClaim | default (include "home-assistant.fullname" .) }}-whisper
+      {{- else }}
+          emptyDir: {}
+      {{- end -}}
+{{- end }}

@@ -1,0 +1,91 @@
+{{- if .Values.config.localVoiceProcessing.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-piper
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "home-assistant.selectorLabels" . | nindent 6 }}
+      ha-component: piper
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "home-assistant.selectorLabels" . | nindent 8 }}
+        ha-component: piper
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      serviceAccountName: {{ include "home-assistant.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: piper
+          securityContext:
+            {{- toYaml .Values.securityContexts.piper | nindent 12 }}
+          image: "{{ .Values.images.piper.repository }}:{{ .Values.images.piper.tag }}"
+          imagePullPolicy: {{ .Values.images.piper.pullPolicy }}
+          args:
+            - --data-dir
+            - /data
+            - --download-dir
+            - /data
+            - --uri
+            - tcp://0.0.0.0:10200
+            - --voice
+            - {{ .Values.config.localVoiceProcessing.piperVoice | quote }}
+          ports:
+            - name: piper-http
+              containerPort: 10200
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: piper-http
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: piper-http
+            periodSeconds: 5
+          startupProbe:
+            tcpSocket:
+              port: piper-http
+            failureThreshold: 60
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources.piper | nindent 12 }}
+          volumeMounts:
+            - name: piper-data
+              mountPath: "/data"
+      {{- with .Values.nodeSelector.piper }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity.piper }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations.piper }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: piper-data
+      {{- if .Values.persistence.piper.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.piper.existingClaim | default (include "home-assistant.fullname" .) }}-piper
+      {{- else }}
+          emptyDir: {}
+      {{- end -}}
+{{- end }}

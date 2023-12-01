@@ -1,0 +1,19 @@
+{{- if .Values.config.localVoiceProcessing.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-whisper
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+    ha-component: whisper
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 10300
+      targetPort: whisper-http
+      protocol: TCP
+      name: whisper-http
+  selector:
+    {{- include "home-assistant.selectorLabels" . | nindent 4 }}
+    ha-component: whisper
+{{- end }}

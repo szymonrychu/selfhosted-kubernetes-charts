@@ -26,12 +26,20 @@ jobs:
 
       - name: Add repo dependencies
         run: |
+          added="F"
           for CHART in `ls "./charts/"`; do
             cd "./charts/${CHART}"
-            yq '.dependencies[] | ("helm repo add " + .name + " " + .repository)' Chart.yaml | bash -
+            if grep "dependencies:" Chart.yaml; then
+              yq '.dependencies[] | ("helm repo add " + .name + " " + .repository)' Chart.yaml | bash -
+              if [[ "$added" == "F" ]]; then
+                added="T"
+              fi
+            fi
             cd -
           done
-          helm repo update
+          if [[ "$added" == "T" ]]; then
+            helm repo update
+          fi
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@a917fd15b20e8b64b94d9158ad54cd6345335584 # v1.6.0

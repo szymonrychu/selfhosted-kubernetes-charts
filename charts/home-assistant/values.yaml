@@ -6,19 +6,18 @@ replicaCount: 1
 
 
 config:
+  localVoiceProcessing:
+    enabled: false
+    piperVoice: pl_PL-gosia-medium
+    whisperModel: base
+    whisperLanguage: pl
+    openwakewordModel: ok_nabu
   homeassistant:
     name: home-assistant
   network:
     trustedProxies:
       - 192.168.1.0/24
       - 10.42.0.0/16
-  influxdb:
-    enabled: false
-    host: home-assistant-influxdb
-    port: 8086
-    organization: home-assistant
-    bucket: home-assistant
-    token: exampletoken
   postgresql:
     enabled: false
     username: change_me
@@ -38,18 +37,6 @@ templates:
       name: {{ config.homeassistant.name }}
       auth_providers:
         - type: homeassistant
-    {%- if config.influxdb.enabled %}
-    influxdb:
-      api_version: 2
-      host: {{ config.influxdb.host }}
-      port: {{ config.influxdb.port }}
-      organization: {{ config.influxdb.organization }}
-      bucket: {{ config.influxdb.bucket }}
-      precision: s
-      token: {{ env.influxdb_token }}
-      ssl: false
-      verify_ssl: false
-    {%- endif %}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
@@ -62,7 +49,7 @@ templates:
       commit_interval: 0
       auto_purge: true
       auto_repack: true
-      db_url: postgresql://{{ env.postgresql_username }}:{{ env.postgresql_password }}@{{ config.postgresql.host }}:{{ config.postgresql.port }}/{{ config.postgresql.database }}
+      db_url: postgresql://{{ env.postgresql_username }}:{{ env.postgresql_password }}@{{ env.postgresql_host }}:{{ env.postgresql_port }}/{{ config.postgresql.database }}
     {%- endif %}
     {%- if config.prometheus.enabled %}
     prometheus:
@@ -91,36 +78,123 @@ templates:
   device_tracker.yaml: ""
 
 
-image:
-  repository: ghcr.io/home-assistant/home-assistant
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
 additionalDNSServers:
   - 1.1.1.1
   - 8.8.8.8
 
-initConfig:
-  image:
-    repository: ghcr.io/szymonrychu/jinja-renderer
-    pullPolicy: IfNotPresent
-    tag: 0.0.4
-
-initWaitForPostgres:
-  image:
-    repository: bash
+images:
+  homeassistant:
+    repository: ghcr.io/home-assistant/home-assistant
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  piper:
+    repository: ghcr.io/szymonrychu/piper
+    pullPolicy: IfNotPresent
+    # renovate: image=ghcr.io/szymonrychu/piper
+    tag: "0.0.5"
+  whisper:
+    repository: ghcr.io/szymonrychu/whisper
+    pullPolicy: IfNotPresent
+    # renovate: image=ghcr.io/szymonrychu/whisper
+    tag: "0.0.5"
+  openwakeword:
+    repository: ghcr.io/szymonrychu/openwakeword
+    pullPolicy: IfNotPresent
+    # renovate: image=ghcr.io/szymonrychu/whisper
+    tag: "0.0.4"
+  initJinjaRenderer:
+    repository: ghcr.io/szymonrychu/jinja-renderer
+    pullPolicy: IfNotPresent
+    # renovate: image=ghcr.io/szymonrychu/jinja-renderer
+    tag: "0.0.4"
+  initWaitForPostgres:
+    repository: bash
+    pullPolicy: IfNotPresent
+    # renovate: image=bash
     tag: "5.2.21"
-  enabled: false
-  host: home-assistant-postgresql-primary
-  port: 5432
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+
+securityContexts:
+  homeassistant: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  piper: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  whisper: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  openwakeword: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  initJinjaRenderer: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  initWaitForPostgres: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+resources:
+  homeassistant: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  piper: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  whisper: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  openwakeword: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  initJinjaRenderer: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  initWaitForPostgres: {}
     # limits:
     #   cpu: 100m
     #   memory: 128Mi
@@ -150,22 +224,6 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-initSecurityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
 service:
   type: ClusterIP
   port: 80
@@ -186,18 +244,6 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -206,43 +252,63 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 persistence:
-  enabled: false
-  ## database data Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  # storageClass: "-"
-  accessMode: ReadWriteOnce
-  size: 8Gi
-  annotations: {}
+  homeassistant:
+    enabled: false
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+  piper:
+    enabled: false
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+  whisper:
+    enabled: false
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
 
-nodeSelector: {}
+nodeSelector:
+  homeassistant: {}
+  piper: {}
+  whisper: {}
+  openwakeword: {}
 
-tolerations: []
+tolerations:
+  homeassistant: []
+  piper: []
+  whisper: []
+  openwakeword: []
 
-affinity: {}
-
-influxdb:
-  env:
-    - name: DOCKER_INFLUXDB_INIT_ORG
-      value: home-assistant
-    - name: DOCKER_INFLUXDB_INIT_BUCKET
-      value: home-assistant
-    - name: DOCKER_INFLUXDB_INIT_RETENTION
-      value: 1w
-    # - name: DOCKER_INFLUXDB_INIT_USERNAME
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: home-assistant-influxdb-auth
-    #       key: influxdb-user
-    # - name: DOCKER_INFLUXDB_INIT_PASSWORD
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: home-assistant-influxdb-auth
-    #       key: influxdb-password
+affinity:
+  homeassistant: {}
+  piper: {}
+  whisper: {}
+  openwakeword: {}
 
 zalandoPostgresql:
   annotations: {}

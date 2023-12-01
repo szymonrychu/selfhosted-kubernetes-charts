@@ -1,0 +1,77 @@
+{{- if .Values.config.localVoiceProcessing.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-openwakeword
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+    ha-component: openwakeword
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "home-assistant.selectorLabels" . | nindent 6 }}
+      ha-component: openwakeword
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "home-assistant.selectorLabels" . | nindent 8 }}
+        ha-component: openwakeword
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      serviceAccountName: {{ include "home-assistant.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: openwakeword
+          securityContext:
+            {{- toYaml .Values.securityContexts.openwakeword | nindent 12 }}
+          image: "{{ .Values.images.openwakeword.repository }}:{{ .Values.images.openwakeword.tag }}"
+          imagePullPolicy: {{ .Values.images.openwakeword.pullPolicy }}
+          args:
+            - --uri
+            - tcp://0.0.0.0:10400
+            - --preload-model
+            - {{ .Values.config.localVoiceProcessing.openwakewordModel | quote }}
+          ports:
+            - name: oupw-http
+              containerPort: 10400
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: oupw-http
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: oupw-http
+            periodSeconds: 5
+          startupProbe:
+            tcpSocket:
+              port: oupw-http
+            failureThreshold: 120
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources.openwakeword | nindent 12 }}
+      {{- with .Values.nodeSelector.openwakeword }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity.openwakeword }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations.openwakeword }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
