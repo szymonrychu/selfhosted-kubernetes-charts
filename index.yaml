@@ -309,6 +309,16 @@ entries:
   home-assistant:
   - apiVersion: v2
     appVersion: 2023.11.3
+    created: "2023-12-01T22:34:58.703307742Z"
+    description: A Helm chart for Kubernetes
+    digest: 5c12dd65cf35b0df0250affef69ed827ae99e38a668927b0280ac77e2988ab9a
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/home-assistant-0.10.0/home-assistant-0.10.0.tgz
+    version: 0.10.0
+  - apiVersion: v2
+    appVersion: 2023.11.3
     created: "2023-11-23T09:01:08.15553972Z"
     dependencies:
     - condition: config.influxdb.enabled
@@ -1497,4 +1507,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-28T09:20:14.969512064Z"
+generated: "2023-12-01T22:34:58.703720886Z"
