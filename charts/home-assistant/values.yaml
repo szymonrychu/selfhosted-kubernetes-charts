@@ -92,7 +92,7 @@ images:
     repository: ghcr.io/szymonrychu/piper
     pullPolicy: IfNotPresent
     # renovate: image=ghcr.io/szymonrychu/piper
-    tag: "0.0.5"
+    tag: "0.0.6"
   whisper:
     repository: ghcr.io/szymonrychu/whisper
     pullPolicy: IfNotPresent
