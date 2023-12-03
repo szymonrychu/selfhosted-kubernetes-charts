@@ -9,7 +9,8 @@ config:
   localVoiceProcessing:
     enabled: false
     piperVoice: pl_PL-gosia-medium
-    whisperModel: base
+    whisperModel: medium-int8
+    whisperBeamSize: 3
     whisperLanguage: pl
     openwakewordModel: ok_nabu
   homeassistant:

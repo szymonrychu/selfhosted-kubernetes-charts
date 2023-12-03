@@ -49,6 +49,8 @@ spec:
             - {{ .Values.config.localVoiceProcessing.whisperModel | quote }}
             - --language
             - {{ .Values.config.localVoiceProcessing.whisperLanguage | quote }}
+            - --beam-size
+            - {{ .Values.config.localVoiceProcessing.whisperBeamSize | quote }}
           ports:
             - name: whisper-http
               containerPort: 10300
