@@ -1,0 +1,60 @@
+---
+{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "code-server-oauth2.fullname" .) "config")  }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.persistence.config.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "code-server-oauth2.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - {{ .Values.persistence.config.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size | quote }}
+{{- if .Values.persistence.config.storageClass }}
+{{- if (eq "-" .Values.persistence.config.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.config.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
+---
+{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.persistence.sharedData.existingClaim | default (printf "%s-%s" (include "code-server-oauth2.fullname" .) "shared-data")  }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.persistence.sharedData.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "code-server-oauth2.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - {{ .Values.persistence.sharedData.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.sharedData.size | quote }}
+{{- if .Values.persistence.sharedData.storageClass }}
+{{- if (eq "-" .Values.persistence.sharedData.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.sharedData.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

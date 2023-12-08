@@ -1,0 +1,224 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "code-server-oauth2.fullname" . }}
+  labels:
+    {{- include "code-server-oauth2.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "code-server-oauth2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "code-server-oauth2.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "code-server-oauth2.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - bash
+          args:
+            - -cex
+            - |
+              cd /secrets
+              gpg --import ./private.rsa
+              if [[ ! -e /home/abc-new/.gnupg ]]; then
+                cp -R /config/.gnupg /home/abc-new/.gnupg
+              fi
+              if [[ ! -e /home/abc-new/.ssh/id_rsa ]]; then
+                mkdir -p /home/abc-new/.ssh
+                cp ./id_rsa /home/abc-new/.ssh/id_rsa
+                chmod 0600 /home/abc-new/.ssh/id_rsa
+              fi
+              if [[ ! -e /home/abc-new/.ssh/id_rsa.pub ]]; then
+                mkdir -p /home/abc-new/.ssh
+                cp ./id_rsa /home/abc-new/.ssh/id_rsa.pub
+              fi
+              if [[ ! -e /home/abc-new/.ssh/known_hosts ]]; then
+                mkdir -p /home/abc-new/.ssh
+                cp ./id_rsa /home/abc-new/.ssh/known_hosts
+              fi
+              if [[ ! -e /home/abc-new/.profile ]] && [[ -e /config/.profile ]]; then
+                cp /config/.profile /home/abc-new/.profile
+              fi
+              if [[ ! -e /home/abc-new/.bashrc ]] && [[ -e /config/.bashrc ]]; then
+                cp /config/.bashrc /home/abc-new/.bashrc
+              fi
+              if [[ ! -e /home/abc-new/.bash_history ]] && [[ -e /home/abc-new/.bash_history ]]; then
+                cp /config/.bash_history /home/abc-new/.bash_history
+              fi
+              if [[ ! -e /home/abc-new/.bash_profile ]] && [[ -e /config/.bash_profile ]]; then
+                cp /config/.bash_profile /home/abc-new/.bash_profile
+              fi
+              mkdir -p /home/abc-new/Documents
+              sudo chown -R 1000:1000 /home/abc-new
+          volumeMounts:
+            - name: code-secrets
+              mountPath: "/secrets"
+              readOnly: true
+            - mountPath: /home/abc-new
+              name: shared-data
+      containers:
+        - name: code
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PROXY_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: code-domain
+            - name: HOME
+              value: /home/abc
+            - name: DEFAULT_WORKSPACE
+              value: /home/abc/Documents
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          volumeMounts:
+            - mountPath: /home/abc
+              name: shared-data
+            - mountPath: /config
+              name: config
+          ports:
+            - name: http
+              containerPort: 8443
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.oauth2Proxy.resources | nindent 12 }}
+        - name: proxy
+          securityContext:
+            {{- toYaml .Values.oauth2Proxy.securityContext | nindent 12 }}
+          image: "{{ .Values.oauth2Proxy.image.repository }}:{{ .Values.oauth2Proxy.image.tag }}"
+          imagePullPolicy: {{ .Values.oauth2Proxy.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.oauth2Proxy.resources | nindent 12 }}
+          env:
+            - name: OAUTH2_PROXY_PROVIDER
+              value: keycloak-oidc
+            - name: OAUTH2_PROXY_HTTP_ADDRESS
+              value: 0.0.0.0:4180
+            - name: OAUTH2_PROXY_REVERSE_PROXY
+              value: "true"
+            - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+              value: "true"
+            - name: OAUTH2_PROXY_UPSTREAMS
+              value: http://localhost:8443
+            - name: OAUTH2_PROXY_SESSION_COOKIE_MINIMAL
+              value: "true"
+            - name: OAUTH2_PROXY_EMAIL_DOMAINS
+              value: "*"
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: client-id
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: client-secret
+            - name: OAUTH2_PROXY_REDIRECT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: redirect-url
+            - name: OAUTH2_PROXY_ALLOWED_GROUP
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: allowed-group
+            - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: realm-url
+            - name: OAUTH2_PROXY_COOKIE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: cookie-name
+            - name: OAUTH2_PROXY_COOKIE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: cookie-domain
+            - name: OAUTH2_PROXY_SCOPE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: scope
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "code-server-oauth2.fullname" . }}
+                  key: cookie-secret
+          ports:
+            - name: oauth2-http
+              containerPort: 4180
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: oauth2-http
+          readinessProbe:
+            tcpSocket:
+              port: oauth2-http
+          resources:
+            {{- toYaml .Values.oauth2Proxy.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: code-secrets
+          secret:
+            secretName: {{ include "code-server-oauth2.fullname" . }}-code-secrets
+        - name: config
+        {{- if .Values.persistence.config.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "code-server-oauth2.fullname" .) "config") }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: shared-data
+        {{- if .Values.persistence.sharedData.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.sharedData.existingClaim | default (printf "%s-%s" (include "code-server-oauth2.fullname" .) "shared-data") }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}

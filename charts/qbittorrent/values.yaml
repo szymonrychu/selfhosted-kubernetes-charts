@@ -33,7 +33,7 @@ oauth2proxy:
   image:
     repository: quay.io/oauth2-proxy/oauth2-proxy
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
+    # renovate: image=quay.io/oauth2-proxy/oauth2-proxy
     tag: v7.5.1
   
 
@@ -56,16 +56,6 @@ oauth2proxy:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
-  config:
-    clientId: flood
-    clientSecret: keycloakclientsecret123
-    redirectUrl: https://flood.domain.com/oauth2/callback
-    realmUrl: https://auth.domain.com/realms/master
-    cookieName: oauth2-authorization-cookie
-    cookieDomain: flood.domain.com
-    cookieSecret: 8csecret
-    allowedGroup: flood
-    scope: openid email profile
 
 
 persistence:

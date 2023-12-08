@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "code-server-oauth2.fullname" . }}
+  labels:
+    {{- include "code-server-oauth2.labels" . | nindent 4 }}
+data: 
+  code-domain: {{ .Values.config.domain | quote }}
+  redirect-url: {{ .Values.config.redirectUrl | quote }}
+  realm-url: {{ .Values.config.realmUrl | quote }}
+  cookie-name: {{ .Values.config.cookieName | quote }}
+  cookie-domain: {{ .Values.config.cookieDomain | quote }}
+  allowed-group: {{ .Values.config.allowedGroup | quote }}
+  scope: {{ .Values.config.scope | quote }}
