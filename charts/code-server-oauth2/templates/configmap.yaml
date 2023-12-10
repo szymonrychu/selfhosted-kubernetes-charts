@@ -13,3 +13,36 @@ data:
   cookie-domain: {{ .Values.config.cookieDomain | quote }}
   allowed-group: {{ .Values.config.allowedGroup | quote }}
   scope: {{ .Values.config.scope | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "code-server-oauth2.fullname" . }}-entrypointd
+  labels:
+    {{- include "code-server-oauth2.labels" . | nindent 4 }}
+data: 
+  00-init-user.sh: |
+    #!/bin/bash
+    set -euo nounset
+    
+    cd /secrets
+    gpg --import ./private.rsa
+    if [[ ! -e /new_home/.gnupg ]]; then
+      cp -R "${HOME}/.gnupg" /new_home/.gnupg
+      chown -R 1000:1000 /new_home/.gnupg
+    fi
+    if [[ ! -e /new_home/.ssh/id_rsa ]]; then
+      mkdir -p /new_home/.ssh
+      cp ./id_rsa /new_home/.ssh/id_rsa
+      chmod 0600 /new_home/.ssh/id_rsa
+      chown -R 1000:1000 /new_home/.ssh
+    fi
+    if [[ ! -e /new_home/.ssh/id_rsa.pub ]]; then
+      cp ./id_rsa.pub /new_home/.ssh/id_rsa.pub
+      chown -R 1000:1000 /new_home/.ssh
+    fi
+    if [[ ! -e /new_home/.ssh/known_hosts ]]; then
+      mkdir -p /new_home/.ssh
+      cp ./known_hosts /new_home/.ssh/known_hosts
+      chown -R 1000:1000 /new_home/.ssh
+    fi

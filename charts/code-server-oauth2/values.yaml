@@ -5,7 +5,6 @@
 replicaCount: 1
 
 config:
-  groupName: user
   userName: user
   userUid: 1000
   userGid: 1000
@@ -36,7 +35,7 @@ config:
     |1|TvNrVYFIso7uiWP0X+L/nRtS5WU=|KDtxXZ1Z/zP3fA9+4IqI+bcjAOc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMMSgqxFsxZv8pZwxx/NPdl7A2exC+V1uInBWvQhkcGch+0KEP9tsu32UnIQnk1+3oQqufo6PzZEtxWfYRMs2GU=
     |1|Vr1oUg8mUO+TkDh+z8ltWu2O8og=|pL9VFzXpIfXsVcfZIRCEAalE+Jc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNr2UdEpYTtWhxtEGe/DA9X/RT9S6BJ92tIg+vh6Wlsb3AfqYcEZkz55aLv6oTfBLt2wW7arhobzc2FnbNIBUXM=
   gpgEncryptionKey: |
-   someprivatekey
+    someprivatekey
 
 image:
   repository: ghcr.io/szymonrychu/code-server

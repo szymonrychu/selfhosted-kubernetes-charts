@@ -25,41 +25,6 @@ spec:
       serviceAccountName: {{ include "code-server-oauth2.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: init
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - bash
-          args:
-            - -cex
-            - |
-              cd /secrets
-              gpg --import ./private.rsa
-              if [[ ! -e /new_home/.gnupg ]]; then
-                cp -R "${HOME}/.gnupg" /new_home/.gnupg
-              fi
-              if [[ ! -e /new_home/.ssh/id_rsa ]]; then
-                mkdir -p /new_home/.ssh
-                cp ./id_rsa /new_home/.ssh/id_rsa
-                chmod 0600 /new_home/.ssh/id_rsa
-              fi
-              if [[ ! -e /new_home/.ssh/id_rsa.pub ]]; then
-                cp ./id_rsa.pub /new_home/.ssh/id_rsa.pub
-              fi
-              if [[ ! -e /new_home/.ssh/known_hosts ]]; then
-                mkdir -p /new_home/.ssh
-                cp ./known_hosts /new_home/.ssh/known_hosts
-              fi
-              sudo chown -R {{ .Values.config.userUid }}:{{ .Values.config.userGid }} /new_home
-          volumeMounts:
-            - name: code-secrets
-              mountPath: "/secrets"
-              readOnly: true
-            - mountPath: /new_home
-              name: shared-data
       containers:
         - name: code
           securityContext:
@@ -80,9 +45,23 @@ spec:
                 configMapKeyRef:
                   name: {{ include "code-server-oauth2.fullname" . }}
                   key: code-domain
+            - name: GROUP_NAME
+              value: "users"
+            - name: USER_NAME
+              value: {{ .Values.config.userName | quote }}
+            - name: USER_UID
+              value: {{ .Values.config.userUid | quote }}
+            - name: USER_GID
+              value: {{ .Values.config.userGid | quote }}
           volumeMounts:
             - mountPath: /home/{{ .Values.config.userName }}
               name: shared-data
+            - name: code-secrets
+              mountPath: "/secrets"
+              readOnly: true
+            - name: entrypointd
+              mountPath: "/etc/codeserver.d"
+              readOnly: true
           ports:
             - name: http
               containerPort: 8080
@@ -189,6 +168,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: entrypointd
+          configMap:
+            name: {{ include "code-server-oauth2.fullname" . }}-entrypointd
         - name: code-secrets
           secret:
             secretName: {{ include "code-server-oauth2.fullname" . }}-code-secrets
