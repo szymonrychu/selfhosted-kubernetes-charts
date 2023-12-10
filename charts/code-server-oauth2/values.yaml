@@ -5,6 +5,10 @@
 replicaCount: 1
 
 config:
+  groupName: user
+  userName: user
+  userUid: 1000
+  userGid: 1000
   domain: code.example.com
   clientId: flood
   clientSecret: keycloakclientsecret123

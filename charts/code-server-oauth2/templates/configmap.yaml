@@ -5,7 +5,7 @@ metadata:
   name: {{ include "code-server-oauth2.fullname" . }}
   labels:
     {{- include "code-server-oauth2.labels" . | nindent 4 }}
-data: 
+data:
   code-domain: {{ .Values.config.domain | quote }}
   redirect-url: {{ .Values.config.redirectUrl | quote }}
   realm-url: {{ .Values.config.realmUrl | quote }}

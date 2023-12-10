@@ -38,41 +38,27 @@ spec:
             - |
               cd /secrets
               gpg --import ./private.rsa
-              if [[ ! -e /home/abc-new/.gnupg ]]; then
-                cp -R /config/.gnupg /home/abc-new/.gnupg
+              if [[ ! -e /new_home/.gnupg ]]; then
+                cp -R "${HOME}/.gnupg" /new_home/.gnupg
               fi
-              if [[ ! -e /home/abc-new/.ssh/id_rsa ]]; then
-                mkdir -p /home/abc-new/.ssh
-                cp ./id_rsa /home/abc-new/.ssh/id_rsa
-                chmod 0600 /home/abc-new/.ssh/id_rsa
+              if [[ ! -e /new_home/.ssh/id_rsa ]]; then
+                mkdir -p /new_home/.ssh
+                cp ./id_rsa /new_home/.ssh/id_rsa
+                chmod 0600 /new_home/.ssh/id_rsa
               fi
-              if [[ ! -e /home/abc-new/.ssh/id_rsa.pub ]]; then
-                mkdir -p /home/abc-new/.ssh
-                cp ./id_rsa /home/abc-new/.ssh/id_rsa.pub
+              if [[ ! -e /new_home/.ssh/id_rsa.pub ]]; then
+                cp ./id_rsa.pub /new_home/.ssh/id_rsa.pub
               fi
-              if [[ ! -e /home/abc-new/.ssh/known_hosts ]]; then
-                mkdir -p /home/abc-new/.ssh
-                cp ./id_rsa /home/abc-new/.ssh/known_hosts
+              if [[ ! -e /new_home/.ssh/known_hosts ]]; then
+                mkdir -p /new_home/.ssh
+                cp ./known_hosts /new_home/.ssh/known_hosts
               fi
-              if [[ ! -e /home/abc-new/.profile ]] && [[ -e /config/.profile ]]; then
-                cp /config/.profile /home/abc-new/.profile
-              fi
-              if [[ ! -e /home/abc-new/.bashrc ]] && [[ -e /config/.bashrc ]]; then
-                cp /config/.bashrc /home/abc-new/.bashrc
-              fi
-              if [[ ! -e /home/abc-new/.bash_history ]] && [[ -e /home/abc-new/.bash_history ]]; then
-                cp /config/.bash_history /home/abc-new/.bash_history
-              fi
-              if [[ ! -e /home/abc-new/.bash_profile ]] && [[ -e /config/.bash_profile ]]; then
-                cp /config/.bash_profile /home/abc-new/.bash_profile
-              fi
-              mkdir -p /home/abc-new/Documents
-              sudo chown -R 1000:1000 /home/abc-new
+              sudo chown -R {{ .Values.config.userUid }}:{{ .Values.config.userGid }} /new_home
           volumeMounts:
             - name: code-secrets
               mountPath: "/secrets"
               readOnly: true
-            - mountPath: /home/abc-new
+            - mountPath: /new_home
               name: shared-data
       containers:
         - name: code
@@ -81,27 +67,25 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: GROUP_NAME
+              value: {{ .Values.config.groupName | quote }}
+            - name: USER_NAME
+              value: {{ .Values.config.userName | quote }}
+            - name: USER_UID
+              value: {{ .Values.config.userUid | quote }}
+            - name: USER_GID
+              value: {{ .Values.config.userGid | quote }}
             - name: PROXY_DOMAIN
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "code-server-oauth2.fullname" . }}
                   key: code-domain
-            - name: HOME
-              value: /home/abc
-            - name: DEFAULT_WORKSPACE
-              value: /home/abc/Documents
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
           volumeMounts:
-            - mountPath: /home/abc
+            - mountPath: /home/{{ .Values.config.userName }}
               name: shared-data
-            - mountPath: /config
-              name: config
           ports:
             - name: http
-              containerPort: 8443
+              containerPort: 8080
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -130,7 +114,7 @@ spec:
             - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
               value: "true"
             - name: OAUTH2_PROXY_UPSTREAMS
-              value: http://localhost:8443
+              value: http://localhost:8080
             - name: OAUTH2_PROXY_SESSION_COOKIE_MINIMAL
               value: "true"
             - name: OAUTH2_PROXY_EMAIL_DOMAINS
@@ -208,13 +192,6 @@ spec:
         - name: code-secrets
           secret:
             secretName: {{ include "code-server-oauth2.fullname" . }}-code-secrets
-        - name: config
-        {{- if .Values.persistence.config.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-%s" (include "code-server-oauth2.fullname" .) "config") }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
         - name: shared-data
         {{- if .Values.persistence.sharedData.enabled }}
           persistentVolumeClaim:
