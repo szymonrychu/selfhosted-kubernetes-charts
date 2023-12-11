@@ -2,7 +2,7 @@ apiVersion: v2
 name: home-assistant
 description: A Helm chart for Kubernetes
 type: application
-version: 0.10.4
+version: 0.10.5
 
 # renovate: image=ghcr.io/home-assistant/home-assistant
-appVersion: "2023.12.0"
+appVersion: "2023.12.1"
