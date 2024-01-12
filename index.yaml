@@ -33,6 +33,16 @@ entries:
     version: 0.0.1
   code-server-oauth2:
   - apiVersion: v2
+    appVersion: 2.0.7
+    created: "2024-01-12T21:37:01.808290689Z"
+    description: A Helm chart for Kubernetes
+    digest: 4b119da7c67b62aa5e1d09408e77d4ad1f8be762fea7c2b73e428d966240726a
+    name: code-server-oauth2
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/code-server-oauth2-0.0.9/code-server-oauth2-0.0.9.tgz
+    version: 0.0.9
+  - apiVersion: v2
     appVersion: 2.0.6
     created: "2024-01-12T21:19:31.868947412Z"
     description: A Helm chart for Kubernetes
@@ -1687,4 +1697,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-12T21:19:31.869236407Z"
+generated: "2024-01-12T21:37:01.808502635Z"
