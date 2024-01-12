@@ -62,6 +62,8 @@ spec:
             - name: entrypointd
               mountPath: "/etc/codeserver.d"
               readOnly: true
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
           ports:
             - name: http
               containerPort: 8080
@@ -171,6 +173,9 @@ spec:
         - name: entrypointd
           configMap:
             name: {{ include "code-server-oauth2.fullname" . }}-entrypointd
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
         - name: code-secrets
           secret:
             secretName: {{ include "code-server-oauth2.fullname" . }}-code-secrets
