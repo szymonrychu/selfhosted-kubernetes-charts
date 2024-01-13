@@ -77,7 +77,7 @@ persistence:
     size: 8Gib
     storageClass: ""
     hostPath: ""
-  data:
+  media:
     enabled: false
     existingClaim: ""
     type: "pvc"

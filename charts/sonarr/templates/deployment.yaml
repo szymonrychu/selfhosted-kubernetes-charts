@@ -42,8 +42,8 @@ spec:
               mountPath: /tmp
             - name: config
               mountPath: /config
-            - name: data
-              mountPath: /data
+            - name: media
+              mountPath: /media
         - name: oauth2proxy
           env:
             - name: HOME
@@ -160,14 +160,14 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
-        - name: data
-        {{- if .Values.persistence.data.enabled }}
-          {{- if eq (.Values.persistence.data.type | default "pvc") "pvc" }}
+        - name: media
+        {{- if .Values.persistence.media.enabled }}
+          {{- if eq (.Values.persistence.media.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.data.existingClaim | default (printf "%s-data" (include "sonarr.fullname" $) ) }}
-          {{- else if eq .Values.persistence.data.type "hostPath" }}
+            claimName: {{ .Values.persistence.media.existingClaim | default (printf "%s-data" (include "sonarr.fullname" $) ) }}
+          {{- else if eq .Values.persistence.media.type "hostPath" }}
           hostPath:
-            path: {{ .Values.persistence.data.hostPath }}
+            path: {{ .Values.persistence.media.hostPath }}
           {{- end }}
         {{- else }}
           emptyDir: {}

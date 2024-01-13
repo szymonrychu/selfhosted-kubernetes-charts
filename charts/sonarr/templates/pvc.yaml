@@ -26,13 +26,13 @@ spec:
 {{- end }}
 {{- end }}
 ---
-{{- if and .Values.persistence.data.enabled (not .Values.persistence.data.existingClaim) (eq (.Values.persistence.data.type | default "pvc") "pvc") }}
+{{- if and .Values.persistence.media.enabled (not .Values.persistence.media.existingClaim) (eq (.Values.persistence.media.type | default "pvc") "pvc") }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ template "sonarr.fullname" $ }}-downloads
   namespace: {{ $.Release.Namespace }}
-{{- with .Values.persistence.data.annotations  }}
+{{- with .Values.persistence.media.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
@@ -40,15 +40,15 @@ metadata:
     {{- include "sonarr.selectorLabels" $ | nindent 4 }}
 spec:
   accessModes:
-    - {{ ( .Values.persistence.data.accessMode | default "ReadWriteOnce" ) | quote }}
+    - {{ ( .Values.persistence.media.accessMode | default "ReadWriteOnce" ) | quote }}
   resources:
     requests:
-      storage: {{ .Values.persistence.data.size | quote }}
-{{- if .Values.persistence.data.storageClass }}
-{{- if (eq "-" .Values.persistence.data.storageClass) }}
+      storage: {{ .Values.persistence.media.size | quote }}
+{{- if .Values.persistence.media.storageClass }}
+{{- if (eq "-" .Values.persistence.media.storageClass) }}
   storageClassName: ""
 {{- else }}
-  storageClassName: "{{ .Values.persistence.data.storageClass }}"
+  storageClassName: "{{ .Values.persistence.media.storageClass }}"
 {{- end }}
 {{- end }}
 {{- end }}
