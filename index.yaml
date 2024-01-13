@@ -1292,6 +1292,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/home-assistant-0.1.0/home-assistant-0.1.0.tgz
     version: 0.1.0
+  jackett:
+  - apiVersion: v2
+    appVersion: v0.21.1540-ls275
+    created: "2024-01-13T12:22:01.284751354Z"
+    description: A Helm chart for Kubernetes
+    digest: 50e1b5a814ef4d32080e7e14d66a1d8d7b923f39d128fc245cae444ed05ca9ca
+    name: jackett
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jackett-0.0.1/jackett-0.0.1.tgz
+    version: 0.0.1
   jellyfin:
   - apiVersion: v2
     appVersion: build20221215122025
@@ -1617,6 +1628,16 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.6
+    created: "2024-01-13T12:22:01.367023337Z"
+    description: A Helm chart for Kubernetes
+    digest: fa78fbae7ee4981fc836a5999f2a84c4f110bb1f34423f8ec106ebca4b49cc3f
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-0.0.4/qbittorrent-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.1.6
     created: "2024-01-13T06:45:27.6559905Z"
     description: A Helm chart for Kubernetes
     digest: 3ffe5afeed2d6cdf2dca5381b908ee4eb3054f356fca4a668bfd1fbf8f7b77d4
@@ -1709,6 +1730,16 @@ entries:
   sonarr:
   - apiVersion: v2
     appVersion: release-4.0.0.748
+    created: "2024-01-13T12:22:01.454828238Z"
+    description: A Helm chart for Kubernetes
+    digest: 36d8d73f611cd55706b72e3770c8b16759b99093ec8488ca4f6f143cd3d2cb04
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/sonarr-0.0.2/sonarr-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: release-4.0.0.748
     created: "2024-01-13T06:45:27.741847523Z"
     description: A Helm chart for Kubernetes
     digest: f181eb0fa4a239334d8189f83a9c01fdb7750b7397a293f3ea79e0d102855d15
@@ -1728,4 +1759,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-13T06:45:27.742138289Z"
+generated: "2024-01-13T12:22:01.455268448Z"
