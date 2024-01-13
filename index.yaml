@@ -1666,6 +1666,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-0.0.1/qbittorrent-0.0.1.tgz
     version: 0.0.1
+  radarr:
+  - apiVersion: v2
+    appVersion: release-5.2.6.8376
+    created: "2024-01-13T19:34:13.270541076Z"
+    description: A Helm chart for Kubernetes
+    digest: 2b597eb903d84c05826eabca4189e0d223b5c3cb0a7c54d6d57cb91787deaee5
+    name: radarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/radarr-0.0.2/radarr-0.0.2.tgz
+    version: 0.0.2
   samba:
   - apiVersion: v2
     appVersion: build20221215165756
@@ -1769,4 +1780,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-13T12:27:13.651067174Z"
+generated: "2024-01-13T19:34:13.270830205Z"
