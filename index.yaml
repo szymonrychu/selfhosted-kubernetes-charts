@@ -1616,6 +1616,16 @@ entries:
     - https://github.com/szymonrychu/charts/releases/download/qbittorrent-0.1.1/qbittorrent-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
+    appVersion: 0.1.6
+    created: "2024-01-13T06:45:27.6559905Z"
+    description: A Helm chart for Kubernetes
+    digest: 3ffe5afeed2d6cdf2dca5381b908ee4eb3054f356fca4a668bfd1fbf8f7b77d4
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-0.0.3/qbittorrent-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     appVersion: 0.1.5
     created: "2023-11-27T21:18:11.385080168Z"
     description: A Helm chart for Kubernetes
@@ -1696,6 +1706,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/samba-0.1.0/samba-0.1.0.tgz
     version: 0.1.0
+  sonarr:
+  - apiVersion: v2
+    appVersion: release-4.0.0.748
+    created: "2024-01-13T06:45:27.741847523Z"
+    description: A Helm chart for Kubernetes
+    digest: f181eb0fa4a239334d8189f83a9c01fdb7750b7397a293f3ea79e0d102855d15
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/sonarr-0.0.1/sonarr-0.0.1.tgz
+    version: 0.0.1
   ubuntu-apt-autoupgrade:
   - apiVersion: v2
     appVersion: jammy
@@ -1707,4 +1728,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-12T21:47:30.135949217Z"
+generated: "2024-01-13T06:45:27.742138289Z"
