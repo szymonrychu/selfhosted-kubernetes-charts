@@ -174,7 +174,7 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
-        - name: downloads
+        - name: media
         {{- if .Values.persistence.media.enabled }}
           {{- if eq (.Values.persistence.media.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
