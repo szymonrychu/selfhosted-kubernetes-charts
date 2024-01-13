@@ -1,16 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "qbittorrent.fullname" . }}
+  name: {{ include "sonarr.fullname" . }}
   labels:
-    {{- include "qbittorrent.labels" . | nindent 4 }}
+    {{- include "sonarr.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "qbittorrent.selectorLabels" . | nindent 6 }}
+      {{- include "sonarr.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,33 +16,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "qbittorrent.selectorLabels" . | nindent 8 }}
+        {{- include "sonarr.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "qbittorrent.serviceAccountName" . }}
+      serviceAccountName: {{ include "sonarr.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: config
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            - name: config
-              mountPath: /config-tmp
-          command:
-            - sh
-          args:
-            - -c
-            - ls /config-tmp//qBittorrent/qBittorrent.conf || (mkdir -p /config-tmp/qBittorrent/ && cp /config/qBittorrent/qBittorrent.conf /config-tmp//qBittorrent/qBittorrent.conf)
       containers:
-        - name: qbittorrent
+        - name: sonarr
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -52,20 +34,16 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
+            - name: cache
+              mountPath: /cache
+            - name: varlogs
+              mountPath: /var/logs
+            - name: tmp
+              mountPath: /tmp
             - name: config
               mountPath: /config
-            - name: downloads
-              mountPath: /downloads
-          ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: http
-          readinessProbe:
-            tcpSocket:
-              port: http
+            - name: data
+              mountPath: /data
         - name: oauth2proxy
           env:
             - name: HOME
@@ -86,7 +64,7 @@ spec:
             - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
               value: "true"
             - name: OAUTH2_PROXY_UPSTREAMS
-              value: http://localhost:8080
+              value: http://localhost:8989
             - name: OAUTH2_PROXY_SESSION_COOKIE_MINIMAL
               value: "true"
             - name: OAUTH2_PROXY_EMAIL_DOMAINS
@@ -96,58 +74,58 @@ spec:
             - name: OAUTH2_PROXY_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qbittorrent.fullname" . }}
+                  name: {{ include "sonarr.fullname" . }}
                   key: client-id
             - name: OAUTH2_PROXY_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qbittorrent.fullname" . }}
+                  name: {{ include "sonarr.fullname" . }}
                   key: client-secret
             - name: OAUTH2_PROXY_REDIRECT_URL
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "qbittorrent.fullname" . }}
+                  name: {{ include "sonarr.fullname" . }}
                   key: redirect-url
             # - name: OAUTH2_PROXY_ALLOWED_GROUP
             #   valueFrom:
             #     configMapKeyRef:
-            #       name: {{ include "qbittorrent.fullname" . }}
+            #       name: {{ include "sonarr.fullname" . }}
             #       key: allowed-group
             - name: OAUTH2_PROXY_OIDC_ISSUER_URL
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "qbittorrent.fullname" . }}
+                  name: {{ include "sonarr.fullname" . }}
                   key: realm-url
             - name: OAUTH2_PROXY_COOKIE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "qbittorrent.fullname" . }}
+                  name: {{ include "sonarr.fullname" . }}
                   key: cookie-name
             - name: OAUTH2_PROXY_COOKIE_DOMAIN
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "qbittorrent.fullname" . }}
+                  name: {{ include "sonarr.fullname" . }}
                   key: cookie-domain
             # - name: OAUTH2_PROXY_SCOPE
             #   valueFrom:
             #     configMapKeyRef:
-            #       name: {{ include "qbittorrent.fullname" . }}
+            #       name: {{ include "sonarr.fullname" . }}
             #       key: scope
             - name: OAUTH2_PROXY_COOKIE_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qbittorrent.fullname" . }}
+                  name: {{ include "sonarr.fullname" . }}
                   key: cookie-secret
           ports:
-            - name: proxy
+            - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             tcpSocket:
-              port: proxy
+              port: http
           readinessProbe:
             tcpSocket:
-              port: proxy
+              port: http
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -162,11 +140,19 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: temp
+          emptyDir: {}
+        - name: varlogs
+          emptyDir: {}
         - name: config
         {{- if .Values.persistence.config.enabled }}
           {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "qbittorrent.fullname" $) ) }}
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "sonarr.fullname" $) ) }}
           {{- else if eq .Values.persistence.config.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.config.hostPath }}
@@ -174,14 +160,14 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
-        - name: downloads
-        {{- if .Values.persistence.downloads.enabled }}
-          {{- if eq (.Values.persistence.downloads.type | default "pvc") "pvc" }}
+        - name: data
+        {{- if .Values.persistence.data.enabled }}
+          {{- if eq (.Values.persistence.data.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.downloads.existingClaim | default (printf "%s-downloads" (include "qbittorrent.fullname" $) ) }}
-          {{- else if eq .Values.persistence.downloads.type "hostPath" }}
+            claimName: {{ .Values.persistence.data.existingClaim | default (printf "%s-data" (include "sonarr.fullname" $) ) }}
+          {{- else if eq .Values.persistence.data.type "hostPath" }}
           hostPath:
-            path: {{ .Values.persistence.downloads.hostPath }}
+            path: {{ .Values.persistence.data.hostPath }}
           {{- end }}
         {{- else }}
           emptyDir: {}
