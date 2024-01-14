@@ -1748,6 +1748,18 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/samba-0.1.0/samba-0.1.0.tgz
     version: 0.1.0
+  snapshot-controller:
+  - apiVersion: v2
+    appVersion: v6.3.3
+    created: "2024-01-14T19:44:20.8394961Z"
+    digest: 3473e8a0b2e35c080503e62cba5bbf2bf611299e608bcdb557c94714292677ed
+    name: snapshot-controller
+    sources:
+    - https://github.com/kubernetes-csi/external-snapshotter/
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/snapshot-controller-2.0.4/snapshot-controller-2.0.4.tgz
+    version: 2.0.4
   sonarr:
   - apiVersion: v2
     appVersion: release-4.0.0.748
@@ -1780,4 +1792,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-13T19:34:13.270830205Z"
+generated: "2024-01-14T19:44:20.839737308Z"
