@@ -1,0 +1,7 @@
+apiVersion: v2
+type: application
+name: snapshot-controller
+version: 2.0.4
+appVersion: "v6.3.3"
+sources:
+  - https://github.com/kubernetes-csi/external-snapshotter/
