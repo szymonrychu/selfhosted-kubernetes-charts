@@ -22,33 +22,26 @@ data:
   00-init-user.sh: |
     #!/bin/bash
     set -euo nounset
-    f(){
-      cd /secrets
-      gpg --import ./private.rsa
-      if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
-        cp -R "${HOME}/.gnupg" "/home/${USER_NAME}/.gnupg"
-        chown -R "${USER_UID}:${USER_GID}" /home/${USER_NAME}/.gnupg
+
+    cd /secrets
+
+
+    if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
+      su - "${USER_NAME}" -- gpg --import ./private.rsa
+    fi
+
+    if [[ ! -e "/home/${USER_NAME}/.ssh" ]]; then
+      mkdir -p /home/${USER_NAME}/.ssh
+
+      if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
+        cp ./id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
+        chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
       fi
-
-      if [[ ! -e "/home/${USER_NAME}/.ssh" ]]; then
-        mkdir -p /home/${USER_NAME}/.ssh
-
-        if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
-          cp ./id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
-          chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
-        fi
-        if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
-          cp ./id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
-        fi
-        if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
-          cp ./known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
-        fi
-        chown -R "${USER_UID}:${USER_GID}" "/home/${USER_NAME}/.ssh"
+      if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
+        cp ./id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
       fi
-
-      # fixes ohmyzsh
-      compaudit | xargs chmod g-w,o-w
-    }
-    su - "${USER_NAME}" -- f
-    
-    
+      if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
+        cp ./known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
+      fi
+      chown -R "${USER_UID}:${USER_GID}" "/home/${USER_NAME}/.ssh"
+    fi
