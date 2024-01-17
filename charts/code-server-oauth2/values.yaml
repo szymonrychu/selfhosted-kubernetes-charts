@@ -4,39 +4,6 @@
 
 replicaCount: 1
 
-config:
-  userName: user
-  userUid: 1000
-  userGid: 1000
-  domain: code.example.com
-  clientId: flood
-  clientSecret: keycloakclientsecret123
-  redirectUrl: https://flood.domain.com/oauth2/callback
-  realmUrl: https://auth.domain.com/realms/master
-  cookieName: oauth2-authorization-cookie
-  cookieDomain: flood.domain.com
-  cookieSecret: 8csecret
-  allowedGroup: flood
-  scope: openid email profile
-  privateKey: |
-    someprivatekey
-  publicKey: |
-    someprivatekey
-  knownHosts: |
-    |1|eHUy+DdABsrCSjWFrPHMB6u/aQg=|j1ubaHgHk7cCmhh2m4C9LHSlmVQ= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
-    |1|5BTVwAXj+vC6I6aDQ43nP27WKAg=|2E8pPM72MPTPTIcEIBdl1+vZzVw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
-    |1|PStxtwUxBOjdhk/VfSWaBbSyAvY=|vGUqFWFcpL6DfJH98NvWOOz+3mI= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
-    |1|kcm+w/r4hUIpANo2kt73krZRMg8=|1SboFAEvMi0z0cmY7B+NFlVnQlE= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMMSgqxFsxZv8pZwxx/NPdl7A2exC+V1uInBWvQhkcGch+0KEP9tsu32UnIQnk1+3oQqufo6PzZEtxWfYRMs2GU=
-    |1|1L+f7SudyNp0JUzd6qxPeJgKK3c=|vcu2S1jJp+QK/0cvFXWjMa46FMc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMMSgqxFsxZv8pZwxx/NPdl7A2exC+V1uInBWvQhkcGch+0KEP9tsu32UnIQnk1+3oQqufo6PzZEtxWfYRMs2GU=
-    |1|TU4IYB00K1s7b+SDvElOk8Gjlvc=|EMWcRuR5MQ+Dhv6BHFkGcieHOso= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBE1TvABrKxeuwCHvj5Z60W96RHuDQy/9IxAU4rPl52kkJVf8N6HT8coqwjIwIXlD93XVHdRrySkibHPu0etB8/E=
-    |1|kZfJKZH2y51Q+3Nz2oY8nEyPjHo=|0TzDqsFEbjI72oc9dEEmZaY8VZ8= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBE1TvABrKxeuwCHvj5Z60W96RHuDQy/9IxAU4rPl52kkJVf8N6HT8coqwjIwIXlD93XVHdRrySkibHPu0etB8/E=
-    |1|/fQqEb2/XE/lu0JFOM0i/y6wQco=|j8HFDqyleoXwASyCUwqm5aKWW2w= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAoLfwohyJai8WQpc0G4GoU5kuk65gh0dLGJiiur4XPBV0W71u+xzD3QHuV5kG0R2d1xp9AoQhK01b6RHO0MtmA=
-    |1|66KMNPk0RLY6vcf3yMRBDt2YrQo=|lYFJahwh2vjfE9PrWEJdj3y/mHw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNr2UdEpYTtWhxtEGe/DA9X/RT9S6BJ92tIg+vh6Wlsb3AfqYcEZkz55aLv6oTfBLt2wW7arhobzc2FnbNIBUXM=
-    |1|TvNrVYFIso7uiWP0X+L/nRtS5WU=|KDtxXZ1Z/zP3fA9+4IqI+bcjAOc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMMSgqxFsxZv8pZwxx/NPdl7A2exC+V1uInBWvQhkcGch+0KEP9tsu32UnIQnk1+3oQqufo6PzZEtxWfYRMs2GU=
-    |1|Vr1oUg8mUO+TkDh+z8ltWu2O8og=|pL9VFzXpIfXsVcfZIRCEAalE+Jc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNr2UdEpYTtWhxtEGe/DA9X/RT9S6BJ92tIg+vh6Wlsb3AfqYcEZkz55aLv6oTfBLt2wW7arhobzc2FnbNIBUXM=
-  gpgEncryptionKey: |
-    someprivatekey
-
 image:
   repository: ghcr.io/szymonrychu/code-server
   pullPolicy: IfNotPresent
@@ -62,12 +29,49 @@ resources: {}
 #   cpu: 100m
 #   memory: 128Mi
 
+config:
+  userName: user
+  groupName: users
+  userUid: 1000
+  userGid: 1000
+  domain: code.example.com
+  privateKey: |
+    someprivatekey
+  publicKey: |
+    someprivatekey
+  knownHosts: |
+    |1|eHUy+DdABsrCSjWFrPHMB6u/aQg=|j1ubaHgHk7cCmhh2m4C9LHSlmVQ= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+    |1|5BTVwAXj+vC6I6aDQ43nP27WKAg=|2E8pPM72MPTPTIcEIBdl1+vZzVw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+    |1|PStxtwUxBOjdhk/VfSWaBbSyAvY=|vGUqFWFcpL6DfJH98NvWOOz+3mI= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+    |1|kcm+w/r4hUIpANo2kt73krZRMg8=|1SboFAEvMi0z0cmY7B+NFlVnQlE= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMMSgqxFsxZv8pZwxx/NPdl7A2exC+V1uInBWvQhkcGch+0KEP9tsu32UnIQnk1+3oQqufo6PzZEtxWfYRMs2GU=
+    |1|1L+f7SudyNp0JUzd6qxPeJgKK3c=|vcu2S1jJp+QK/0cvFXWjMa46FMc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMMSgqxFsxZv8pZwxx/NPdl7A2exC+V1uInBWvQhkcGch+0KEP9tsu32UnIQnk1+3oQqufo6PzZEtxWfYRMs2GU=
+    |1|TU4IYB00K1s7b+SDvElOk8Gjlvc=|EMWcRuR5MQ+Dhv6BHFkGcieHOso= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBE1TvABrKxeuwCHvj5Z60W96RHuDQy/9IxAU4rPl52kkJVf8N6HT8coqwjIwIXlD93XVHdRrySkibHPu0etB8/E=
+    |1|kZfJKZH2y51Q+3Nz2oY8nEyPjHo=|0TzDqsFEbjI72oc9dEEmZaY8VZ8= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBE1TvABrKxeuwCHvj5Z60W96RHuDQy/9IxAU4rPl52kkJVf8N6HT8coqwjIwIXlD93XVHdRrySkibHPu0etB8/E=
+    |1|/fQqEb2/XE/lu0JFOM0i/y6wQco=|j8HFDqyleoXwASyCUwqm5aKWW2w= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAoLfwohyJai8WQpc0G4GoU5kuk65gh0dLGJiiur4XPBV0W71u+xzD3QHuV5kG0R2d1xp9AoQhK01b6RHO0MtmA=
+    |1|66KMNPk0RLY6vcf3yMRBDt2YrQo=|lYFJahwh2vjfE9PrWEJdj3y/mHw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNr2UdEpYTtWhxtEGe/DA9X/RT9S6BJ92tIg+vh6Wlsb3AfqYcEZkz55aLv6oTfBLt2wW7arhobzc2FnbNIBUXM=
+    |1|TvNrVYFIso7uiWP0X+L/nRtS5WU=|KDtxXZ1Z/zP3fA9+4IqI+bcjAOc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMMSgqxFsxZv8pZwxx/NPdl7A2exC+V1uInBWvQhkcGch+0KEP9tsu32UnIQnk1+3oQqufo6PzZEtxWfYRMs2GU=
+    |1|Vr1oUg8mUO+TkDh+z8ltWu2O8og=|pL9VFzXpIfXsVcfZIRCEAalE+Jc= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNr2UdEpYTtWhxtEGe/DA9X/RT9S6BJ92tIg+vh6Wlsb3AfqYcEZkz55aLv6oTfBLt2wW7arhobzc2FnbNIBUXM=
+  gpgEncryptionKey: |
+    someprivatekey
+
 oauth2Proxy:
   image:
     repository: quay.io/oauth2-proxy/oauth2-proxy
     pullPolicy: IfNotPresent
     # renovate: image=quay.io/oauth2-proxy/oauth2-proxy
     tag: v7.5.1
+  
+  config:
+    clientId: test
+    redirectUrl: https://test.example.com/oauth2/callback
+    realmUrl: https://test.example.com/realms/master
+    cookieName: oauth2-authorization-cookie
+    cookieDomain: test.example.com
+    clientSecret: test
+    cookieSecret: test
+    # allowedGroup: test
+    # scope: test
+  
 
   securityContext: {}
     # capabilities:
@@ -78,16 +82,17 @@ oauth2Proxy:
     # runAsUser: 1000
   
   resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
 
 
 service:

@@ -46,13 +46,9 @@ spec:
                   name: {{ include "code-server-oauth2.fullname" . }}
                   key: code-domain
             - name: GROUP_NAME
-              value: "users"
+              value: {{ .Values.config.groupName | quote }}
             - name: USER_NAME
               value: {{ .Values.config.userName | quote }}
-            - name: USER_UID
-              value: {{ .Values.config.userUid | quote }}
-            - name: USER_GID
-              value: {{ .Values.config.userGid | quote }}
           volumeMounts:
             - mountPath: /home/{{ .Values.config.userName }}
               name: shared-data
@@ -115,11 +111,6 @@ spec:
                 configMapKeyRef:
                   name: {{ include "code-server-oauth2.fullname" . }}
                   key: redirect-url
-            - name: OAUTH2_PROXY_ALLOWED_GROUP
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "code-server-oauth2.fullname" . }}
-                  key: allowed-group
             - name: OAUTH2_PROXY_OIDC_ISSUER_URL
               valueFrom:
                 configMapKeyRef:
@@ -135,11 +126,6 @@ spec:
                 configMapKeyRef:
                   name: {{ include "code-server-oauth2.fullname" . }}
                   key: cookie-domain
-            - name: OAUTH2_PROXY_SCOPE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "code-server-oauth2.fullname" . }}
-                  key: scope
             - name: OAUTH2_PROXY_COOKIE_SECRET
               valueFrom:
                 secretKeyRef:

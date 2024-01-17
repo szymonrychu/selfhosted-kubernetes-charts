@@ -7,12 +7,10 @@ metadata:
     {{- include "code-server-oauth2.labels" . | nindent 4 }}
 data:
   code-domain: {{ .Values.config.domain | quote }}
-  redirect-url: {{ .Values.config.redirectUrl | quote }}
-  realm-url: {{ .Values.config.realmUrl | quote }}
-  cookie-name: {{ .Values.config.cookieName | quote }}
-  cookie-domain: {{ .Values.config.cookieDomain | quote }}
-  allowed-group: {{ .Values.config.allowedGroup | quote }}
-  scope: {{ .Values.config.scope | quote }}
+  redirect-url: {{ .Values.oauth2Proxy.config.redirectUrl | quote }}
+  realm-url: {{ .Values.oauth2Proxy.config.realmUrl | quote }}
+  cookie-name: {{ .Values.oauth2Proxy.config.cookieName | quote }}
+  cookie-domain: {{ .Values.oauth2Proxy.config.cookieDomain | quote }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -24,25 +22,33 @@ data:
   00-init-user.sh: |
     #!/bin/bash
     set -euo nounset
+    f(){
+      cd /secrets
+      gpg --import ./private.rsa
+      if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
+        cp -R "${HOME}/.gnupg" "/home/${USER_NAME}/.gnupg"
+        chown -R "${USER_UID}:${USER_GID}" /home/${USER_NAME}/.gnupg
+      fi
+
+      if [[ ! -e "/home/${USER_NAME}/.ssh" ]]; then
+        mkdir -p /home/${USER_NAME}/.ssh
+
+        if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
+          cp ./id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
+          chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
+        fi
+        if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
+          cp ./id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
+        fi
+        if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
+          cp ./known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
+        fi
+        chown -R "${USER_UID}:${USER_GID}" "/home/${USER_NAME}/.ssh"
+      fi
+
+      # fixes ohmyzsh
+      compaudit | xargs chmod g-w,o-w
+    }
+    su - "${USER_NAME}" -- f
     
-    cd /secrets
-    gpg --import ./private.rsa
-    if [[ ! -e /new_home/.gnupg ]]; then
-      cp -R "${HOME}/.gnupg" /new_home/.gnupg
-      chown -R 1000:1000 /new_home/.gnupg
-    fi
-    if [[ ! -e /new_home/.ssh/id_rsa ]]; then
-      mkdir -p /new_home/.ssh
-      cp ./id_rsa /new_home/.ssh/id_rsa
-      chmod 0600 /new_home/.ssh/id_rsa
-      chown -R 1000:1000 /new_home/.ssh
-    fi
-    if [[ ! -e /new_home/.ssh/id_rsa.pub ]]; then
-      cp ./id_rsa.pub /new_home/.ssh/id_rsa.pub
-      chown -R 1000:1000 /new_home/.ssh
-    fi
-    if [[ ! -e /new_home/.ssh/known_hosts ]]; then
-      mkdir -p /new_home/.ssh
-      cp ./known_hosts /new_home/.ssh/known_hosts
-      chown -R 1000:1000 /new_home/.ssh
-    fi
+    
