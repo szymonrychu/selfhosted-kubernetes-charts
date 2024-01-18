@@ -43,3 +43,7 @@ data:
       fi
       chown -R "${USER_UID}:${USER_GID}" "/home/${USER_NAME}/.ssh"
     fi
+{{- range $name, $content := .Values.extraEntrypointScripts -}}
+  {{ $name | nindent 2 }}: |
+    {{- $content | nindent 4 }}
+{{- end }}

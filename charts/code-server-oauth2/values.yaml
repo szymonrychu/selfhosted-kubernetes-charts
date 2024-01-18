@@ -54,6 +54,10 @@ config:
   gpgEncryptionKey: |
     someprivatekey
 
+extraEntrypointScripts: {}
+
+extraSecrets: {}
+
 oauth2Proxy:
   image:
     repository: quay.io/oauth2-proxy/oauth2-proxy
