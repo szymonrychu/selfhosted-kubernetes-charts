@@ -33,8 +33,9 @@ data:
 
       if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
         cp /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
-        chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
       fi
+      chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
+      
       if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
         cp /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
       fi
