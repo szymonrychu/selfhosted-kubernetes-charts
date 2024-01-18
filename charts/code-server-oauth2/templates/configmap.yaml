@@ -25,6 +25,7 @@ data:
 
     if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
       su - "${USER_NAME}" -c "gpg --import /secrets/private.rsa"
+      chmod 0640 "/home/${USER_NAME}/.gnupg"
     fi
 
     if [[ ! -e "/home/${USER_NAME}/.ssh" ]]; then
