@@ -25,7 +25,6 @@ data:
 
     if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
       su - "${USER_NAME}" -c "gpg --import /secrets/private.rsa"
-      chmod 0640 "/home/${USER_NAME}/.gnupg"
     fi
 
     if [[ ! -e "/home/${USER_NAME}/.ssh" ]]; then
@@ -34,7 +33,6 @@ data:
       if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
         cp /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
       fi
-      chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
       
       if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
         cp /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
@@ -44,6 +42,8 @@ data:
       fi
       chown -R "${USER_UID}:${USER_GID}" "/home/${USER_NAME}/.ssh"
     fi
+    chmod 0600 "/home/${USER_NAME}/.gnupg"
+    chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
 {{- range $name, $content := .Values.extraEntrypointScripts -}}
   {{ $name | nindent 2 }}: |
     {{- $content | nindent 4 }}
