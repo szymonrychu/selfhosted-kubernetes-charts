@@ -159,6 +159,7 @@ spec:
         - name: entrypointd
           configMap:
             name: {{ include "code-server-oauth2.fullname" . }}-entrypointd
+            defaultMode: 0777
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
