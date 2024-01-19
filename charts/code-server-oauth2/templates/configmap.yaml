@@ -24,23 +24,20 @@ data:
     set -euo nounset
 
     if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
-      su - "${USER_NAME}" -c "gpg --import /secrets/private.rsa"
+      gpg --import /secrets/private.rsa
     fi
 
     if [[ ! -e "/home/${USER_NAME}/.ssh" ]]; then
       mkdir -p /home/${USER_NAME}/.ssh
-
       if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
         cp /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
       fi
-      
       if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
         cp /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
       fi
       if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
         cp /secrets/known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
       fi
-      chown -R "${USER_UID}:${USER_GID}" "/home/${USER_NAME}/.ssh"
     fi
     chmod 0600 "/home/${USER_NAME}/.gnupg"
     chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
