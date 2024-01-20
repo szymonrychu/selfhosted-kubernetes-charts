@@ -39,8 +39,8 @@ data:
         cp /secrets/known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
       fi
     fi
-    chmod 0600 "/home/${USER_NAME}/.gnupg"
-    chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
+    echo "chmod 0600 /home/${USER_NAME}/.gnupg" >> /home/${USER_NAME}/.zshrc
+    echo "chmod 0600 /home/${USER_NAME}/.ssh/id_rsa"" >> /home/${USER_NAME}/.zshrc
 {{- range $name, $content := .Values.extraEntrypointScripts -}}
   {{ $name | nindent 2 }}: |
     {{- $content | nindent 4 }}
