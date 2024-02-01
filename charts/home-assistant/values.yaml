@@ -4,7 +4,6 @@
 
 replicaCount: 1
 
-
 config:
   localVoiceProcessing:
     enabled: false
@@ -78,10 +77,8 @@ templates:
   switch.yaml: ""
   device_tracker.yaml: ""
 
-
 additionalDNSServers:
-  - 1.1.1.1
-  - 8.8.8.8
+  - 192.168.1.1
 
 images:
   homeassistant:
@@ -114,6 +111,12 @@ images:
     pullPolicy: IfNotPresent
     # renovate: image=bash
     tag: "5.2.21"
+
+priorityClassName: {}
+  # homeassistant: ""
+  # piper: ""
+  # whisper: ""
+  # openwakeword: ""
 
 securityContexts:
   homeassistant: {}

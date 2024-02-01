@@ -27,6 +27,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.priorityClassName.piper }}
+      priorityClassName: {{- . | quote }}
+      {{- end }}
       restartPolicy: Always
       serviceAccountName: {{ include "home-assistant.serviceAccountName" . }}
       securityContext:
