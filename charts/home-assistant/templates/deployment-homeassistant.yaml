@@ -29,6 +29,9 @@ spec:
       {{- end }}
       restartPolicy: Always
       hostNetwork: true
+      {{- with .Values.priorityClassName.homeassistant }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
       dnsPolicy: ClusterFirstWithHostNet
       dnsConfig:
         nameservers:
