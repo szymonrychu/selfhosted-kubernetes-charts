@@ -1,0 +1,172 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "filebrowser-oauth2.fullname" . }}
+  labels:
+    {{- include "filebrowser-oauth2.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "filebrowser-oauth2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "filebrowser-oauth2.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "filebrowser-oauth2.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: main
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --cache-dir
+            - /cache
+            - --database
+            - /config/filebrowser.db
+            - --noauth
+            - --port
+            - "8080"
+          volumeMounts:
+            - mountPath: /cache
+              name: cache
+            - mountPath: /srv
+              name: media
+            - mountPath: /config
+              name: config
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.oauth2proxy.resources | nindent 12 }}
+        - name: proxy
+          securityContext:
+            {{- toYaml .Values.oauth2proxy.securityContext | nindent 12 }}
+          image: "{{ .Values.oauth2proxy.image.repository }}:{{ .Values.oauth2proxy.image.tag }}"
+          imagePullPolicy: {{ .Values.oauth2proxy.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.oauth2proxy.resources | nindent 12 }}
+          env:
+            - name: OAUTH2_PROXY_PROVIDER
+              value: keycloak-oidc
+            - name: OAUTH2_PROXY_HTTP_ADDRESS
+              value: 0.0.0.0:4180
+            - name: OAUTH2_PROXY_REVERSE_PROXY
+              value: "true"
+            - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+              value: "true"
+            - name: OAUTH2_PROXY_UPSTREAMS
+              value: http://localhost:8080
+            - name: OAUTH2_PROXY_SESSION_COOKIE_MINIMAL
+              value: "true"
+            - name: OAUTH2_PROXY_EMAIL_DOMAINS
+              value: "*"
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "filebrowser-oauth2.fullname" . }}
+                  key: client-id
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "filebrowser-oauth2.fullname" . }}
+                  key: client-secret
+            - name: OAUTH2_PROXY_REDIRECT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "filebrowser-oauth2.fullname" . }}
+                  key: redirect-url
+            - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "filebrowser-oauth2.fullname" . }}
+                  key: realm-url
+            - name: OAUTH2_PROXY_COOKIE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "filebrowser-oauth2.fullname" . }}
+                  key: cookie-name
+            - name: OAUTH2_PROXY_COOKIE_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "filebrowser-oauth2.fullname" . }}
+                  key: cookie-domain
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "filebrowser-oauth2.fullname" . }}
+                  key: cookie-secret
+          ports:
+            - name: oauth2-http
+              containerPort: 4180
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: oauth2-http
+          readinessProbe:
+            tcpSocket:
+              port: oauth2-http
+          resources:
+            {{- toYaml .Values.oauth2proxy.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: cache
+          emptyDir: {}
+        - name: config
+        {{- if .Values.persistence.config.enabled }}
+          {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "filebrowser-oauth2.fullname" $) ) }}
+          {{- else if eq .Values.persistence.config.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.config.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: media
+        {{- if .Values.persistence.media.enabled }}
+          {{- if eq (.Values.persistence.media.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.media.existingClaim | default (printf "%s-media" (include "filebrowser-oauth2.fullname" $) ) }}
+          {{- else if eq .Values.persistence.media.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.media.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
