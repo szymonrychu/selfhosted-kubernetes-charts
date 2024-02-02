@@ -504,6 +504,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ffmpeg-encoder-daemon-0.1.0/ffmpeg-encoder-daemon-0.1.0.tgz
     version: 0.1.0
+  filebrowser-oauth2:
+  - apiVersion: v2
+    appVersion: v2.27.0
+    created: "2024-02-02T10:30:13.912685464Z"
+    description: A Helm chart for Kubernetes
+    digest: b6a9164f3140bf28de0df1396377616b7517d0f3308a1f8eda8fa9af6b669955
+    name: filebrowser-oauth2
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/filebrowser-oauth2-0.0.1/filebrowser-oauth2-0.0.1.tgz
+    version: 0.0.1
   flood-rtorrent:
   - apiVersion: v2
     appVersion: 0.0.0
@@ -2082,4 +2093,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-01T13:59:32.727188717Z"
+generated: "2024-02-02T10:30:13.913068138Z"
