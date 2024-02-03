@@ -24,7 +24,32 @@ jobs:
         with:
           version: v3.10.0
 
-      - name: Add repo dependencies
+      - name: Add repo dependencies for library-charts
+        run: |
+          added="F"
+          for CHART in `ls "./library-charts/"`; do
+            cd "./library-charts/${CHART}"
+            if grep "dependencies:" Chart.yaml; then
+              yq '.dependencies[] | ("helm repo add " + .name + " " + .repository)' Chart.yaml | bash -
+              if [[ "$added" == "F" ]]; then
+                added="T"
+              fi
+            fi
+            cd -
+          done
+          if [[ "$added" == "T" ]]; then
+            helm repo update
+          fi
+
+      - name: Run chart-releaser for library-charts
+        uses: helm/chart-releaser-action@a917fd15b20e8b64b94d9158ad54cd6345335584 # v1.6.0
+        with:
+          charts_dir: library-charts
+          skip_existing: true
+        env:
+          CR_TOKEN: "${{ secrets.SZYMONRYCHU_TOKEN }}"
+
+      - name: Add repo dependencies for charts
         run: |
           added="F"
           for CHART in `ls "./charts/"`; do
@@ -41,8 +66,10 @@ jobs:
             helm repo update
           fi
 
-      - name: Run chart-releaser
+      - name: Run chart-releaser for charts
         uses: helm/chart-releaser-action@a917fd15b20e8b64b94d9158ad54cd6345335584 # v1.6.0
+        with:
+          charts_dir: charts
+          skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.SZYMONRYCHU_TOKEN }}"
-          CR_SKIP_EXISTING: "true"

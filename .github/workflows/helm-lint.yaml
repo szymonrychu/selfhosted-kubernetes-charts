@@ -23,6 +23,7 @@ jobs:
         with:
           files: |
             charts/
+            library-charts/
           json: true
           escape_json: false
           dir_names: true

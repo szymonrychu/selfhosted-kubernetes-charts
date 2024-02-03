@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "availability-checker.name" -}}
+{{- define "oauth2proxy.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "availability-checker.fullname" -}}
+{{- define "oauth2proxy.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "availability-checker.chart" -}}
+{{- define "oauth2proxy.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "availability-checker.labels" -}}
-helm.sh/chart: {{ include "availability-checker.chart" . }}
-{{ include "availability-checker.selectorLabels" . }}
+{{- define "oauth2proxy.labels" -}}
+helm.sh/chart: {{ include "oauth2proxy.chart" . }}
+{{ include "oauth2proxy.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,29 +45,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "availability-checker.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "availability-checker.name" . }}
+{{- define "oauth2proxy.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "oauth2proxy.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of nodeRebooter service account to use
+Create the name of the service account to use
 */}}
-{{- define "availability-checker.nodeRebooter.serviceAccountName" -}}
-{{- if .Values.nodeRebooter.serviceAccount.create }}
-{{- default (include "availability-checker.fullname" .) .Values.nodeRebooter.serviceAccount.name }}
+{{- define "oauth2proxy.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "oauth2proxy.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.nodeRebooter.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create the name of ingressHostsChecker service account to use
-*/}}
-{{- define "availability-checker.ingressHostsChecker.serviceAccountName" -}}
-{{- if .Values.ingressHostsChecker.serviceAccount.create }}
-{{- default (include "availability-checker.fullname" .) .Values.ingressHostsChecker.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.ingressHostsChecker.serviceAccount.name }}
+{{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
