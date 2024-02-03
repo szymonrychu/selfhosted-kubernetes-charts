@@ -34,6 +34,20 @@ entries:
   code-server-oauth2:
   - apiVersion: v2
     appVersion: 2.1.5
+    created: "2024-02-03T22:21:41.271687232Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: c576ae131b1642c2f8a2f9f1edafe64d5572f9d8d01f305701041875d896aa9e
+    name: code-server-oauth2
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/code-server-oauth2-1.0.1/code-server-oauth2-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 2.1.5
     created: "2024-02-03T22:06:43.559887055Z"
     dependencies:
     - name: oauth2proxy
@@ -339,6 +353,20 @@ entries:
   esphome:
   - apiVersion: v2
     appVersion: 2023.12.9
+    created: "2024-02-03T22:21:41.338755977Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: 48ceaabc2e9024e03f1472ef8336916050f125a21a77cf6fa7d133fa029229d7
+    name: esphome
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/esphome-2.0.1/esphome-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
+    appVersion: 2023.12.9
     created: "2024-02-03T22:06:43.702532259Z"
     dependencies:
     - name: oauth2proxy
@@ -533,6 +561,20 @@ entries:
     - https://github.com/szymonrychu/charts/releases/download/ffmpeg-encoder-daemon-0.1.0/ffmpeg-encoder-daemon-0.1.0.tgz
     version: 0.1.0
   filebrowser-oauth2:
+  - apiVersion: v2
+    appVersion: v2.27.0
+    created: "2024-02-03T22:21:41.434406546Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: cc6e1b49241851d424fd5ab472250de20e86518540541c51123eca98d2431c3f
+    name: filebrowser-oauth2
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/filebrowser-oauth2-1.0.1/filebrowser-oauth2-1.0.1.tgz
+    version: 1.0.1
   - apiVersion: v2
     appVersion: v2.27.0
     created: "2024-02-03T22:06:43.854985842Z"
@@ -1628,6 +1670,20 @@ entries:
   jackett:
   - apiVersion: v2
     appVersion: v0.21.1540-ls275
+    created: "2024-02-03T22:21:41.497457053Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: 4489764633d6867d8e40175f8f999c8311d0603868fe47a4effb87e097f7ca5d
+    name: jackett
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jackett-1.0.1/jackett-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: v0.21.1540-ls275
     created: "2024-02-03T22:06:43.991577672Z"
     dependencies:
     - name: oauth2proxy
@@ -1876,6 +1932,20 @@ entries:
   qbittorrent:
   - apiVersion: v2
     appVersion: 0.1.7
+    created: "2024-02-03T22:21:41.575553242Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: b5b924f092f89e1ce49e2c2cb5da1a70f42cd7eae8c904d5e3231f11aa13bd4b
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-1.0.1/qbittorrent-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 0.1.7
     created: "2024-02-03T22:06:44.157821469Z"
     dependencies:
     - name: oauth2proxy
@@ -1939,6 +2009,20 @@ entries:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-0.0.1/qbittorrent-0.0.1.tgz
     version: 0.0.1
   radarr:
+  - apiVersion: v2
+    appVersion: release-5.2.6.8376
+    created: "2024-02-03T22:21:41.642819622Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: 949989c98b02379d583a4628eea81f53cd7860f9fdcfc6b95d56cef1e28399ed
+    name: radarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/radarr-1.0.1/radarr-1.0.1.tgz
+    version: 1.0.1
   - apiVersion: v2
     appVersion: release-5.2.6.8376
     created: "2024-02-03T22:06:44.299443822Z"
@@ -2049,6 +2133,20 @@ entries:
   sonarr:
   - apiVersion: v2
     appVersion: release-4.0.0.748
+    created: "2024-02-03T22:21:41.735224651Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: 8e52854e757238c2fb4db2019d8715aa83ecf0b7560e8f8a3d3a785bbdf3d213
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/sonarr-1.0.2/sonarr-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    appVersion: release-4.0.0.748
     created: "2024-02-03T22:12:05.976447855Z"
     dependencies:
     - name: oauth2proxy
@@ -2106,4 +2204,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-03T22:20:06.608549569Z"
+generated: "2024-02-03T22:21:41.73565082Z"
