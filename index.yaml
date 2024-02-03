@@ -1670,6 +1670,20 @@ entries:
   jackett:
   - apiVersion: v2
     appVersion: v0.21.1540-ls275
+    created: "2024-02-03T22:33:06.110227884Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: aa575dfa1be1a8da0961bd2581ce1fefc72d384e99719d6bedd369faeb54e657
+    name: jackett
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jackett-1.0.2/jackett-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    appVersion: v0.21.1540-ls275
     created: "2024-02-03T22:21:41.497457053Z"
     dependencies:
     - name: oauth2proxy
@@ -1932,6 +1946,20 @@ entries:
   qbittorrent:
   - apiVersion: v2
     appVersion: 0.1.7
+    created: "2024-02-03T22:33:06.199321419Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: d3b6073d99217ee908ca15750bee3a4fe1973b1e6a3360427ed990423cb7446b
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-1.0.2/qbittorrent-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    appVersion: 0.1.7
     created: "2024-02-03T22:21:41.575553242Z"
     dependencies:
     - name: oauth2proxy
@@ -2009,6 +2037,20 @@ entries:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-0.0.1/qbittorrent-0.0.1.tgz
     version: 0.0.1
   radarr:
+  - apiVersion: v2
+    appVersion: release-5.2.6.8376
+    created: "2024-02-03T22:33:06.276077699Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: 6a8a4fb3d3f6f9035abf087effd3f08bd6bef6bb2da2033ddd88470754da31e0
+    name: radarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/radarr-1.0.2/radarr-1.0.2.tgz
+    version: 1.0.2
   - apiVersion: v2
     appVersion: release-5.2.6.8376
     created: "2024-02-03T22:21:41.642819622Z"
@@ -2133,6 +2175,20 @@ entries:
   sonarr:
   - apiVersion: v2
     appVersion: release-4.0.0.748
+    created: "2024-02-03T22:33:06.364098355Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.2
+    description: A Helm chart for Kubernetes
+    digest: d4e1ad8a0e0665e9465b26e1cff1790794351715d9ffe4080521431b108624cf
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/sonarr-1.0.3/sonarr-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: release-4.0.0.748
     created: "2024-02-03T22:21:41.735224651Z"
     dependencies:
     - name: oauth2proxy
@@ -2204,4 +2260,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-03T22:21:41.73565082Z"
+generated: "2024-02-03T22:33:06.364482141Z"
