@@ -51,6 +51,7 @@ jobs:
 
       - name: Add repo dependencies for charts
         run: |
+          sleep 5
           added="F"
           for CHART in `ls "./charts/"`; do
             cd "./charts/${CHART}"

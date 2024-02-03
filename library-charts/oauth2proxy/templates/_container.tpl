@@ -23,7 +23,7 @@ env:
     value: "*"
   - name: OAUTH2_PROXY_ALLOWED_GROUPS
     valueFrom:
-      secretKeyRef:
+      configMapKeyRef:
         name: {{ include "oauth2proxy.fullname" . }}-proxy
         key: allowed-groups
   - name: OAUTH2_PROXY_CLIENT_ID
