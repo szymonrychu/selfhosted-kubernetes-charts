@@ -5,9 +5,9 @@ metadata:
   labels:
     {{- include "qbittorrent.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "qbittorrent.selectorLabels" . | nindent 6 }}
