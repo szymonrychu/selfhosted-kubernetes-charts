@@ -2039,6 +2039,20 @@ entries:
   sonarr:
   - apiVersion: v2
     appVersion: release-4.0.0.748
+    created: "2024-02-03T22:12:05.976447855Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.1
+    description: A Helm chart for Kubernetes
+    digest: ae3cbc3a58ec1e7f00090ab074054cc2d47309e5ef10ba0b966bf621c77248ed
+    name: sonarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/sonarr-1.0.1/sonarr-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: release-4.0.0.748
     created: "2024-02-03T22:06:44.447934656Z"
     dependencies:
     - name: oauth2proxy
@@ -2082,4 +2096,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-03T22:06:44.448411914Z"
+generated: "2024-02-03T22:12:05.976768307Z"
