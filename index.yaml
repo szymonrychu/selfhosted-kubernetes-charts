@@ -1796,6 +1796,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/metallb-3.0.12/metallb-3.0.12.tgz
     version: 3.0.12
+  oauth2proxy:
+  - apiVersion: v2
+    appVersion: v7.5.1
+    created: "2024-02-03T22:02:51.506676412Z"
+    description: A Helm chart for Kubernetes
+    digest: d3399c77fd9efc9c38ef2639ed2a55a02fbdc34d364ff23ea5efcea25063c320
+    name: oauth2proxy
+    type: library
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/oauth2proxy-0.0.1/oauth2proxy-0.0.1.tgz
+    version: 0.0.1
   qbittorrent:
   - apiVersion: v2
     appVersion: 0.1.7
@@ -1973,4 +1984,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-02T10:30:13.913068138Z"
+generated: "2024-02-03T22:02:51.507090194Z"
