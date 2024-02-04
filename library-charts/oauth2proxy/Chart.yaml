@@ -2,7 +2,7 @@ apiVersion: v2
 name: oauth2proxy
 description: A Helm chart for Kubernetes
 type: library
-version: 0.0.2
+version: 0.0.3
 # renovate: image=quay.io/oauth2proxy/oauth2proxy
 appVersion: v7.5.1
     

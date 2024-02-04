@@ -10,6 +10,7 @@ cookieDomain: test.example.com
 clientSecret: test
 cookieSecret: test
 allowedGroups: "*"
+upstreamPort: "8080"
 
 image:
   repository: quay.io/oauth2-proxy/oauth2-proxy

@@ -16,7 +16,7 @@ env:
   - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
     value: "true"
   - name: OAUTH2_PROXY_UPSTREAMS
-    value: http://localhost:8080
+    value: http://localhost:{{ .Values.oauth2proxy.upstreamPort}}
   - name: OAUTH2_PROXY_SESSION_COOKIE_MINIMAL
     value: "true"
   - name: OAUTH2_PROXY_EMAIL_DOMAINS
