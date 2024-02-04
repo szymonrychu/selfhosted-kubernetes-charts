@@ -1953,6 +1953,16 @@ entries:
   oauth2proxy:
   - apiVersion: v2
     appVersion: v7.5.1
+    created: "2024-02-04T09:25:28.683529971Z"
+    description: A Helm chart for Kubernetes
+    digest: 3b3b13ad4f09c1c6b36d95eb4c7b496de310dab577e2db26512032597c837013
+    name: oauth2proxy
+    type: library
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/oauth2proxy-0.0.3/oauth2proxy-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: v7.5.1
     created: "2024-02-03T22:20:06.607894236Z"
     description: A Helm chart for Kubernetes
     digest: 8ce0bc754c6ca65ce5a5b7ceec6327b61d7ff13f7ee59124a4f3fbba0d10a19b
@@ -2288,4 +2298,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-04T09:13:45.149186167Z"
+generated: "2024-02-04T09:25:28.683924614Z"
