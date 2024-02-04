@@ -1698,6 +1698,20 @@ entries:
   jackett:
   - apiVersion: v2
     appVersion: v0.21.1540-ls275
+    created: "2024-02-04T09:32:39.366415495Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.3
+    description: A Helm chart for Kubernetes
+    digest: 2c05a5697ecf8ce1d2c396d520b310ec1e96367eba1787dc76373adee7b21b39
+    name: jackett
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jackett-1.0.3/jackett-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: v0.21.1540-ls275
     created: "2024-02-03T22:33:06.110227884Z"
     dependencies:
     - name: oauth2proxy
@@ -2326,4 +2340,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-04T09:31:34.85595934Z"
+generated: "2024-02-04T09:32:39.547986887Z"
