@@ -74,7 +74,6 @@ spec:
             - name: config
               mountPath: "/config"
         - {{ include "oauth2proxy.container" . | nindent 10 }}
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
