@@ -761,6 +761,16 @@ entries:
     version: 0.0.1
   home-assistant:
   - apiVersion: v2
+    appVersion: 2024.2.1
+    created: "2024-02-12T09:20:38.586908269Z"
+    description: A Helm chart for Kubernetes
+    digest: 9034fa586ff537958243ab684bb5d605d430311a18fff86f1e613ac8cc7fe10d
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/home-assistant-0.10.17/home-assistant-0.10.17.tgz
+    version: 0.10.17
+  - apiVersion: v2
     appVersion: 2024.2.0
     created: "2024-02-08T09:19:56.215163539Z"
     description: A Helm chart for Kubernetes
@@ -2350,4 +2360,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-02-08T09:19:56.21552719Z"
+generated: "2024-02-12T09:20:38.587437205Z"
