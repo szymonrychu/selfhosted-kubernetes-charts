@@ -10,7 +10,7 @@ env:
   - name: OAUTH2_PROXY_PROVIDER
     value: keycloak-oidc
   - name: OAUTH2_PROXY_HTTP_ADDRESS
-    value: 0.0.0.0:4180
+    value: 0.0.0.0:{{ .Values.oauth2proxy.proxyPort }}
   - name: OAUTH2_PROXY_REVERSE_PROXY
     value: "true"
   - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
@@ -63,7 +63,7 @@ env:
         key: cookie-secret
 ports:
   - name: oauth2-http
-    containerPort: 4180
+    containerPort: {{ .Values.oauth2proxy.proxyPort }}
     protocol: TCP
 livenessProbe:
   tcpSocket:

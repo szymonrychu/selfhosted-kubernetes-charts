@@ -11,6 +11,7 @@ clientSecret: test
 cookieSecret: test
 allowedGroups: "*"
 upstreamPort: "8080"
+proxyPort: "4180"
 
 image:
   repository: quay.io/oauth2-proxy/oauth2-proxy
