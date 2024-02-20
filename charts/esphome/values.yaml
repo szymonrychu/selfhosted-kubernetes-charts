@@ -114,7 +114,8 @@ oauth2proxy:
   cookieDomain: test.example.com
   clientSecret: test
   cookieSecret: test
-  allowedGroups: "*"
+  allowedGroups: esphome
+  upstreamPort: 6052
   proxyPort: 4181
   
 
