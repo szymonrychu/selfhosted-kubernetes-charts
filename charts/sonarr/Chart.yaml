@@ -7,6 +7,6 @@ version: 1.0.4
 appVersion: release-4.0.0.748
 dependencies:
   - name: oauth2proxy
-    version: 0.0.3
+    version: 0.0.4
     import-values: []
     repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
