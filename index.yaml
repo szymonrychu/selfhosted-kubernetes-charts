@@ -2062,7 +2062,8 @@ entries:
       clusters, using standard routing protocols.
     digest: 49843cdaa900c5c6cfa365f503b3bc7e39cbc32c39aada625299491c382d622e
     home: https://github.com/bitnami/charts/tree/master/bitnami/metallb
-    icon: https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
+    icon: 
+      https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
     keywords:
     - load-balancer
     - balancer
@@ -2085,6 +2086,15 @@ entries:
     - https://github.com/szymonrychu/charts/releases/download/metallb-3.0.12/metallb-3.0.12.tgz
     version: 3.0.12
   oauth2-proxy-admission-controller:
+  - apiVersion: v2
+    appVersion: "0.0.1"
+    created: '2024-03-05T21:46:11.487098Z'
+    description: A Helm chart for Kubernetes
+    digest: 00d2ac64bdc9561b2fc161cf4cad765c69f70c27b02e4d59fdee14bf1ac75250
+    name: oauth2-proxy-admission-controller
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.0.1.tgz
   - apiVersion: v2
     appVersion: 0.0.1
     created: "2024-03-05T15:51:24.457156+01:00"
