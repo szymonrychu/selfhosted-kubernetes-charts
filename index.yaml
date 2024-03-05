@@ -2084,6 +2084,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/metallb-3.0.12/metallb-3.0.12.tgz
     version: 3.0.12
+  oauth2-proxy-admission-controller:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-03-05T15:51:24.457156+01:00"
+    description: A Helm chart for Kubernetes
+    digest: 4f8e680291bd701cdba8fac45aaa81de5403824dc59c2ba50bcab5f8eed90a91
+    name: oauth2-proxy-admission-controller
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/oauth2-proxy-admission-controller-0.0.1/oauth2-proxy-admission-controller-0.0.1.tgz
+    version: 0.0.1
   oauth2proxy:
   - apiVersion: v2
     appVersion: v7.5.1
@@ -2470,4 +2481,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-03T16:13:43.327938959Z"
+generated: "2024-03-05T15:51:24.460101+01:00"
