@@ -831,6 +831,16 @@ entries:
     version: 0.0.1
   home-assistant:
   - apiVersion: v2
+    appVersion: 2024.3.1
+    created: "2024-03-15T09:08:38.843743895Z"
+    description: A Helm chart for Kubernetes
+    digest: 99674812956edc5f9a1ee9dd82f06f97729d2f8b74fcc198945dba034dfb1c98
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/home-assistant-0.10.22/home-assistant-0.10.22.tgz
+    version: 0.10.22
+  - apiVersion: v2
     appVersion: 2024.3.0
     created: "2024-03-07T09:06:33.060421392Z"
     description: A Helm chart for Kubernetes
@@ -2072,8 +2082,7 @@ entries:
       clusters, using standard routing protocols.
     digest: 49843cdaa900c5c6cfa365f503b3bc7e39cbc32c39aada625299491c382d622e
     home: https://github.com/bitnami/charts/tree/master/bitnami/metallb
-    icon: 
-      https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
+    icon: https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
     keywords:
     - load-balancer
     - balancer
@@ -2098,7 +2107,7 @@ entries:
   oauth2-proxy-admission-controller:
   - apiVersion: v2
     appVersion: 469d47a
-    created: '2024-03-08T13:48:19.338351Z'
+    created: "2024-03-08T13:48:19.338351Z"
     description: A Helm chart for Kubernetes
     digest: ab41f1b91a5f92cc5c82990ce3cb23cacd9e6d7cd7468730485b17a14a7a7b11
     name: oauth2-proxy-admission-controller
@@ -2108,7 +2117,7 @@ entries:
     version: 0.1.1-1709905663-469d47a
   - apiVersion: v2
     appVersion: 88ed358
-    created: '2024-03-08T12:56:47.072185Z'
+    created: "2024-03-08T12:56:47.072185Z"
     description: A Helm chart for Kubernetes
     digest: e2b19d7d9cb352e6b44573a73a29e7e440f7d09ea8f196b02ed4ccc249518e57
     name: oauth2-proxy-admission-controller
@@ -2118,7 +2127,7 @@ entries:
     version: 0.1.1-1709902560-88ed358
   - apiVersion: v2
     appVersion: c3d418d
-    created: '2024-03-08T12:52:25.858694Z'
+    created: "2024-03-08T12:52:25.858694Z"
     description: A Helm chart for Kubernetes
     digest: c8ede92a9c7fff80bb31eaba078f24cb19cb3bc130c4a5175b1efd10871c07e6
     name: oauth2-proxy-admission-controller
@@ -2128,7 +2137,7 @@ entries:
     version: 0.1.1-1709902300-c3d418d
   - apiVersion: v2
     appVersion: cc542e9
-    created: '2024-03-08T12:38:26.966572Z'
+    created: "2024-03-08T12:38:26.966572Z"
     description: A Helm chart for Kubernetes
     digest: f403a9bb68a74c64f802fd1c4fe37bfe32a9a713f8396af6eff8b52ee9f05427
     name: oauth2-proxy-admission-controller
@@ -2138,7 +2147,7 @@ entries:
     version: 0.1.1-1709901474-cc542e9
   - apiVersion: v2
     appVersion: 24e3c74
-    created: '2024-03-08T12:36:31.124632Z'
+    created: "2024-03-08T12:36:31.124632Z"
     description: A Helm chart for Kubernetes
     digest: 6fc6e843fdd7b08f19f656819f1835c49020f45fe9e82a045e6ebe8d98eb7c26
     name: oauth2-proxy-admission-controller
@@ -2148,7 +2157,7 @@ entries:
     version: 0.1.1-1709901346-24e3c74
   - apiVersion: v2
     appVersion: 941b34d
-    created: '2024-03-08T12:31:31.970370Z'
+    created: "2024-03-08T12:31:31.97037Z"
     description: A Helm chart for Kubernetes
     digest: 465375a683af4691df636d8751b2baff69fe7080e386580d84b8fb6c7a698750
     name: oauth2-proxy-admission-controller
@@ -2158,7 +2167,7 @@ entries:
     version: 0.1.1-1709901054-941b34d
   - apiVersion: v2
     appVersion: c4897d9
-    created: '2024-03-08T12:14:56.223131Z'
+    created: "2024-03-08T12:14:56.223131Z"
     description: A Helm chart for Kubernetes
     digest: 9a7ec6bcc28d0620ed9f7c0a926c1c922184b295966e04929684b55bfd88cf10
     name: oauth2-proxy-admission-controller
@@ -2168,7 +2177,7 @@ entries:
     version: 0.1.1-1709900063-c4897d9
   - apiVersion: v2
     appVersion: e73d278
-    created: '2024-03-08T12:09:36.474531Z'
+    created: "2024-03-08T12:09:36.474531Z"
     description: A Helm chart for Kubernetes
     digest: 1d1f4b53e8b92ace1122e91a66d9afed41fcea0ea14c22ad3f3f195ca3044ae9
     name: oauth2-proxy-admission-controller
@@ -2178,7 +2187,7 @@ entries:
     version: 0.1.1-1709899731-e73d278
   - apiVersion: v2
     appVersion: 26650ff
-    created: '2024-03-08T11:59:48.350932Z'
+    created: "2024-03-08T11:59:48.350932Z"
     description: A Helm chart for Kubernetes
     digest: 4410cd6163c066e8364dfe1e34277de0475aeb4ad34f5c3aad8dc714cf3b0d7d
     name: oauth2-proxy-admission-controller
@@ -2188,7 +2197,7 @@ entries:
     version: 0.1.1-1709899149-26650ff
   - apiVersion: v2
     appVersion: 11d945c
-    created: '2024-03-08T11:52:32.715762Z'
+    created: "2024-03-08T11:52:32.715762Z"
     description: A Helm chart for Kubernetes
     digest: 7f8ddd23253c011877a11c1423f5dfab640e819da5da89542c2d5b69a73bd27b
     name: oauth2-proxy-admission-controller
@@ -2582,4 +2591,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-07T09:06:33.060889355Z"
+generated: "2024-03-15T09:08:38.844066876Z"
