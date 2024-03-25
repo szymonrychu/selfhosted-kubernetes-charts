@@ -1,4 +1,4 @@
-{{- if .Values.config.localVoiceProcessing.enabled }}
+{{- if .Values.localVoiceProcessing.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,7 +48,7 @@ spec:
             - --uri
             - tcp://0.0.0.0:10200
             - --voice
-            - {{ .Values.config.localVoiceProcessing.piperVoice | quote }}
+            - {{ .Values.localVoiceProcessing.piperVoice | quote }}
           ports:
             - name: piper-http
               containerPort: 10200

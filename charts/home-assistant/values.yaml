@@ -4,63 +4,78 @@
 
 replicaCount: 1
 
-config:
-  localVoiceProcessing:
-    enabled: false
-    piperVoice: pl_PL-gosia-medium
-    whisperModel: medium-int8
-    whisperBeamSize: 3
-    whisperLanguage: pl
-    openwakewordModel: ok_nabu
-  homeassistant:
-    name: home-assistant
-  network:
-    trustedProxies:
-      - 192.168.1.0/24
-      - 10.42.0.0/16
-  postgresql:
-    enabled: false
-    username: change_me
-    password: change_me
-    host: home-assistant-db
-    port: 5432
-    database: homeassistant
-  prometheus:
-    enabled: false
-    namespace: hass
-    token: change_me
+localVoiceProcessing:
+  enabled: false
+  piperVoice: pl_PL-gosia-medium
+  whisperModel: medium-int8
+  whisperBeamSize: 3
+  whisperLanguage: pl
+  openwakewordModel: ok_nabu
+
+homeassistant:
+  name: home-assistant
+
+network:
+  trustedProxies:
+    - 192.168.1.0/24
+    - 10.42.0.0/16
+
+prometheus:
+  enabled: false
+  namespace: hass
+  token: change_me
+
+postgresql:
+  enabled: false
+  username: change_me
+  usernameSecret: {}
+    # name: ""
+    # key: ""
+  password: change_me
+  passwordSecret: {}
+    # name: ""
+    # key: ""
+  host: home-assistant-db
+  port: "5432"
+  database: homeassistant
 
 templates:
   configuration.yaml: |
+    ### RENDERER_REPLACE_DESTINATION ###
     default_config:
-    homeassistant:
-      name: {{ config.homeassistant.name }}
-      auth_providers:
-        - type: homeassistant
+    homeassistant: !include homeassistant.yaml
     http:
       use_x_forwarded_for: true
       trusted_proxies:
         {%- for network in config.network.trustedProxies %}
         - {{ network }}
         {%- endfor %}
-    {%- if config.postgresql.enabled %}
-    recorder:
-      purge_keep_days: 30
-      commit_interval: 0
-      auto_purge: true
-      auto_repack: true
-      db_url: postgresql://{{ env.postgresql_username }}:{{ env.postgresql_password }}@{{ env.postgresql_host }}:{{ env.postgresql_port }}/{{ config.postgresql.database }}
-    {%- endif %}
-    {%- if config.prometheus.enabled %}
-    prometheus:
-      namespace: {{ config.prometheus.namespace }}
-    {%- endif %}
     automation: !include automations.yaml
     zone: !include zone.yaml
     sensor: !include sensor.yaml
     switch: !include switch.yaml
     device_tracker: !include device_tracker.yaml
-
+    {%- if config.postgresql.enabled %}
+    recorder: !include recorder.yaml
+    {%- endif %}
+    {%- if config.prometheus.enabled %}
+    prometheus: !include prometheus.yaml
+    {%- endif %}
+  
+  prometheus.yaml: |
+    prometheus:
+      namespace: {{ config.prometheus.namespace }}
+  recorder.yaml: |
+    ### RENDERER_REPLACE_DESTINATION ###
+    purge_keep_days: 30
+    commit_interval: 0
+    auto_purge: true
+    auto_repack: true
+    db_url: postgresql://{{ env.postgresql_username }}:{{ env.postgresql_password }}@{{ env.postgresql_host }}:{{ env.postgresql_port }}/{{ config.postgresql.database }}
+  homeassistant.yaml: |
+    name: {{ config.homeassistant.name }}
+    auth_providers:
+      - type: homeassistant
   automations.yaml: ""
   zone.yaml: ""
   sensor.yaml: |
@@ -105,7 +120,7 @@ images:
     repository: ghcr.io/szymonrychu/jinja-renderer
     pullPolicy: IfNotPresent
     # renovate: image=ghcr.io/szymonrychu/jinja-renderer
-    tag: "0.0.4"
+    tag: "0.1.0"
   initWaitForPostgres:
     repository: bash
     pullPolicy: IfNotPresent
@@ -313,16 +328,3 @@ affinity:
   piper: {}
   whisper: {}
   openwakeword: {}
-
-zalandoPostgresql:
-  annotations: {}
-  persistence:
-    size: 20Gi
-    storageClass: "-"
-  resources:
-    requests:
-      cpu: 10m
-      memory: 100Mi
-    limits:
-      cpu: 500m
-      memory: 500Mi

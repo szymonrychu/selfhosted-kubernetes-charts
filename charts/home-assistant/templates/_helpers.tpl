@@ -60,3 +60,17 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{- define "home-assistant.config" -}}
+localVoiceProcessing:
+{{ .Values.localVoiceProcessing | toYaml | indent 2 }}
+homeassistant:
+{{ .Values.homeassistant | toYaml | indent 2 }}
+network:
+{{ .Values.network | toYaml | indent 2 }}
+prometheus:
+{{ .Values.prometheus | toYaml | indent 2 }}
+postgresql:
+{{ .Values.postgresql | toYaml | indent 2 }}
+{{- end -}}

@@ -1,4 +1,4 @@
-{{- if .Values.config.localVoiceProcessing.enabled }}
+{{- if .Values.localVoiceProcessing.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,11 +49,11 @@ spec:
             - --uri
             - tcp://0.0.0.0:10300
             - --model
-            - {{ .Values.config.localVoiceProcessing.whisperModel | quote }}
+            - {{ .Values.localVoiceProcessing.whisperModel | quote }}
             - --language
-            - {{ .Values.config.localVoiceProcessing.whisperLanguage | quote }}
+            - {{ .Values.localVoiceProcessing.whisperLanguage | quote }}
             - --beam-size
-            - {{ .Values.config.localVoiceProcessing.whisperBeamSize | quote }}
+            - {{ .Values.localVoiceProcessing.whisperBeamSize | quote }}
           ports:
             - name: whisper-http
               containerPort: 10300

@@ -32,19 +32,6 @@
   ],
   "packageRules": [
     {
-      "description": "lockFileMaintenance",
-      "matchUpdateTypes": [
-        "pin",
-        "digest",
-        "patch",
-        "minor",
-        "major",
-        "lockFileMaintenance"
-      ],
-      "dependencyDashboardApproval": false,
-      "minimumReleaseAge": null
-    },
-    {
       "matchManagers": ["helm-requirements", "helm-values", "regex"],
       "postUpgradeTasks": {
         "commands": [
@@ -52,6 +39,17 @@
         ],
         "fileFilters": ["**/Chart.yaml"]
       }
+    },
+    {
+      "description": "MinorAutoUpgrade",
+      "matchUpdateTypes": ["pin", "digest", "patch", "minor"],
+      "minimumReleaseAge": null,
+      "labels": ["automerge"]
+    },
+    {
+      "description": "MajorUpgrade",
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "7 days"
     }
   ]
 }

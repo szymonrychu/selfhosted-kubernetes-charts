@@ -54,38 +54,38 @@ spec:
             - /config
           resources:
             {{- toYaml .Values.resources.initJinjaRenderer | nindent 12 }}
-          {{- if or .Values.config.postgresql.enabled }}
+          {{- if .Values.postgresql.enabled }}
           env:
             - name: JINJA_POSTGRESQL_USERNAME
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.zalandoPostgresql.enabled }}
-                  name: homeassistant.home-assistant-db.credentials.postgresql.acid.zalan.do
-                  key: username
+                  {{- if .Values.postgresql.usernameSecret }}
+                  name: {{ .Values.postgresql.usernameSecret.name }}
+                  key: {{ .Values.postgresql.usernameSecret.key }}
                   {{- else }}
                   name: {{ include "home-assistant.fullname" . }}
-                  key: postgresql_username
+                  key: username
+                  {{- end }}
+            - name: JINJA_POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.postgresql.passwordSecret }}
+                  name: {{ .Values.postgresql.passwordSecret.name }}
+                  key: {{ .Values.postgresql.passwordSecret.key }}
+                  {{- else }}
+                  name: {{ include "home-assistant.fullname" . }}
+                  key: password
                   {{- end }}
             - name: JINJA_POSTGRESQL_HOST
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "home-assistant.fullname" . }}
-                  key: postgresql-host
+                  key: host
             - name: JINJA_POSTGRESQL_PORT
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "home-assistant.fullname" . }}
-                  key: postgresql-port
-            - name: JINJA_POSTGRESQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.zalandoPostgresql.enabled }}
-                  name: homeassistant.home-assistant-db.credentials.postgresql.acid.zalan.do
-                  key: password
-                  {{- else }}
-                  name: {{ include "home-assistant.fullname" . }}
-                  key: postgresql_password
-                  {{- end }}
+                  key: port
           {{- end }}
           volumeMounts:
             - name: templates
@@ -96,7 +96,7 @@ spec:
               readOnly: true
             - name: config
               mountPath: "/config"
-          {{- if .Values.config.postgresql.enabled }}
+          {{- if  .Values.postgresql.enabled }}
         - name: wait-for-postgres
           securityContext:
             {{- toYaml .Values.securityContexts.initWaitForPostgres | nindent 12 }}
@@ -120,12 +120,12 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "home-assistant.fullname" . }}
-                  key: postgresql-host
+                  key: host
             - name: POSTGRESQL_PORT
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "home-assistant.fullname" . }}
-                  key: postgresql-port
+                  key: port
           {{- end }}
       containers:
         - name: homeassistant
@@ -184,8 +184,8 @@ spec:
           configMap:
             name: {{ template "home-assistant.fullname" . }}-templates
         - name: values
-          configMap:
-            name: {{ template "home-assistant.fullname" . }}-values
+          secret:
+            secretName: {{ template "home-assistant.fullname" . }}-values
         - name: config
       {{- if .Values.persistence.homeassistant.enabled }}
           persistentVolumeClaim:

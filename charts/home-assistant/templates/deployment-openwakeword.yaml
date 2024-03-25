@@ -1,4 +1,4 @@
-{{- if .Values.config.localVoiceProcessing.enabled }}
+{{- if .Values.localVoiceProcessing.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,7 +45,7 @@ spec:
             - --uri
             - tcp://0.0.0.0:10400
             - --preload-model
-            - {{ .Values.config.localVoiceProcessing.openwakewordModel | quote }}
+            - {{ .Values.localVoiceProcessing.openwakewordModel | quote }}
           ports:
             - name: oupw-http
               containerPort: 10400
