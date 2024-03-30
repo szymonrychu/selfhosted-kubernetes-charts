@@ -2172,6 +2172,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/metallb-3.0.12/metallb-3.0.12.tgz
     version: 3.0.12
+  microtik-exporter:
+  - apiVersion: v2
+    appVersion: stable-20240325144810
+    created: "2024-03-30T22:21:07.062034587Z"
+    description: A Helm chart for Kubernetes
+    digest: 8eaeda6e465c74db718f645bc9ebdd644fbf66863724bd1b2af3cc026758c044
+    name: microtik-exporter
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/microtik-exporter-0.1.0/microtik-exporter-0.1.0.tgz
+    version: 0.1.0
   oauth2-proxy-admission-controller:
   - apiVersion: v2
     appVersion: 469d47a
@@ -2659,4 +2670,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-30T12:20:20.321576966Z"
+generated: "2024-03-30T22:21:07.062985033Z"
