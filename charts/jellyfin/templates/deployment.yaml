@@ -35,11 +35,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-            {{- if and .Values.nvidiaVisibleDevice }}
-          env:
-            - name: NVIDIA_VISIBLE_DEVICES
-              value: {{ .Values.nvidiaVisibleDevice }}
-            {{- end }}
           volumeMounts:
             - name: cache
               mountPath: /cache
