@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: microtik-exporter-prometheus-microtik-exporter
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 60s
+    path: /
+    port: http-metrics
+    scheme: http
+    scrapeTimeout: 30s
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: microtik-exporter
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: microtik-exporter
+      app.kubernetes.io/version: stable-20240325144810
+      helm.sh/chart: microtik-exporter-0.1.0
