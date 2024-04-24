@@ -46,7 +46,7 @@ spec:
               mountPath: /config
           ports:
             - name: http
-              containerPort: 7878
+              containerPort: 9696
               protocol: TCP
           livenessProbe:
             tcpSocket:
