@@ -3,14 +3,14 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "plowlarr.fullname" $ }}-config
+  name: {{ template "prowlarr.fullname" $ }}-config
   namespace: {{ $.Release.Namespace }}
 {{- with .Values.persistence.config.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "plowlarr.selectorLabels" $ | nindent 4 }}
+    {{- include "prowlarr.selectorLabels" $ | nindent 4 }}
 spec:
   accessModes:
     - {{ ( .Values.persistence.config.accessMode | default "ReadWriteOnce" ) | quote }}

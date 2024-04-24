@@ -1,9 +1,9 @@
 apiVersion: v2
-name: plowlarr
+name: prowlarr
 description: A Helm chart for Kubernetes
 type: application
 version: 0.0.2
-# renovate: image=ghcr.io/hotio/plowlarr
+# renovate: image=ghcr.io/hotio/prowlarr
 appVersion: release-1.16.2.4435
 dependencies:
   - name: oauth2proxy

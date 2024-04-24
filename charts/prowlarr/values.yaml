@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/hotio/plowlarr
+  repository: ghcr.io/hotio/prowlarr
   pullPolicy: IfNotPresent
   tag: ""
 

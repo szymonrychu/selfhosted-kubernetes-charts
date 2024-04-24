@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "plowlarr.fullname" . }}
+  name: {{ include "prowlarr.fullname" . }}
   labels:
-    {{- include "plowlarr.labels" . | nindent 4 }}
+    {{- include "prowlarr.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      {{- include "plowlarr.selectorLabels" . | nindent 6 }}
+      {{- include "prowlarr.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,17 +18,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "plowlarr.selectorLabels" . | nindent 8 }}
+        {{- include "prowlarr.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "plowlarr.serviceAccountName" . }}
+      serviceAccountName: {{ include "prowlarr.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: plowlarr
+        - name: prowlarr
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -80,7 +80,7 @@ spec:
         {{- if .Values.persistence.config.enabled }}
           {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "plowlarr.fullname" $) ) }}
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "prowlarr.fullname" $) ) }}
           {{- else if eq .Values.persistence.config.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.config.hostPath }}
