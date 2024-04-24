@@ -364,6 +364,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/code-server-oauth2-0.0.1/code-server-oauth2-0.0.1.tgz
     version: 0.0.1
+  eclipse-mosquitto:
+  - apiVersion: v2
+    appVersion: 1.6.12
+    created: "2024-04-24T07:20:44.126201319Z"
+    description: A Helm chart for Kubernetes
+    digest: 1d3d8d1dd09286027f4566fdc7226962a65f47fe367e14ebf89f0345d1b5b626
+    name: eclipse-mosquitto
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/eclipse-mosquitto-0.1.0/eclipse-mosquitto-0.1.0.tgz
+    version: 0.1.0
   esphome:
   - apiVersion: v2
     appVersion: 2024.3.1
@@ -2680,4 +2691,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-13T13:37:21.558338167Z"
+generated: "2024-04-24T07:20:44.215365361Z"
