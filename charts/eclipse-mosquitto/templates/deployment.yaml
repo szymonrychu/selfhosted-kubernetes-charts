@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eclipse-mosquitto.fullname" . }}
+  labels:
+    {{- include "eclipse-mosquitto.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "eclipse-mosquitto.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+        checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum | trunc 63 }}
+        {{- if or .Values.authentication.passwordEntries .Values.authentication.passwordFilePath }}
+        checksum/secret: {{ include (print .Template.BasePath "/secret.yaml") . | sha256sum | trunc 63 }}
+        {{- end }}
+        {{- end }}
+      labels:
+        {{- include "eclipse-mosquitto.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "eclipse-mosquitto.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        {{- if or .Values.monitoring.enabled }}
+        - name: exporter
+          image: "{{ .Values.monitoring.image.repository }}:{{ .Values.monitoring.image.tag }}"
+          imagePullPolicy: {{ .Values.monitoring.image.pullPolicy }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          args:
+            {{ toYaml .Values.monitoring.args | indent 12 | trim }}
+          env:
+            {{ toYaml .Values.monitoring.envs | indent 12| trim }}
+          resources:
+            {{ toYaml .Values.monitoring.resources | indent 12 | trim }}
+          ports:
+            - containerPort: 9234
+              name: http-metrics
+              protocol: TCP
+        {{- end }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.ports }}
+          ports:
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              containerPort: {{ $value.port }}
+              protocol: {{ default "TCP" $value.protocol }}
+            {{- end }}
+          {{- end }}
+          livenessProbe:
+            tcpSocket:
+              port: websocket
+            initialDelaySeconds: 5
+            periodSeconds: 1
+          readinessProbe:
+            tcpSocket:
+              port: websocket
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: cache
+              mountPath: /cache
+            - name: varlogs
+              mountPath: /var/logs
+            - name: tmp
+              mountPath: /tmp
+            - name: data
+              mountPath: /mosquitto/data/
+            - name: config
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+          {{- if and .Values.authentication.passwordEntries .Values.authentication.passwordFilePath }}
+            - name: passwordfile
+              mountPath: /etc/mosquitto/passwordfile
+              subPath: passwordfile
+          {{- end }}
+          {{- if and .Values.authorization.acls .Values.authorization.aclfilePath }}
+            - name: aclfile
+              mountPath: /etc/mosquitto/aclfile
+              subPath: aclfile
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: temp
+          emptyDir: {}
+        - name: varlogs
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: {{ include "eclipse-mosquitto.fullname" . }}
+      {{- if .Values.authentication.passwordEntries }}
+        - name: passwordfile
+          secret:
+            secretName: {{ include "mosquitto.fullname" . }}
+      {{- end }}
+      {{- if .Values.authorization.acls }}
+        - name: aclfile
+          secret:
+            secretName: {{ include "mosquitto.fullname" . }}
+      {{- end }}
+        - name: data
+        {{- if .Values.persistence.data.enabled }}
+          {{- if eq (.Values.persistence.data.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.data.existingClaim | default (printf "%s-data" (include "eclipse-mosquitto.fullname" $) ) }}
+          {{- else if eq .Values.persistence.data.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.data.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}

@@ -1,0 +1,27 @@
+---
+{{- if and .Values.persistence.data.enabled (not .Values.persistence.data.existingClaim) (eq (.Values.persistence.data.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "eclipse-mosquitto.fullname" $ }}-data
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.data.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "eclipse-mosquitto.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.data.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.data.size | quote }}
+{{- if .Values.persistence.data.storageClass }}
+{{- if (eq "-" .Values.persistence.data.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.data.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

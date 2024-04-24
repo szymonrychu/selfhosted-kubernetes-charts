@@ -1,0 +1,18 @@
+{{- if or .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "eclipse-mosquitto.fullname" . }}
+  labels:
+    {{- include "eclipse-mosquitto.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - interval: 60s
+    path: /
+    port: http-metrics
+    scheme: http
+    scrapeTimeout: 30s
+  selector:
+    matchLabels:
+      {{- include "eclipse-mosquitto.selectorLabels" . | nindent 6 }}
+{{- end }}
