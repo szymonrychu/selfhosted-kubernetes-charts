@@ -1,0 +1,12 @@
+apiVersion: v2
+name: plowlarr
+description: A Helm chart for Kubernetes
+type: application
+version: 0.0.1
+# renovate: image=ghcr.io/hotio/plowlarr
+appVersion: release-1.16.2.4435
+dependencies:
+  - name: oauth2proxy
+    version: 0.0.4
+    import-values: []
+    repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
