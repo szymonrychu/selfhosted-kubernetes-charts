@@ -2349,6 +2349,20 @@ entries:
   plowlarr:
   - apiVersion: v2
     appVersion: release-1.16.2.4435
+    created: "2024-04-24T11:26:44.847867689Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.4
+    description: A Helm chart for Kubernetes
+    digest: 01f98490addcfdc54005ee7f181c76387c24e37ae7e68c459bb6d1c18a74a033
+    name: plowlarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/plowlarr-0.0.2/plowlarr-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: release-1.16.2.4435
     created: "2024-04-24T11:19:55.627920902Z"
     dependencies:
     - name: oauth2proxy
@@ -2706,4 +2720,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-24T11:19:55.628346439Z"
+generated: "2024-04-24T11:26:44.848658182Z"
