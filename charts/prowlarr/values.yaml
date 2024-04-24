@@ -101,7 +101,7 @@ oauth2proxy:
   clientSecret: test
   cookieSecret: test
   allowedGroups: "*"
-  upstreamPort: "7878"
+  upstreamPort: "9696"
   
 
   securityContext: {}
