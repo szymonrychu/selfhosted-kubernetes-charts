@@ -377,6 +377,20 @@ entries:
     version: 0.1.0
   esphome:
   - apiVersion: v2
+    appVersion: 2024.4.2
+    created: "2024-05-01T09:23:02.150460965Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.4
+    description: A Helm chart for Kubernetes
+    digest: 0abdab025e4af8311de01025ea5b034f033c7906dc57a1f67fd67013a24ddeb0
+    name: esphome
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/esphome-2.0.10/esphome-2.0.10.tgz
+    version: 2.0.10
+  - apiVersion: v2
     appVersion: 2024.3.1
     created: "2024-03-30T12:18:21.446375685Z"
     dependencies:
@@ -2787,4 +2801,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-01T09:22:45.58504303Z"
+generated: "2024-05-01T09:23:02.151228885Z"
