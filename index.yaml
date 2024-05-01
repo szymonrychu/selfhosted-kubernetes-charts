@@ -699,6 +699,20 @@ entries:
     version: 0.1.0
   filebrowser-oauth2:
   - apiVersion: v2
+    appVersion: v2.29.0
+    created: "2024-05-01T09:22:26.815911686Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.4
+    description: A Helm chart for Kubernetes
+    digest: 8f0e3723995074a7bb3c33d3fb5ca1d6ed8a457fd2c17a3fa65e34bdd02d3815
+    name: filebrowser-oauth2
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/filebrowser-oauth2-1.0.2/filebrowser-oauth2-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
     appVersion: v2.27.0
     created: "2024-02-03T22:21:41.434406546Z"
     dependencies:
@@ -2763,4 +2777,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-24T11:48:25.364956564Z"
+generated: "2024-05-01T09:22:26.816281685Z"
