@@ -366,6 +366,16 @@ entries:
     version: 0.0.1
   eclipse-mosquitto:
   - apiVersion: v2
+    appVersion: 1.6.15
+    created: "2024-05-01T09:23:39.801340837Z"
+    description: A Helm chart for Kubernetes
+    digest: 23e88b7ba4a0850df9e1d4a3026305fb4101072d51b9657de170091d2bee37e8
+    name: eclipse-mosquitto
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/eclipse-mosquitto-0.1.1/eclipse-mosquitto-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 1.6.12
     created: "2024-04-24T07:20:44.126201319Z"
     description: A Helm chart for Kubernetes
@@ -2801,4 +2811,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-01T09:23:02.151228885Z"
+generated: "2024-05-01T09:23:39.802086557Z"
