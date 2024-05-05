@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tdarr.fullname" . }}
+  labels:
+    {{- include "tdarr.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "tdarr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tdarr.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tdarr.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: tdarr
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          environment:
+            - name: serverIP
+              value: "0.0.0.0"
+            - name: serverPort
+              value: "8266"
+            - name: webUIPort
+              value: "8265"
+            - name: internalNode
+              value: "true"
+            - name: inContainer
+              value: "true"
+            - name: ffmpegVersion
+              value: "6"
+            - name: nodeName
+              value: "nas"
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          volumeMounts:
+            - name: cache
+              mountPath: /cache
+            - name: varlogs
+              mountPath: /var/logs
+            - name: transcode-cache
+              mountPath: /temp
+              medium: Memory
+            - name: tmp
+              mountPath: /tmp
+            - name: config
+              mountPath: /app/configs
+            - name: media
+              mountPath: /media
+          ports:
+            - name: http
+              containerPort: 8265
+              protocol: TCP
+            - name: api
+              containerPort: 8266
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 20
+            tcpSocket:
+              port: http
+          readinessProbe:
+            initialDelaySeconds: 20
+            tcpSocket:
+              port: http
+        - {{ include "oauth2proxy.container" . | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: temp
+          emptyDir: {}
+        - name: varlogs
+          emptyDir: {}
+        - name: transcode-cache
+          emptyDir: {}
+        - name: config
+        {{- if .Values.persistence.config.enabled }}
+          {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "tdarr.fullname" $) ) }}
+          {{- else if eq .Values.persistence.config.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.config.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: media
+        {{- if .Values.persistence.media.enabled }}
+          {{- if eq (.Values.persistence.media.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.media.existingClaim | default (printf "%s-data" (include "tdarr.fullname" $) ) }}
+          {{- else if eq .Values.persistence.media.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.media.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
