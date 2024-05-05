@@ -2843,6 +2843,21 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/sonarr-0.0.1/sonarr-0.0.1.tgz
     version: 0.0.1
+  tdarr:
+  - apiVersion: v2
+    appVersion: 2.17.01
+    created: "2024-05-05T20:26:35.155321557Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.4
+    description: A Helm chart for Kubernetes
+    digest: 316f1d34b6f5bddb90f0338de13cec4d94d70bc0f9b8d0800e51c18023cf4446
+    name: tdarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/tdarr-1.0.4/tdarr-1.0.4.tgz
+    version: 1.0.4
   ubuntu-apt-autoupgrade:
   - apiVersion: v2
     appVersion: jammy
@@ -2854,4 +2869,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-05T17:47:15.924998565Z"
+generated: "2024-05-05T20:26:35.155801059Z"
