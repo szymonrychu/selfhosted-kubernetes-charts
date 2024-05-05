@@ -44,6 +44,8 @@ spec:
               mountPath: /tmp
             - name: config
               mountPath: /config
+            - name: media
+              mountPath: /media
           ports:
             - name: http
               containerPort: 6767
@@ -87,6 +89,18 @@ spec:
           {{- else if eq .Values.persistence.config.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.config.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: media
+        {{- if .Values.persistence.media.enabled }}
+          {{- if eq (.Values.persistence.media.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.media.existingClaim | default (printf "%s-media" (include "bazarr.fullname" $) ) }}
+          {{- else if eq .Values.persistence.media.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.media.hostPath }}
           {{- end }}
         {{- else }}
           emptyDir: {}

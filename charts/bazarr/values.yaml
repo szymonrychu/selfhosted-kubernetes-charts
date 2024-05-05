@@ -39,6 +39,15 @@ persistence:
     size: 8Gib
     storageClass: ""
     hostPath: ""
+  media:
+    enabled: false
+    existingClaim: ""
+    type: "pvc"
+    annotations: {}
+    accessMode: ""
+    size: 8Gib
+    storageClass: ""
+    hostPath: ""
 
 imagePullSecrets: []
 nameOverride: ""

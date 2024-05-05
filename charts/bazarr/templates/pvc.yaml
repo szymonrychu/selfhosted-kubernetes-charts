@@ -25,3 +25,30 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
+---
+{{- if and .Values.persistence.media.enabled (not .Values.persistence.media.existingClaim) (eq (.Values.persistence.media.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "bazarr.fullname" $ }}-media
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.media.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "bazarr.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.media.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.media.size | quote }}
+{{- if .Values.persistence.media.storageClass }}
+{{- if (eq "-" .Values.persistence.media.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.media.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
