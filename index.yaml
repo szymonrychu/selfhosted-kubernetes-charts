@@ -34,6 +34,20 @@ entries:
   bazarr:
   - apiVersion: v2
     appVersion: release-1.4.2
+    created: "2024-05-05T17:16:10.818348958Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.4
+    description: A Helm chart for Kubernetes
+    digest: b67f90d14d59bfc1677664a63df4c748584f0c23df0279a6f04820d36efa4417
+    name: bazarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/bazarr-0.0.2/bazarr-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: release-1.4.2
     created: "2024-05-05T17:14:19.900747513Z"
     dependencies:
     - name: oauth2proxy
@@ -2826,4 +2840,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-05T17:14:19.901186953Z"
+generated: "2024-05-05T17:16:10.818641009Z"
