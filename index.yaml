@@ -31,6 +31,21 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/availability-checker-0.0.1/availability-checker-0.0.1.tgz
     version: 0.0.1
+  bazarr:
+  - apiVersion: v2
+    appVersion: release-1.4.2
+    created: "2024-05-05T17:14:19.900747513Z"
+    dependencies:
+    - name: oauth2proxy
+      repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+      version: 0.0.4
+    description: A Helm chart for Kubernetes
+    digest: 1e9cbf0f3f7bfc06cb39b1eab4ab14ae272b766ffedca64e805b5c6260254348
+    name: bazarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/bazarr-0.0.1/bazarr-0.0.1.tgz
+    version: 0.0.1
   code-server-oauth2:
   - apiVersion: v2
     appVersion: 2.1.5
@@ -2811,4 +2826,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-01T09:23:39.802086557Z"
+generated: "2024-05-05T17:14:19.901186953Z"
