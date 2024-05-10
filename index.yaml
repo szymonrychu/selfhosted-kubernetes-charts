@@ -2948,6 +2948,16 @@ entries:
   tdarr:
   - apiVersion: v2
     appVersion: 2.17.01
+    created: "2024-05-10T09:48:46.84207552Z"
+    description: A Helm chart for Kubernetes
+    digest: ed1eb5c70a3744369ddf1281080263f2254ef2dc6d6449010b7d7ae13f76527f
+    name: tdarr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/tdarr-2.0.1/tdarr-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
+    appVersion: 2.17.01
     created: "2024-05-10T09:30:02.384452737Z"
     description: A Helm chart for Kubernetes
     digest: 0118910d976ed3366516a5868241e49ff9b65df23596ee2f395e0c14abbd98de
@@ -2981,4 +2991,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-10T09:32:17.051599216Z"
+generated: "2024-05-10T09:48:46.842386218Z"
