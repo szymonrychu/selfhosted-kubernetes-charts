@@ -59,10 +59,12 @@ spec:
               containerPort: 10300
               protocol: TCP
           readinessProbe:
+            initialDelaySeconds: 60
             tcpSocket:
               port: whisper-http
             periodSeconds: 5
           livenessProbe:
+            initialDelaySeconds: 60
             tcpSocket:
               port: whisper-http
             periodSeconds: 5
@@ -76,6 +78,8 @@ spec:
           volumeMounts:
             - name: whisper-data
               mountPath: "/data"
+            - name: whisper-cache
+              mountPath: "/.cache"
       {{- with .Values.nodeSelector.whisper }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -89,6 +93,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: whisper-cache
+          emptyDir: {}
         - name: whisper-data
       {{- if .Values.persistence.whisper.enabled }}
           persistentVolumeClaim:
