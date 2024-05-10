@@ -84,6 +84,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/bazarr-0.0.1/bazarr-0.0.1.tgz
     version: 0.0.1
+  code-server:
+  - apiVersion: v2
+    appVersion: 2.1.5
+    created: "2024-05-10T09:32:17.051254697Z"
+    description: A Helm chart for Kubernetes
+    digest: 80f419adf3539efa7e0d19a5ad2ac9b3de5f344386bc2ef5765f6331d4b8d31a
+    name: code-server
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/code-server-2.0.0/code-server-2.0.0.tgz
+    version: 2.0.0
   code-server-oauth2:
   - apiVersion: v2
     appVersion: 2.1.5
@@ -2970,4 +2981,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-10T09:30:02.385086095Z"
+generated: "2024-05-10T09:32:17.051599216Z"
