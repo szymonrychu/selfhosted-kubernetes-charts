@@ -1,7 +1,7 @@
 apiVersion: v2
-name: jackett
+name: filebrowser
 description: A Helm chart for Kubernetes
 type: application
 version: 2.0.0
-# renovate: image=lscr.io/linuxserver/jackett
-appVersion: v0.21.1540-ls275
+# renovate: image=filebrowser/filebrowser
+appVersion: v2.29.0

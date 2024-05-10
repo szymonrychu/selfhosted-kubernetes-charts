@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "filebrowser-oauth2.fullname" . }}
+  name: {{ include "filebrowser.fullname" . }}
   labels:
-    {{- include "filebrowser-oauth2.labels" . | nindent 4 }}
+    {{- include "filebrowser.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      {{- include "filebrowser-oauth2.selectorLabels" . | nindent 6 }}
+      {{- include "filebrowser.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "filebrowser-oauth2.selectorLabels" . | nindent 8 }}
+        {{- include "filebrowser.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "filebrowser-oauth2.serviceAccountName" . }}
+      serviceAccountName: {{ include "filebrowser.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -62,7 +62,6 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.oauth2proxy.resources | nindent 12 }}
-        - {{ include "oauth2proxy.container" . | nindent 10 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -82,7 +81,7 @@ spec:
         {{- if .Values.persistence.config.enabled }}
           {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "filebrowser-oauth2.fullname" $) ) }}
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "filebrowser.fullname" $) ) }}
           {{- else if eq .Values.persistence.config.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.config.hostPath }}
@@ -94,7 +93,7 @@ spec:
         {{- if .Values.persistence.media.enabled }}
           {{- if eq (.Values.persistence.media.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.media.existingClaim | default (printf "%s-media" (include "filebrowser-oauth2.fullname" $) ) }}
+            claimName: {{ .Values.persistence.media.existingClaim | default (printf "%s-media" (include "filebrowser.fullname" $) ) }}
           {{- else if eq .Values.persistence.media.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.media.hostPath }}

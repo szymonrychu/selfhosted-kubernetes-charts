@@ -3,14 +3,14 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "filebrowser-oauth2.fullname" $ }}-config
+  name: {{ template "filebrowser.fullname" $ }}-config
   namespace: {{ $.Release.Namespace }}
 {{- with .Values.persistence.config.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "filebrowser-oauth2.selectorLabels" $ | nindent 4 }}
+    {{- include "filebrowser.selectorLabels" $ | nindent 4 }}
 spec:
   accessModes:
     - {{ ( .Values.persistence.config.accessMode | default "ReadWriteOnce" ) | quote }}
@@ -30,14 +30,14 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "filebrowser-oauth2.fullname" $ }}-media
+  name: {{ template "filebrowser.fullname" $ }}-media
   namespace: {{ $.Release.Namespace }}
 {{- with .Values.persistence.media.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "filebrowser-oauth2.selectorLabels" $ | nindent 4 }}
+    {{- include "filebrowser.selectorLabels" $ | nindent 4 }}
 spec:
   accessModes:
     - {{ ( .Values.persistence.media.accessMode | default "ReadWriteOnce" ) | quote }}

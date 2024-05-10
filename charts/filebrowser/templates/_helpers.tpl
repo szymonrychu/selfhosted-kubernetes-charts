@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "filebrowser-oauth2.name" -}}
+{{- define "filebrowser.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "filebrowser-oauth2.fullname" -}}
+{{- define "filebrowser.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "filebrowser-oauth2.chart" -}}
+{{- define "filebrowser.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "filebrowser-oauth2.labels" -}}
-helm.sh/chart: {{ include "filebrowser-oauth2.chart" . }}
-{{ include "filebrowser-oauth2.selectorLabels" . }}
+{{- define "filebrowser.labels" -}}
+helm.sh/chart: {{ include "filebrowser.chart" . }}
+{{ include "filebrowser.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "filebrowser-oauth2.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "filebrowser-oauth2.name" . }}
+{{- define "filebrowser.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "filebrowser.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "filebrowser-oauth2.serviceAccountName" -}}
+{{- define "filebrowser.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "filebrowser-oauth2.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "filebrowser.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
