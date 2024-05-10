@@ -2,15 +2,15 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "code-server-oauth2.fullname" . }}
+  name: {{ include "code-server.fullname" . }}
   labels:
-    {{- include "code-server-oauth2.labels" . | nindent 4 }}
+    {{- include "code-server.labels" . | nindent 4 }}
 roleRef:
   kind: ClusterRole
   name: cluster-admin
   apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
-  name: {{ include "code-server-oauth2.fullname" . }}
+  name: {{ include "code-server.fullname" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}

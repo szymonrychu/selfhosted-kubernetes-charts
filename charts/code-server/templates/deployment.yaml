@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "code-server-oauth2.fullname" . }}
+  name: {{ include "code-server.fullname" . }}
   labels:
-    {{- include "code-server-oauth2.labels" . | nindent 4 }}
+    {{- include "code-server.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "code-server-oauth2.selectorLabels" . | nindent 6 }}
+      {{- include "code-server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,13 +16,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "code-server-oauth2.selectorLabels" . | nindent 8 }}
+        {{- include "code-server.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "code-server-oauth2.serviceAccountName" . }}
+      serviceAccountName: {{ include "code-server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -86,18 +86,18 @@ spec:
       volumes:
         - name: entrypointd
           configMap:
-            name: {{ include "code-server-oauth2.fullname" . }}-entrypointd
+            name: {{ include "code-server.fullname" . }}-entrypointd
             defaultMode: 0777
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
         - name: code-secrets
           secret:
-            secretName: {{ include "code-server-oauth2.fullname" . }}-code-secrets
+            secretName: {{ include "code-server.fullname" . }}-code-secrets
         - name: shared-data
         {{- if .Values.persistence.sharedData.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.sharedData.existingClaim | default (printf "%s-%s" (include "code-server-oauth2.fullname" .) "shared-data") }}
+            claimName: {{ .Values.persistence.sharedData.existingClaim | default (printf "%s-%s" (include "code-server.fullname" .) "shared-data") }}
         {{- else }}
           emptyDir: {}
         {{- end }}

@@ -2,14 +2,14 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ .Values.persistence.sharedData.existingClaim | default (printf "%s-%s" (include "code-server-oauth2.fullname" .) "shared-data")  }}
+  name: {{ .Values.persistence.sharedData.existingClaim | default (printf "%s-%s" (include "code-server.fullname" .) "shared-data")  }}
   namespace: {{ .Release.Namespace }}
 {{- with .Values.persistence.sharedData.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    app: {{ template "code-server-oauth2.fullname" . }}
+    app: {{ template "code-server.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
