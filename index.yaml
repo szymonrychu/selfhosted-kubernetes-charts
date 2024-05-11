@@ -2334,7 +2334,8 @@ entries:
       clusters, using standard routing protocols.
     digest: 49843cdaa900c5c6cfa365f503b3bc7e39cbc32c39aada625299491c382d622e
     home: https://github.com/bitnami/charts/tree/master/bitnami/metallb
-    icon: https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
+    icon: 
+      https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
     keywords:
     - load-balancer
     - balancer
@@ -2368,6 +2369,16 @@ entries:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/microtik-exporter-0.1.0/microtik-exporter-0.1.0.tgz
     version: 0.1.0
   oauth2-proxy-admission-controller:
+  - apiVersion: v2
+    appVersion: 47c8e8e
+    created: '2024-05-11T09:59:34.122133Z'
+    description: A Helm chart for Kubernetes
+    digest: 2bd267f71639f00a7f9ec5e41a9767a74aaff7eeb415e25690a9ac30cf6cb7b9
+    name: oauth2-proxy-admission-controller
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-1.1.0-1715421523-47c8e8e.tgz
+    version: 1.1.0-1715421523-47c8e8e
   - apiVersion: v2
     appVersion: 1.1.0
     created: "2024-05-10T10:09:59.287255Z"
@@ -2458,16 +2469,6 @@ entries:
     urls:
     - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.4.tgz
     version: 0.1.4
-  - apiVersion: v2
-    appVersion: eb09fa2
-    created: "2024-05-10T08:18:38.132737Z"
-    description: A Helm chart for Kubernetes
-    digest: 982ce96d85ee9192e2232f3a11e5c0ad94ccfe817ab4cdfd47f01e1521b99e0e
-    name: oauth2-proxy-admission-controller
-    type: application
-    urls:
-    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.4-1715329068-eb09fa2.tgz
-    version: 0.1.4-1715329068-eb09fa2
   oauth2proxy:
   - apiVersion: v2
     appVersion: v7.5.1
