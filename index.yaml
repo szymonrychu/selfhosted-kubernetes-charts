@@ -2901,4 +2901,15 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
+  oauth2-proxy-admission-controller:
+  - apiVersion: v2
+    appVersion: 52d5125
+    created: '2024-05-13T12:13:26.821187Z'
+    description: A Helm chart for Kubernetes
+    digest: a419db08c96f81075d184055c60311094f4869c03566fee2050a8ce92abd801d
+    name: oauth2-proxy-admission-controller
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.0.1-1715602305-52d5125.tgz
+    version: 0.0.1-1715602305-52d5125
 generated: "2024-05-10T10:37:38.237483939Z"
