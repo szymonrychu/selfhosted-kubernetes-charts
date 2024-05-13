@@ -1,0 +1,6 @@
+dependencies:
+- name: oauth2proxy
+  repository: https://szymonrychu.github.io/selfhosted-kubernetes-charts
+  version: 0.0.4
+digest: sha256:e09cc5136fe5b6d242a477959c6f73ec3d3782295a87968ee98831e0a8b6a93c
+generated: "2024-05-05T19:03:58.195805+02:00"
