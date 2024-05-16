@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: lscr.io/linuxserver/jackett
+  repository: fallenbagel/jellyseerr
   pullPolicy: IfNotPresent
   tag: ""
 
@@ -31,15 +31,6 @@ resources: {}
 
 persistence:
   config:
-    enabled: false
-    existingClaim: ""
-    type: "pvc"
-    annotations: {}
-    accessMode: ""
-    size: 8Gib
-    storageClass: ""
-    hostPath: ""
-  data:
     enabled: false
     existingClaim: ""
     type: "pvc"

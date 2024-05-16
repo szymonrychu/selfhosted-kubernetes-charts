@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "jackett.fullname" . }}
+  name: {{ include "jellyseerr.fullname" . }}
   labels:
-    {{- include "jackett.labels" . | nindent 4 }}
+    {{- include "jellyseerr.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      {{- include "jackett.selectorLabels" . | nindent 6 }}
+      {{- include "jellyseerr.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,17 +18,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "jackett.selectorLabels" . | nindent 8 }}
+        {{- include "jellyseerr.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "jackett.serviceAccountName" . }}
+      serviceAccountName: {{ include "jellyseerr.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: jackett
+        - name: jellyseerr
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -43,12 +43,10 @@ spec:
             - name: tmp
               mountPath: /tmp
             - name: config
-              mountPath: /config
-            - name: data
-              mountPath: /data
+              mountPath: /app/config
           ports:
             - name: http
-              containerPort: 9117
+              containerPort: 5055
               protocol: TCP
           livenessProbe:
             tcpSocket:
@@ -81,22 +79,10 @@ spec:
         {{- if .Values.persistence.config.enabled }}
           {{- if eq (.Values.persistence.config.type | default "pvc") "pvc" }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "jackett.fullname" $) ) }}
+            claimName: {{ .Values.persistence.config.existingClaim | default (printf "%s-config" (include "jellyseerr.fullname" $) ) }}
           {{- else if eq .Values.persistence.config.type "hostPath" }}
           hostPath:
             path: {{ .Values.persistence.config.hostPath }}
-          {{- end }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
-        - name: data
-        {{- if .Values.persistence.data.enabled }}
-          {{- if eq (.Values.persistence.data.type | default "pvc") "pvc" }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.data.existingClaim | default (printf "%s-data" (include "jackett.fullname" $) ) }}
-          {{- else if eq .Values.persistence.data.type "hostPath" }}
-          hostPath:
-            path: {{ .Values.persistence.data.hostPath }}
           {{- end }}
         {{- else }}
           emptyDir: {}
