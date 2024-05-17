@@ -66,6 +66,78 @@ spec:
           readinessProbe:
             tcpSocket:
               port: http
+      {{- if .Values.vpnContainer.enabled }}
+        - name: port-forwarding
+          image: "{{ .Values.vpnContainer.portForwardImage.repository }}:{{ .Values.vpnContainer.portForwardImage.tag }}"
+          imagePullPolicy: {{ .Values.vpnContainer.portForwardImage.pullPolicy }}
+          securityContext:
+            runAsGroup: 0
+            runAsUser: 0
+          args:
+            - /bin/sh
+            - -ce
+            - while true; do /usr/src/app/main.sh || true; sleep 30; done
+          resources:
+            {{- toYaml .Values.vpnContainer.resources | nindent 12 }}
+          env:
+            - name: QBT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: qbittorrent-username
+            - name: QBT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: qbittorrent-password
+            - name: QBT_ADDR
+              value: "http://localhost:8080"
+            - name: GTN_ADDR
+              value: "http://localhost:8000"
+        - name: gluetun
+          securityContext:
+            sysctls:
+              - name: net.ipv6.conf.all.disable_ipv6
+                value: "1"
+            runAsGroup: 0
+            privileged: true
+            # runAsNonRoot: true
+            runAsUser: 0
+            capabilities:
+              add: ["NET_ADMIN", "NET_RAW"]
+          image: "{{ .Values.vpnContainer.gluetunImage.repository }}:{{ .Values.vpnContainer.gluetunImage.tag }}"
+          imagePullPolicy: {{ .Values.vpnContainer.gluetunImage.pullPolicy }}
+          resources:
+            {{- toYaml .Values.vpnContainer.resources | nindent 12 }}
+          ports:
+            - name: shadowsockstcp
+              containerPort: 8388
+              protocol: TCP
+            - name: shadowsocksudp
+              containerPort: 8388
+              protocol: UDP
+          env:
+            - name: VPN_SERVICE_PROVIDER
+              value: private internet access
+            - name: VPN_TYPE
+              value: openvpn
+            - name: OPENVPN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: pia-username
+            - name: OPENVPN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent.fullname" . }}
+                  key: pia-password
+            - name: SERVER_REGIONS
+              value: Netherlands
+            - name: PORT_FORWARD_ONLY
+              value: "true"
+            - name: VPN_PORT_FORWARDING
+              value: "on"
+      {{-  end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
