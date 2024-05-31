@@ -2337,6 +2337,16 @@ entries:
     version: 0.1.1
   jellyseerr:
   - apiVersion: v2
+    appVersion: 1.9.0
+    created: "2024-05-31T09:30:40.542892313Z"
+    description: A Helm chart for Kubernetes
+    digest: fc0bde9a4310a8030f611cbc90640c7ef51514f569214dfc08da8b4d69018ab3
+    name: jellyseerr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jellyseerr-0.0.2/jellyseerr-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     appVersion: 1.8.1
     created: "2024-05-16T06:12:40.005328558Z"
     description: A Helm chart for Kubernetes
@@ -3082,4 +3092,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-31T08:58:18.974438539Z"
+generated: "2024-05-31T09:30:40.543356393Z"
