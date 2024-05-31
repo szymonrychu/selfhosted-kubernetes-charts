@@ -461,6 +461,16 @@ entries:
     version: 0.1.0
   esphome:
   - apiVersion: v2
+    appVersion: 2024.5.4
+    created: "2024-05-31T08:58:04.559899693Z"
+    description: A Helm chart for Kubernetes
+    digest: 9bd2a8bf9107032c3d09ba0f13f595ba065728d25f136cd735057d45c78a60d9
+    name: esphome
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/esphome-3.0.1/esphome-3.0.1.tgz
+    version: 3.0.1
+  - apiVersion: v2
     appVersion: 2024.4.2
     created: "2024-05-10T09:30:01.772036133Z"
     description: A Helm chart for Kubernetes
@@ -3062,4 +3072,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/ubuntu-apt-autoupgrade-0.1.0/ubuntu-apt-autoupgrade-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-31T08:57:52.736511873Z"
+generated: "2024-05-31T08:58:04.560310454Z"
