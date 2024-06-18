@@ -3,14 +3,14 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "tdarr.fullname" $ }}-config
+  name: {{ template "unmanic.fullname" $ }}-config
   namespace: {{ $.Release.Namespace }}
 {{- with .Values.persistence.config.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "tdarr.selectorLabels" $ | nindent 4 }}
+    {{- include "unmanic.selectorLabels" $ | nindent 4 }}
 spec:
   accessModes:
     - {{ ( .Values.persistence.config.accessMode | default "ReadWriteOnce" ) | quote }}
@@ -30,14 +30,14 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "tdarr.fullname" $ }}-downloads
+  name: {{ template "unmanic.fullname" $ }}-media
   namespace: {{ $.Release.Namespace }}
 {{- with .Values.persistence.media.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    {{- include "tdarr.selectorLabels" $ | nindent 4 }}
+    {{- include "unmanic.selectorLabels" $ | nindent 4 }}
 spec:
   accessModes:
     - {{ ( .Values.persistence.media.accessMode | default "ReadWriteOnce" ) | quote }}

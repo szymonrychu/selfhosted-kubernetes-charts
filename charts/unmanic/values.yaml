@@ -5,11 +5,14 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/haveagitgat/tdarr
+  repository: josh5/unmanic
   pullPolicy: IfNotPresent
   tag: ""
 
 securityContext: {}
+  # privileged: true
+
+podSecurityContext: {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -63,9 +66,6 @@ serviceAccount:
   name: ""
 
 podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
 
 service:
   type: ClusterIP
