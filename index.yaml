@@ -2425,7 +2425,8 @@ entries:
       clusters, using standard routing protocols.
     digest: 49843cdaa900c5c6cfa365f503b3bc7e39cbc32c39aada625299491c382d622e
     home: https://github.com/bitnami/charts/tree/master/bitnami/metallb
-    icon: https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
+    icon: 
+      https://bitnami.com/assets/stacks/metallb-speaker/img/metallb-speaker-stack-220x234.png
     keywords:
     - load-balancer
     - balancer
@@ -2459,6 +2460,16 @@ entries:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/microtik-exporter-0.1.0/microtik-exporter-0.1.0.tgz
     version: 0.1.0
   oauth2-proxy-admission-controller:
+  - apiVersion: v2
+    appVersion: '4375589'
+    created: '2024-06-26T10:21:43.608116Z'
+    description: A Helm chart for Kubernetes
+    digest: ad4c38e0cb91f3da335388703d61a8f67f53f21ea118ba7447088ced730ec40a
+    name: oauth2-proxy-admission-controller
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.1-1719397213-4375589.tgz
+    version: 0.1.1-1719397213-4375589
   - apiVersion: v2
     appVersion: 0.1.1
     created: "2024-05-14T05:37:27.988547Z"
@@ -2549,16 +2560,6 @@ entries:
     urls:
     - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.1-1717585523-02d0578.tgz
     version: 0.1.1-1717585523-02d0578
-  - apiVersion: v2
-    appVersion: 01c2e18
-    created: "2024-06-05T09:30:26.948827Z"
-    description: A Helm chart for Kubernetes
-    digest: edce82476a986fcc87df211dfd11d887a57262c977545081dacdcc4b90e35d9c
-    name: oauth2-proxy-admission-controller
-    type: application
-    urls:
-    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.1-1717579713-01c2e18.tgz
-    version: 0.1.1-1717579713-01c2e18
   oauth2proxy:
   - apiVersion: v2
     appVersion: v7.5.1
