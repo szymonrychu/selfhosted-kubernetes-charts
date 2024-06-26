@@ -4,11 +4,7 @@
   "dependencyDashboard": false,
   "rebaseWhen": "conflicted",
   "suppressNotifications": ["prIgnoreNotification"],
-  "username": "szymonrichert.pl bot",
   "gitAuthor": "szymonrichert.pl bot <bot@szymonrichert.pl>",
-  "onboarding": false,
-  "platform": "github",
-  "repositories": ["szymonrychu/selfhosted-kubernetes-charts"],
   "customManagers": [
     {
       "customType": "regex",
@@ -50,6 +46,17 @@
       "description": "MajorUpgrade",
       "matchUpdateTypes": ["major"],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
     }
   ]
 }
