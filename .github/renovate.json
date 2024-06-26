@@ -1,5 +1,4 @@
 {
-  "dryRun": null,
   "extends": ["config:recommended", ":rebaseStalePrs"],
   "dependencyDashboard": false,
   "rebaseWhen": "conflicted",
