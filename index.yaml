@@ -2337,6 +2337,16 @@ entries:
     version: 0.1.1
   jellyseerr:
   - apiVersion: v2
+    appVersion: 1.9.2
+    created: "2024-06-26T10:01:06.65395288Z"
+    description: A Helm chart for Kubernetes
+    digest: 5a9d4c722faf7166dc347ed81a2e389c7823fca9b9b56222e4373b1c48347ed7
+    name: jellyseerr
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jellyseerr-0.0.3/jellyseerr-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     appVersion: 1.9.0
     created: "2024-05-31T09:30:40.542892313Z"
     description: A Helm chart for Kubernetes
@@ -3113,4 +3123,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-18T13:28:08.670449326Z"
+generated: "2024-06-26T10:01:06.654415123Z"
