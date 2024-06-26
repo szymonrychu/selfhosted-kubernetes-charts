@@ -2176,6 +2176,16 @@ entries:
     version: 0.0.1
   jellyfin:
   - apiVersion: v2
+    appVersion: 10.9.7
+    created: "2024-06-26T10:42:21.530523915Z"
+    description: A Helm chart for Kubernetes
+    digest: d3f99f03d5afbe8654d01e66e7a7aba666a3d93f27ccd7eb7169f76d13ab647e
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jellyfin-0.6.3/jellyfin-0.6.3.tgz
+    version: 0.6.3
+  - apiVersion: v2
     appVersion: 10.9.3
     created: "2024-05-31T08:57:52.735984749Z"
     description: A Helm chart for Kubernetes
@@ -3143,4 +3153,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-26T10:32:41.720788661Z"
+generated: "2024-06-26T10:42:21.531216829Z"
