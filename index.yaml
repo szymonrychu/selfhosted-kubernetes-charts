@@ -1002,6 +1002,16 @@ entries:
     version: 0.1.0
   gha-runner:
   - apiVersion: v2
+    appVersion: 2.311.1
+    created: "2024-07-04T20:14:19.256156145Z"
+    description: A Helm chart for Kubernetes
+    digest: 7c5604eb4335ca17da1dec17012a4b4174710adeb7031e888ec710c1362b33e5
+    name: gha-runner
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/gha-runner-2.311.1/gha-runner-2.311.1.tgz
+    version: 2.311.1
+  - apiVersion: v2
     appVersion: 2.311.0
     created: "2023-10-25T19:32:23.317776606Z"
     description: A Helm chart for Kubernetes
@@ -3193,4 +3203,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-04T09:25:41.1555749Z"
+generated: "2024-07-04T20:14:19.25649673Z"
