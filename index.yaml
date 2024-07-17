@@ -461,6 +461,16 @@ entries:
     version: 0.1.0
   esphome:
   - apiVersion: v2
+    appVersion: 2024.7.0
+    created: "2024-07-17T09:25:13.270030929Z"
+    description: A Helm chart for Kubernetes
+    digest: 5c60b8abb4a75e926ad4e751c77369d34e484a89a1dc3cc9a1e0b72f1a88c4e6
+    name: esphome
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/esphome-3.0.6/esphome-3.0.6.tgz
+    version: 3.0.6
+  - apiVersion: v2
     appVersion: 2024.6.6
     created: "2024-07-04T09:25:41.091543144Z"
     description: A Helm chart for Kubernetes
@@ -3223,4 +3233,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-11T09:24:39.029669561Z"
+generated: "2024-07-17T09:25:13.27065926Z"
