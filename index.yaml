@@ -461,6 +461,16 @@ entries:
     version: 0.1.0
   esphome:
   - apiVersion: v2
+    appVersion: 2024.7.1
+    created: "2024-07-22T09:26:38.970031448Z"
+    description: A Helm chart for Kubernetes
+    digest: cd8a0d3f50aadc568adfee4bfa09155703bfdfbcb3e75dc0eb49000f2d1fa341
+    name: esphome
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/esphome-3.0.7/esphome-3.0.7.tgz
+    version: 3.0.7
+  - apiVersion: v2
     appVersion: 2024.7.0
     created: "2024-07-17T09:25:13.270030929Z"
     description: A Helm chart for Kubernetes
@@ -1082,6 +1092,16 @@ entries:
     - https://github.com/szymonrychu/charts/releases/download/gha-runner-0.0.1/gha-runner-0.0.1.tgz
     version: 0.0.1
   home-assistant:
+  - apiVersion: v2
+    appVersion: 2024.7.3
+    created: "2024-07-22T09:26:39.119995556Z"
+    description: A Helm chart for Kubernetes
+    digest: e301d96d65714a7ac9e5cd5c2626121eaddc8533235ecc47a93b2a725e4d5796
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/home-assistant-0.11.8/home-assistant-0.11.8.tgz
+    version: 0.11.8
   - apiVersion: v2
     appVersion: 2024.7.2
     created: "2024-07-11T09:24:39.029242494Z"
@@ -2256,6 +2276,16 @@ entries:
     version: 0.0.1
   jellyfin:
   - apiVersion: v2
+    appVersion: 10.9.8
+    created: "2024-07-22T09:26:39.341911307Z"
+    description: A Helm chart for Kubernetes
+    digest: e6d09a03daa8641049ad5bf33a9252e7bf6c9e259ecf9011bb7449c1836eb1b9
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jellyfin-0.6.4/jellyfin-0.6.4.tgz
+    version: 0.6.4
+  - apiVersion: v2
     appVersion: 10.9.7
     created: "2024-06-26T10:42:21.530523915Z"
     description: A Helm chart for Kubernetes
@@ -3233,4 +3263,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-17T09:25:13.27065926Z"
+generated: "2024-07-22T09:26:39.342612383Z"
