@@ -440,6 +440,16 @@ entries:
     version: 0.0.1
   eclipse-mosquitto:
   - apiVersion: v2
+    appVersion: 2.0.17
+    created: "2024-07-26T09:22:53.179144604Z"
+    description: A Helm chart for Kubernetes
+    digest: 443d30eff7c84e22b3a33cc4823c0d52d8b85f9e13a02a7cda24bf3e68647026
+    name: eclipse-mosquitto
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/eclipse-mosquitto-0.1.2/eclipse-mosquitto-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 1.6.15
     created: "2024-05-01T09:23:39.801340837Z"
     description: A Helm chart for Kubernetes
@@ -3273,4 +3283,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-25T09:23:55.921073221Z"
+generated: "2024-07-26T09:22:53.179623476Z"
