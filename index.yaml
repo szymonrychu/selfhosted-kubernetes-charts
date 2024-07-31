@@ -1133,6 +1133,16 @@ entries:
     version: 0.0.1
   home-assistant:
   - apiVersion: v2
+    appVersion: 2024.7.4
+    created: "2024-07-31T09:23:26.707141472Z"
+    description: A Helm chart for Kubernetes
+    digest: 47c233f3ccae10bc3333dde98cb8cbf11dcea71ce5359382a63627692199830e
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/home-assistant-0.11.9/home-assistant-0.11.9.tgz
+    version: 0.11.9
+  - apiVersion: v2
     appVersion: 2024.7.3
     created: "2024-07-22T09:26:39.119995556Z"
     description: A Helm chart for Kubernetes
@@ -3303,4 +3313,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-30T09:23:17.449157894Z"
+generated: "2024-07-31T09:23:26.707815288Z"
