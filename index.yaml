@@ -2652,9 +2652,9 @@ entries:
   oauth2-proxy-admission-controller:
   - apiVersion: v2
     appVersion: 0.1.5
-    created: '2024-08-01T18:57:05.499516Z'
+    created: '2024-08-01T18:57:14.018784Z'
     description: A Helm chart for Kubernetes
-    digest: 8b7a7b9f25ddc27367f325c640d1ecb3ae1adc68db94580ecaeafc9aaea48a94
+    digest: f3e8803704b0fa943b6c8592f82c09abbf93b544b75e4b6eb29d15685f7524f5
     name: oauth2-proxy-admission-controller
     type: application
     urls:
