@@ -2895,6 +2895,16 @@ entries:
   qbittorrent:
   - apiVersion: v2
     appVersion: 0.1.7
+    created: "2024-08-09T09:24:52.906706542Z"
+    description: A Helm chart for Kubernetes
+    digest: b359afa46036632f5270bb6e77fdc133c17bba5a05b26036f159a08bfdd51292
+    name: qbittorrent
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/qbittorrent-2.1.1/qbittorrent-2.1.1.tgz
+    version: 2.1.1
+  - apiVersion: v2
+    appVersion: 0.1.7
     created: "2024-05-17T10:48:44.233148717Z"
     description: A Helm chart for Kubernetes
     digest: b763a26123aa73ea3ce96e007f4922029840e806f752d7e7a3d21faa119317d9
@@ -3343,4 +3353,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-08T09:23:54.569279731Z"
+generated: "2024-08-09T09:24:52.907068071Z"
