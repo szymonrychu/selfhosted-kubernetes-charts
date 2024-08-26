@@ -1153,6 +1153,16 @@ entries:
     version: 0.0.1
   home-assistant:
   - apiVersion: v2
+    appVersion: 2024.8.3
+    created: "2024-08-26T09:24:03.751014643Z"
+    description: A Helm chart for Kubernetes
+    digest: 695d5c2dc66ef8d734ff7241591aab41327f6da879610da44c3417241c5c2b55
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/home-assistant-0.11.13/home-assistant-0.11.13.tgz
+    version: 0.11.13
+  - apiVersion: v2
     appVersion: 2024.8.2
     created: "2024-08-19T09:24:34.906733003Z"
     description: A Helm chart for Kubernetes
@@ -2376,6 +2386,16 @@ entries:
     version: 0.0.1
   jellyfin:
   - apiVersion: v2
+    appVersion: 10.9.10
+    created: "2024-08-26T09:24:03.823630924Z"
+    description: A Helm chart for Kubernetes
+    digest: a80a0f86e869155f379fd99f98446495266b5bfd732702576252e2558f00de68
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/jellyfin-0.6.6/jellyfin-0.6.6.tgz
+    version: 0.6.6
+  - apiVersion: v2
     appVersion: 10.9.9
     created: "2024-08-05T09:24:16.755253306Z"
     description: A Helm chart for Kubernetes
@@ -3383,4 +3403,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-21T09:24:17.471587086Z"
+generated: "2024-08-26T09:24:03.824189359Z"
