@@ -3394,6 +3394,16 @@ entries:
     version: 0.1.0
   unmanic:
   - apiVersion: v2
+    appVersion: 0.2.8
+    created: "2024-08-29T09:25:21.821696083Z"
+    description: A Helm chart for Kubernetes
+    digest: 7bcc66c90f5791956625b46422616c12810d06948e869a0eceb04225b99e0e41
+    name: unmanic
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.2/unmanic-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 0.2.7
     created: "2024-06-18T13:28:08.670075283Z"
     description: A Helm chart for Kubernetes
@@ -3413,4 +3423,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-28T09:24:20.482878556Z"
+generated: "2024-08-29T09:25:21.822127552Z"
