@@ -947,6 +947,16 @@ entries:
     version: 0.1.0
   filebrowser:
   - apiVersion: v2
+    appVersion: v2.31.0
+    created: "2024-08-30T09:25:11.834532689Z"
+    description: A Helm chart for Kubernetes
+    digest: 97166784667ef45b61caffa99ee28fa447ec805153b05577b9f4e0d22f8ee3a2
+    name: filebrowser
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/filebrowser-2.0.2/filebrowser-2.0.2.tgz
+    version: 2.0.2
+  - apiVersion: v2
     appVersion: v2.30.0
     created: "2024-05-31T08:57:40.989157721Z"
     description: A Helm chart for Kubernetes
@@ -3423,4 +3433,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-29T09:25:21.822127552Z"
+generated: "2024-08-30T09:25:11.835182546Z"
