@@ -438,6 +438,17 @@ entries:
     urls:
     - https://github.com/szymonrychu/charts/releases/download/code-server-oauth2-0.0.1/code-server-oauth2-0.0.1.tgz
     version: 0.0.1
+  db-provision:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-09-12T07:30:57.20438796Z"
+    description: Helm chart for provisioning Aurora DBs
+    digest: a5e7e55f2a32d4bb4c7646dd56e89eb2f6d2a81e512ffa539482051b98e2e2c6
+    name: db-provision
+    type: application
+    urls:
+    - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/db-provision-0.0.1/db-provision-0.0.1.tgz
+    version: 0.0.1
   eclipse-mosquitto:
   - apiVersion: v2
     appVersion: 2.0.18
@@ -3483,4 +3494,4 @@ entries:
     urls:
     - https://github.com/szymonrychu/selfhosted-kubernetes-charts/releases/download/unmanic-0.1.0/unmanic-0.1.0.tgz
     version: 0.1.0
-generated: "2024-09-09T09:26:41.420240497Z"
+generated: "2024-09-12T07:30:57.204769593Z"
