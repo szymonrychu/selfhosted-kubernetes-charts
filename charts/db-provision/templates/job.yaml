@@ -1,0 +1,84 @@
+{{- $fullname := include "db-provision.fullname" . -}}
+{{- $name     := include "db-provision.name" . -}}
+{{- $chart    := include "db-provision.chart" . -}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $fullname }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ $chart }}
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- if eq .Values.database.type "mysql" }}
+          image: "{{ .Values.image.mysql.repository }}:{{ .Values.image.mysql.tag }}"
+          {{- else if eq .Values.database.type "postgres" }}
+          image: "{{ .Values.image.postgres.repository }}:{{ .Values.image.postgres.tag }}"
+          {{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ 'sh' ]
+          {{- if eq .Values.database.type "mysql" }}
+          args: [ '/workdir/mysql_provision.sh' ]
+          {{- else if eq .Values.database.type "postgres" }}
+          args: [ '/workdir/postgres_provision.sh' ]
+          {{- end }}
+          env:
+            - name: DATABASE_HOST
+              value: {{ tpl .Values.database.host . | quote }}
+            - name: DATABASE_PORT
+              value: {{ .Values.database.port | quote }}
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.database.userSecret }}
+                  name: {{ (.Values.database.userSecret | split "/" )._0 }}
+                  key: {{ (.Values.database.userSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ $fullname }}-secrets
+                  key: database-user
+                  {{- end }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.database.passwordSecret }}
+                  name: {{ (.Values.database.passwordSecret | split "/" )._0 }}
+                  key: {{ (.Values.database.passwordSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ $fullname }}-secrets
+                  key: database-password
+                  {{- end }}
+            - name: PROVISION_DATABASE
+              value: {{ .Values.provision.database | quote }}
+            - name: PROVISION_USER
+              value: {{ .Values.provision.user | quote }}
+            - name: PROVISION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.provision.passwordSecret }}
+                  name: {{ (.Values.provision.passwordSecret | split "/" )._0 }}
+                  key: {{ (.Values.provision.passwordSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ $fullname }}-secrets
+                  key: provision-password
+                  {{- end }}
+          volumeMounts:
+            - name: db-provision-script
+              mountPath: /workdir/
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: db-provision-script
+          configMap:
+            name: {{ $fullname }}-script

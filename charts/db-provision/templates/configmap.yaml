@@ -1,0 +1,19 @@
+{{- $fullname := include "db-provision.fullname" . -}}
+{{- $name     := include "db-provision.name" . -}}
+{{- $chart    := include "db-provision.chart" . -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}-script
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ $chart }}
+data:
+{{- if eq .Values.database.type "mysql" }}
+{{ (.Files.Glob "files/mysql_provision.sh").AsConfig | indent 2 }}
+{{- else if eq .Values.database.type "postgres" }}
+{{ (.Files.Glob "files/postgres_provision.sh").AsConfig | indent 2 }}
+{{- end }}

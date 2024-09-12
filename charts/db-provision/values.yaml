@@ -1,0 +1,43 @@
+# Default values for oauth-proxy.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  mysql:
+    repository: mysql
+    tag: 5.6
+  postgres:
+    repository: postgres
+    tag: 10.6
+
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+database:
+  type: mysql
+  host: ""
+  port: 3306
+  user: ""
+  # userSecret: ""
+  password: ""
+  # passwordSecret: ""
+
+provision:
+  database: example
+  user: example
+  password: example
+  # passwordSecret: ""
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
