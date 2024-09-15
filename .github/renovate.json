@@ -27,6 +27,11 @@
   ],
   "packageRules": [
     {
+      "matchDatasources": ["docker"],
+      "versioning": "regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)?.*$",
+      "matchPackageNames": ["^ghcr\\.io\\/hotio\\/.*$"]
+    },
+    {
       "matchManagers": ["helm-requirements", "helm-values", "regex"],
       "postUpgradeTasks": {
         "commands": [
