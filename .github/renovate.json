@@ -4,9 +4,6 @@
   "rebaseWhen": "conflicted",
   "suppressNotifications": ["prIgnoreNotification"],
   "gitAuthor": "szymonrichert.pl bot <bot@szymonrichert.pl>",
-  "repositories": ["szymonrychu/selfhosted-kubernetes-charts"],
-  "allowedPostUpgradeCommands": ["^.github.*"],
-  "allowPostUpgradeCommandTemplating": true,
   "customManagers": [
     {
       "customType": "regex",
