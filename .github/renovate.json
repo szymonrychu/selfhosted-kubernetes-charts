@@ -4,12 +4,16 @@
   "rebaseWhen": "conflicted",
   "suppressNotifications": ["prIgnoreNotification"],
   "gitAuthor": "szymonrichert.pl bot <bot@szymonrichert.pl>",
+  "repositories": ["szymonrychu/selfhosted-kubernetes-charts"],
+  "allowedPostUpgradeCommands": ["^.github.*"],
+  "allowPostUpgradeCommandTemplating": true,
   "customManagers": [
     {
       "customType": "regex",
       "fileMatch": ["(^|/)Chart\\.yaml$"],
       "matchStrings": [
-        "#\\s?renovate: image=(?<depName>.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)"
+        "#\\s?renovate: image=(?<depName>.*?)\\s?appVersion:\\s?\\\"?(?<currentValue>[\\w+\\.\\-]*)",
+        "#\\s?renovate: image=(?<depName>.*?)\\s?appVersion:\\s?\\\"?(?<compatibility>[a-z0-9-]+)(?<currentValue>[\\w+\\.\\-]*)"
       ],
       "datasourceTemplate": "docker"
     },
@@ -27,9 +31,10 @@
   ],
   "packageRules": [
     {
+      "description": "Use custom regex versioning for hotio images",
+      "matchPackageNames": ["gcr.io\/hotio\/.*"],
       "matchDatasources": ["docker"],
-      "versioning": "regex:^release-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)?.*$",
-      "matchPackageNames": ["^ghcr\\.io\\/hotio\\/.*$"]
+      "versioning": "regex:^(?<compatibility>[a-z0-9-]+)(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(\\.(?<revision>\\d+))?$"
     },
     {
       "matchManagers": ["helm-requirements", "helm-values", "regex"],
