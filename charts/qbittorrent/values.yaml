@@ -116,7 +116,7 @@ vpnContainer:
   gluetunImage:
     repository: qmcgaw/gluetun
     pullPolicy: IfNotPresent
-    tag: v3.39.0
+    tag: v3.39.1
 
   portForwardImage:
     repository: ghcr.io/mjmeli/qbittorrent-port-forward-gluetun-server
