@@ -26,11 +26,11 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: rsync
+        - name: rsync-start
           securityContext:
             {{- toYaml .Values.rsync.securityContext | nindent 12 }}
           image: "{{ .Values.rsync.image.repository }}:{{ .Values.rsync.image.tag }}"
-          arguments:
+          args:
             - -c
             - rsync -avz /source /destination
           volumeMounts:
