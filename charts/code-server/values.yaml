@@ -13,7 +13,7 @@ rsync:
   image:
     repository: ghcr.io/szymonrychu/directory-sync
     # renovate: image=ghcr.io/szymonrychu/directory-sync
-    tag: 0.0.2
+    tag: 0.0.5
   resources: {}
     # limits:
     #   cpu: 100m

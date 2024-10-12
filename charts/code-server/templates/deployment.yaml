@@ -6,6 +6,8 @@ metadata:
     {{- include "code-server.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "code-server.selectorLabels" . | nindent 6 }}
@@ -30,9 +32,10 @@ spec:
           securityContext:
             {{- toYaml .Values.rsync.securityContext | nindent 12 }}
           image: "{{ .Values.rsync.image.repository }}:{{ .Values.rsync.image.tag }}"
+          workingDir: /source
           args:
             - -c
-            - rsync -avz /source /destination
+            - rsync -avhz --delete . /destination
           volumeMounts:
             - mountPath: /source
               name: shared-data
@@ -45,6 +48,7 @@ spec:
           securityContext:
             {{- toYaml .Values.rsync.securityContext | nindent 12 }}
           image: "{{ .Values.rsync.image.repository }}:{{ .Values.rsync.image.tag }}"
+          workingDir: /source
           env:
             - name: SOURCE_DIR
               value: "/source"
@@ -73,10 +77,6 @@ spec:
               value: {{ .Values.config.userGid | quote }}
             - name: PROXY_DOMAIN
               value: {{ .Values.config.domain | quote }}
-            - name: GROUP_NAME
-              value: {{ .Values.config.groupName | quote }}
-            - name: USER_NAME
-              value: {{ .Values.config.userName | quote }}
           volumeMounts:
             - mountPath: /home/{{ .Values.config.userName }}
               name: workdir
