@@ -25,6 +25,21 @@ spec:
       serviceAccountName: {{ include "code-server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: rsync
+          securityContext:
+            {{- toYaml .Values.rsync.securityContext | nindent 12 }}
+          image: "{{ .Values.rsync.image.repository }}:{{ .Values.rsync.image.tag }}"
+          arguments:
+            - -c
+            - rsync -avz /source /destination
+          volumeMounts:
+            - mountPath: /source
+              name: shared-data
+            - mountPath: /destination
+              name: workdir
+          resources:
+            {{- toYaml .Values.rsync.resources | nindent 12 }}
       containers:
         - name: rsync
           securityContext:
