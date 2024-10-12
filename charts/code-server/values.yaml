@@ -9,6 +9,27 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
+rsync:
+  image:
+    repository: ghcr.io/szymonrychu/directory-sync
+    # renovate: image=ghcr.io/szymonrychu/directory-sync
+    tag: 0.0.2
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+
 securityContext: {}
   # capabilities:
   #   drop:

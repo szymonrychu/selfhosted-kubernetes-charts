@@ -26,6 +26,22 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        - name: rsync
+          securityContext:
+            {{- toYaml .Values.rsync.securityContext | nindent 12 }}
+          image: "{{ .Values.rsync.image.repository }}:{{ .Values.rsync.image.tag }}"
+          env:
+            - name: SOURCE_DIR
+              value: "/source"
+            - name: DESTINATION_DIR
+              value: "/destination"
+          volumeMounts:
+            - mountPath: /source
+              name: workdir
+            - mountPath: /destination
+              name: shared-data
+          resources:
+            {{- toYaml .Values.rsync.resources | nindent 12 }}
         - name: code
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -48,7 +64,7 @@ spec:
               value: {{ .Values.config.userName | quote }}
           volumeMounts:
             - mountPath: /home/{{ .Values.config.userName }}
-              name: shared-data
+              name: workdir
             - name: code-secrets
               mountPath: "/secrets"
               readOnly: true
@@ -94,6 +110,8 @@ spec:
         - name: code-secrets
           secret:
             secretName: {{ include "code-server.fullname" . }}-code-secrets
+        - name: workdir
+          emptyDir: {}
         - name: shared-data
         {{- if .Values.persistence.sharedData.enabled }}
           persistentVolumeClaim:
