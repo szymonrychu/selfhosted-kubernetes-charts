@@ -1,0 +1,148 @@
+# Default values for qbittorrent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/paperless-ngx/paperless-ngx
+  pullPolicy: IfNotPresent
+  tag: ""
+
+uid: 1000
+gid: 1000
+
+admin:
+  # usernameSecret: name/key
+  username: admin
+  # passwordSecret: name/key
+  password: admin
+  # emailSecret: name/key
+  email: admin@admin.com
+
+paperless_url: ''
+
+redis:
+  host: redis
+
+database:
+  # hostConfigMap: name/key  
+  host: db-host
+  # portConfigMap: name/key
+  port: "5432"
+  # nameConfigMap: name/key
+  name: paperless-ngx
+  # usernameSecret: name/key
+  username: paperless-ngx
+  # passwordSecret: name/key
+  password: paperless-ngx
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+persistence:
+  data:
+    enabled: false
+    existingClaim: ""
+    type: "pvc"
+    annotations: {}
+    accessMode: ""
+    size: 8Gib
+    storageClass: ""
+    hostPath: ""
+  media:
+    enabled: false
+    existingClaim: ""
+    type: "pvc"
+    annotations: {}
+    accessMode: ""
+    size: 8Gib
+    storageClass: ""
+    hostPath: ""
+  export:
+    enabled: false
+    existingClaim: ""
+    type: "pvc"
+    annotations: {}
+    accessMode: ""
+    size: 8Gib
+    storageClass: ""
+    hostPath: ""
+  consume:
+    enabled: false
+    existingClaim: ""
+    type: "pvc"
+    annotations: {}
+    accessMode: ""
+    size: 8Gib
+    storageClass: ""
+    hostPath: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

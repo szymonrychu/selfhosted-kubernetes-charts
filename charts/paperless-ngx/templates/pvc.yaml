@@ -1,0 +1,108 @@
+---
+{{- if and .Values.persistence.data.enabled (not .Values.persistence.data.existingClaim) (eq (.Values.persistence.data.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ printf "%s-data" (include "paperless-ngx.fullname" $) }}
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.data.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "paperless-ngx.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.data.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.data.size | quote }}
+{{- if .Values.persistence.data.storageClass }}
+{{- if (eq "-" .Values.persistence.data.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.data.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
+---
+{{- if and .Values.persistence.media.enabled (not .Values.persistence.media.existingClaim) (eq (.Values.persistence.media.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ printf "%s-media" (include "paperless-ngx.fullname" $) }}
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.media.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "paperless-ngx.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.media.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.media.size | quote }}
+{{- if .Values.persistence.media.storageClass }}
+{{- if (eq "-" .Values.persistence.media.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.media.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
+---
+{{- if and .Values.persistence.export.enabled (not .Values.persistence.export.existingClaim) (eq (.Values.persistence.export.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ printf "%s-export" (include "paperless-ngx.fullname" $) }}
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.export.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "paperless-ngx.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.export.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.export.size | quote }}
+{{- if .Values.persistence.export.storageClass }}
+{{- if (eq "-" .Values.persistence.export.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.export.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
+---
+{{- if and .Values.persistence.consume.enabled (not .Values.persistence.consume.existingClaim) (eq (.Values.persistence.consume.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ printf "%s-consume" (include "paperless-ngx.fullname" $) }}
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.consume.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "paperless-ngx.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.consume.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.consume.size | quote }}
+{{- if .Values.persistence.consume.storageClass }}
+{{- if (eq "-" .Values.persistence.consume.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.consume.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

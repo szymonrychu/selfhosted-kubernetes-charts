@@ -1,0 +1,243 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "paperless-ngx.fullname" . }}
+  labels:
+    {{- include "paperless-ngx.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "paperless-ngx.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "paperless-ngx.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "paperless-ngx.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: main
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: PAPERLESS_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.admin.usernameSecret }}
+                  name: {{ (.Values.admin.usernameSecret | split "/" )._0 }}
+                  key: {{ (.Values.admin.usernameSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: admin-username
+                  {{- end }}
+            - name: PAPERLESS_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.admin.passwordSecret }}
+                  name: {{ (.Values.admin.passwordSecret | split "/" )._0 }}
+                  key: {{ (.Values.admin.passwordSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: admin-password
+                  {{- end }}
+            - name: PAPERLESS_ADMIN_MAIL
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.admin.emailSecret }}
+                  name: {{ (.Values.admin.emailSecret | split "/" )._0 }}
+                  key: {{ (.Values.admin.emailSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: admin-email
+                  {{- end }}
+            - name: PAPERLESS_URL
+              value: {{ .Values.paperless_url | quote }}
+            - name: PAPERLESS_PORT
+              value: "8000"
+            - name: USERMAP_UID
+              value: {{ .Values.uid | quote }}
+            - name: USERMAP_GID
+              value: {{ .Values.gid | quote }}
+            - name: PAPERLESS_REDIS
+              valueFrom:
+                configMapKeyRef:
+                  {{- if .Values.redis.hostConfigMap }}
+                  name: {{ (.Values.redis.hostConfigMap | split "/" )._0 }}
+                  key: {{ (.Values.redis.hostConfigMap | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: redis
+                  {{- end }}
+            - name: PAPERLESS_DBENGINE
+              value: 'postgresql'
+            - name: PAPERLESS_DBHOST
+              valueFrom:
+                configMapKeyRef:
+                  {{- if .Values.database.hostConfigMap }}
+                  name: {{ (.Values.database.hostConfigMap | split "/" )._0 }}
+                  key: {{ (.Values.database.hostConfigMap | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: dbhost
+                  {{- end }}
+            - name: PAPERLESS_DBPORT
+              valueFrom:
+                configMapKeyRef:
+                  {{- if .Values.database.portConfigMap }}
+                  name: {{ (.Values.database.portConfigMap | split "/" )._0 }}
+                  key: {{ (.Values.database.portConfigMap | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: dbport
+                  {{- end }}
+            - name: PAPERLESS_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  {{- if .Values.database.nameConfigMap }}
+                  name: {{ (.Values.database.nameConfigMap | split "/" )._0 }}
+                  key: {{ (.Values.database.nameConfigMap | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: dbname
+                  {{- end }}
+            - name: PAPERLESS_DBUSER
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.database.usernameSecret }}
+                  name: {{ (.Values.database.usernameSecret | split "/" )._0 }}
+                  key: {{ (.Values.database.usernameSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: dbusername
+                  {{- end }}
+            - name: PAPERLESS_DBPASS
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.database.passwordSecret }}
+                  name: {{ (.Values.database.passwordSecret | split "/" )._0 }}
+                  key: {{ (.Values.database.passwordSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "paperless-ngx.fullname" . }}
+                  key: dbpassword
+                  {{- end }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: localhost
+          startupProbe:
+            failureThreshold: 24
+            periodSeconds: 5
+            httpGet:
+              path: /
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: localhost
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: localhost
+          volumeMounts:
+            - name: data
+              mountPath: /usr/src/paperless/data
+            - name: media
+              mountPath: /usr/src/paperless/media
+            - name: export
+              mountPath: /usr/src/paperless/export
+            - name: consume
+              mountPath: /usr/src/paperless/consume
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: temp
+          emptyDir: {}
+        - name: varlogs
+          emptyDir: {}
+        - name: data
+        {{- if .Values.persistence.data.enabled }}
+          {{- if eq (.Values.persistence.data.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.data.existingClaim | default (printf "%s-data" (include "paperless-ngx.fullname" $) ) }}
+          {{- else if eq .Values.persistence.data.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.data.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: media
+        {{- if .Values.persistence.media.enabled }}
+          {{- if eq (.Values.persistence.media.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.media.existingClaim | default (printf "%s-media" (include "paperless-ngx.fullname" $) ) }}
+          {{- else if eq .Values.persistence.media.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.media.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: export
+        {{- if .Values.persistence.export.enabled }}
+          {{- if eq (.Values.persistence.export.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.export.existingClaim | default (printf "%s-export" (include "paperless-ngx.fullname" $) ) }}
+          {{- else if eq .Values.persistence.export.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.export.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: consume
+        {{- if .Values.persistence.consume.enabled }}
+          {{- if eq (.Values.persistence.consume.type | default "pvc") "pvc" }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.consume.existingClaim | default (printf "%s-consume" (include "paperless-ngx.fullname" $) ) }}
+          {{- else if eq .Values.persistence.consume.type "hostPath" }}
+          hostPath:
+            path: {{ .Values.persistence.consume.hostPath }}
+          {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
