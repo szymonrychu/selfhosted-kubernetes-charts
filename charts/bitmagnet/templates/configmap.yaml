@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bitmagnet.fullname" . }}
+  labels:
+    {{- include "bitmagnet.labels" . | nindent 4 }}
+data:
+{{- if not .Values.database.hostConfigMap }}
+  dbhost: {{ ( tpl .Values.database.host . ) | quote }}
+{{- end }}
+{{- if not .Values.database.nameConfigMap }}
+  dbname: {{ (tpl .Values.database.name . ) | quote }}
+{{- end }}

@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bitmagnet.fullname" . }}
+  labels:
+    {{- include "bitmagnet.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "bitmagnet.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "bitmagnet.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "bitmagnet.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: main
+          command:
+            - /usr/local/bin/bitmagnet
+            - worker
+            - run
+            - --keys=http_server
+            - --keys=queue_server
+            # disable the next line to run without DHT crawler
+            - --keys=dht_crawler
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  {{- if .Values.database.hostConfigMap }}
+                  name: {{ (.Values.database.hostConfigMap | split "/" )._0 }}
+                  key: {{ (.Values.database.hostConfigMap | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "bitmagnet.fullname" . }}
+                  key: dbhost
+                  {{- end }}
+            - name: POSTGRES_NAME
+              valueFrom:
+                configMapKeyRef:
+                  {{- if .Values.database.nameConfigMap }}
+                  name: {{ (.Values.database.nameConfigMap | split "/" )._0 }}
+                  key: {{ (.Values.database.nameConfigMap | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "bitmagnet.fullname" . }}
+                  key: dbname
+                  {{- end }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.database.usernameSecret }}
+                  name: {{ (.Values.database.usernameSecret | split "/" )._0 }}
+                  key: {{ (.Values.database.usernameSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "bitmagnet.fullname" . }}
+                  key: dbusername
+                  {{- end }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.database.passwordSecret }}
+                  name: {{ (.Values.database.passwordSecret | split "/" )._0 }}
+                  key: {{ (.Values.database.passwordSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "bitmagnet.fullname" . }}
+                  key: dbpassword
+                  {{- end }}
+{{- if .Values.tmdb.enabled }}
+            - name: TMDB_ENABLED
+              value: "true"
+            - name: TMDB_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.tmdb.apiKeySecret }}
+                  name: {{ (.Values.tmdb.apiKeySecret | split "/" )._0 }}
+                  key: {{ (.Values.tmdb.apiKeySecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "bitmagnet.fullname" . }}
+                  key: tmdb-api-key
+                  {{- end }}
+{{- else }}
+            - name: TMDB_ENABLED
+              value: "false"
+{{- end }}
+          ports:
+            - name: http
+              containerPort: 3333
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+          startupProbe:
+            failureThreshold: 24
+            periodSeconds: 5
+            tcpSocket:
+              port: http
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
