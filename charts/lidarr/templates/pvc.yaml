@@ -1,0 +1,54 @@
+---
+{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) (eq (.Values.persistence.config.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "lidarr.fullname" $ }}-config
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.config.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "lidarr.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.config.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size | quote }}
+{{- if .Values.persistence.config.storageClass }}
+{{- if (eq "-" .Values.persistence.config.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.config.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
+---
+{{- if and .Values.persistence.media.enabled (not .Values.persistence.media.existingClaim) (eq (.Values.persistence.media.type | default "pvc") "pvc") }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "lidarr.fullname" $ }}-downloads
+  namespace: {{ $.Release.Namespace }}
+{{- with .Values.persistence.media.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "lidarr.selectorLabels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ ( .Values.persistence.media.accessMode | default "ReadWriteOnce" ) | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.media.size | quote }}
+{{- if .Values.persistence.media.storageClass }}
+{{- if (eq "-" .Values.persistence.media.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.media.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
