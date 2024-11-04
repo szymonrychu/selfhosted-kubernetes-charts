@@ -37,6 +37,38 @@ database:
   # passwordSecret: name/key
   password: paperless-ngx
 
+gotenbergTika:
+  enabled: false
+
+gotenberg:
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  resources: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+  image:
+    repository: gotenberg/gotenberg
+    pullPolicy: IfNotPresent
+    # renovate: image=gotenberg/gotenberg
+    tag: 8.12.0
+
+tika:
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  resources: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+  image:
+    repository: apache/tika
+    pullPolicy: IfNotPresent
+    # renovate: image=apache/tika
+    tag: 3.0.0.0
+
+
 securityContext: {}
   # capabilities:
   #   drop:

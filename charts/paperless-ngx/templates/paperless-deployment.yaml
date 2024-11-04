@@ -136,6 +136,15 @@ spec:
                   name: {{ include "paperless-ngx.fullname" . }}
                   key: dbpassword
                   {{- end }}
+{{- if .Values.gotenbergTika.enabled }}
+            - name: PAPERLESS_TIKA_ENABLED
+              value: "1"
+            - name: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
+              value: "http://{{ include "paperless-ngx.fullname" . }}-gotenberg"
+            - name: PAPERLESS_TIKA_ENDPOINT
+              value: "http://{{ include "paperless-ngx.fullname" . }}-tika"
+{{- end }}
+
           ports:
             - name: http
               containerPort: 8000

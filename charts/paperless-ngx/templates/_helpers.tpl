@@ -43,10 +43,50 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Gotenberg common labels
+*/}}
+{{- define "paperless-ngx.gotenbergLabels" -}}
+helm.sh/chart: {{ include "paperless-ngx.chart" . }}
+{{ include "paperless-ngx.gotenbergSelectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Values.gotenberg.image.tag | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Tika common labels
+*/}}
+{{- define "paperless-ngx.tikaLabels" -}}
+helm.sh/chart: {{ include "paperless-ngx.chart" . }}
+{{ include "paperless-ngx.tikaSelectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Values.tika.image.tag | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "paperless-ngx.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "paperless-ngx.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Gotenberg selector labels
+*/}}
+{{- define "paperless-ngx.gotenbergSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "paperless-ngx.name" . }}-gotenberg
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "paperless-ngx.tikaSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "paperless-ngx.name" . }}-tika
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
