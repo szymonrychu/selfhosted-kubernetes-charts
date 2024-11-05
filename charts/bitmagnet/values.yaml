@@ -25,6 +25,21 @@ tmdb:
   # apiKeySecret: name/key
   apiKey: ''
 
+gluetun:
+  enabled: false
+  # piaUsernameSecret: name/key
+  piaUsername: ''
+  # piaPasswordSecret: name/key
+  piaPassword: ''
+  resources: {}
+  image:
+    repository: qmcgaw/gluetun
+    pullPolicy: IfNotPresent
+    # renovate: image=qmcgaw/gluetun
+    tag: v3.39.1
+
+
+
 securityContext: {}
   # capabilities:
   #   drop:

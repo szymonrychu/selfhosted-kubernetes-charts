@@ -116,6 +116,63 @@ spec:
             periodSeconds: 5
             tcpSocket:
               port: http
+      {{- if .Values.gluetun.enabled }}
+        - name: gluetun
+          securityContext:
+            sysctls:
+              - name: net.ipv6.conf.all.disable_ipv6
+                value: "1"
+            runAsGroup: 0
+            privileged: true
+            runAsUser: 0
+            capabilities:
+              add: ["NET_ADMIN", "NET_RAW"]
+          image: "{{ .Values.gluetun.image.repository }}:{{ .Values.gluetun.image.tag }}"
+          imagePullPolicy: {{ .Values.gluetun.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.gluetun.resources | nindent 12 }}
+          ports:
+            - name: bitmagnethttp
+              containerPort: 3333
+              protocol: TCP
+            - name: shadowsockstcp
+              containerPort: 3334
+              protocol: TCP
+            - name: shadowsocksudp
+              containerPort: 3334
+              protocol: UDP
+          env:
+            - name: VPN_SERVICE_PROVIDER
+              value: private internet access
+            - name: VPN_TYPE
+              value: openvpn
+            - name: OPENVPN_USER
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.gluetun.piaUsernameSecret }}
+                  name: {{ (.Values.gluetun.piaUsernameSecret | split "/" )._0 }}
+                  key: {{ (.Values.gluetun.piaUsernameSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "bitmagnet.fullname" . }}
+                  key: pia-username
+                  {{- end }}
+            - name: OPENVPN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.gluetun.piaPasswordSecret }}
+                  name: {{ (.Values.gluetun.piaPasswordSecret | split "/" )._0 }}
+                  key: {{ (.Values.gluetun.piaPasswordSecret | split "/" )._1 }}
+                  {{- else }}
+                  name: {{ include "bitmagnet.fullname" . }}
+                  key: pia-password
+                  {{- end }}
+            - name: SERVER_REGIONS
+              value: Netherlands
+            - name: PORT_FORWARD_ONLY
+              value: "true"
+            - name: VPN_PORT_FORWARDING
+              value: "on"
+      {{-  end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
