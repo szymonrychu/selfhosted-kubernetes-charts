@@ -50,13 +50,15 @@ spec:
             - name: http
               containerPort: 6767
               protocol: TCP
-          
           livenessProbe:
-            initialDelaySeconds: 10
+            tcpSocket:
+              port: http
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 10
             tcpSocket:
               port: http
           readinessProbe:
-            initialDelaySeconds: 10
             tcpSocket:
               port: http
       {{- with .Values.nodeSelector }}
