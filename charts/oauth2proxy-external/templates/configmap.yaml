@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "oauth2proxy-external.fullname" . }}
+  labels:
+    {{- include "oauth2proxy-external.labels" . | nindent 4 }}
+data:
+{{- if and  (not  .Values.redirectUrlConfigmap) (not .Values.redirectUrlSecret) }}
+  redirect-url: {{ .Values.redirectUrl | quote }}
+{{- end }}
+{{- if and  (not  .Values.realmUrlConfigmap) (not .Values.realmUrlSecret) }}
+  realm-url: {{ .Values.realmUrl | quote }}
+{{- end }}
+{{- if and  (not  .Values.cookieNameConfigmap) (not .Values.cookieNameSecret) }}
+  cookie-name: {{ .Values.cookieName | quote }}
+{{- end }}
+{{- if and  (not  .Values.cookieDomainConfigmap) (not .Values.cookieDomainSecret) }}
+  cookie-domain: {{ .Values.cookieDomain | quote }}
+{{- end }}
+{{- if and  (not  .Values.allowedGroupsConfigmap) (not .Values.allowedGroupsSecret) }}
+  allowed-groups: {{ .Values.allowedGroups | quote }}
+{{- end }}
+  external-address: {{ .Values.externalAddress | quote }}

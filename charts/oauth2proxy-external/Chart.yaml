@@ -1,0 +1,7 @@
+apiVersion: v2
+name: oauth2proxy-external
+description: A Helm chart for Kubernetes
+type: application
+version: 0.0.1
+# renovate: image=quay.io/oauth2-proxy/oauth2-proxy
+appVersion: v7.5.1

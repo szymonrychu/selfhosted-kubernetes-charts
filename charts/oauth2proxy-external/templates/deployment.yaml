@@ -1,0 +1,196 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "oauth2proxy-external.fullname" . }}
+  labels:
+    {{- include "oauth2proxy-external.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "oauth2proxy-external.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "oauth2proxy-external.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "oauth2proxy-external.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      dnsConfig:
+        nameservers:
+          {{- toYaml .Values.additionalDNS.nameservers | nindent 10 }}
+        searches:
+          {{- toYaml .Values.additionalDNS.searches | nindent 10 }}
+        options:
+          {{- toYaml .Values.additionalDNS.options | nindent 10 }}
+      containers:
+        - name: main
+          env:
+            - name: OAUTH2_PROXY_PROVIDER
+              value: keycloak-oidc
+            - name: OAUTH2_PROXY_HTTP_ADDRESS
+              value: 0.0.0.0:4180
+            - name: OAUTH2_PROXY_REVERSE_PROXY
+              value: "true"
+            - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+              value: "true"
+            - name: OAUTH2_PROXY_SESSION_COOKIE_MINIMAL
+              value: "true"
+            - name: OAUTH2_PROXY_UPSTREAMS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: external-address
+            - name: OAUTH2_PROXY_EMAIL_DOMAINS
+              value: '*'
+            - name: OAUTH2_PROXY_ALLOWED_GROUPS
+              valueFrom:
+              {{- if .Values.allowedGroupsSecret }}
+                secretKeyRef:
+                  name: {{ (split "/" .Values.allowedGroupsSecret)._0 }}
+                  key: {{ (split "/" .Values.allowedGroupsSecret)._1 }}
+                {{- else }}
+                configMapKeyRef:
+                  {{- if .Values.allowedGroupsConfigmap }}
+                  name: {{ (split "/" .Values.allowedGroupsConfigmap)._0 }}
+                  key: {{ (split "/" .Values.allowedGroupsConfigmap)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: allowed-groups
+                  {{- end }}
+                {{- end }}
+            - name: OAUTH2_PROXY_REDIRECT_URL
+              valueFrom:
+              {{- if .Values.redirectUrlSecret }}
+                secretKeyRef:
+                  name: {{ (split "/" .Values.redirectUrlSecret)._0 }}
+                  key: {{ (split "/" .Values.redirectUrlSecret)._1 }}
+                {{- else }}
+                configMapKeyRef:
+                  {{- if .Values.redirectUrlConfigmap }}
+                  name: {{ (split "/" .Values.redirectUrlConfigmap)._0 }}
+                  key: {{ (split "/" .Values.redirectUrlConfigmap)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: redirect-url
+                  {{- end }}
+                {{- end }}
+            - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+              valueFrom:
+              {{- if .Values.realmUrlSecret }}
+                secretKeyRef:
+                  name: {{ (split "/" .Values.realmUrlSecret)._0 }}
+                  key: {{ (split "/" .Values.realmUrlSecret)._1 }}
+                {{- else }}
+                configMapKeyRef:
+                  {{- if .Values.realmUrlConfigmap }}
+                  name: {{ (split "/" .Values.realmUrlConfigmap)._0 }}
+                  key: {{ (split "/" .Values.realmUrlConfigmap)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: realm-url
+                  {{- end }}
+                {{- end }}
+            - name: OAUTH2_PROXY_COOKIE_NAME
+              valueFrom:
+              {{- if .Values.cookieNameSecret }}
+                secretKeyRef:
+                  name: {{ (split "/" .Values.cookieNameSecret)._0 }}
+                  key: {{ (split "/" .Values.cookieNameSecret)._1 }}
+                {{- else }}
+                configMapKeyRef:
+                  {{- if .Values.cookieNameConfigmap }}
+                  name: {{ (split "/" .Values.cookieNameConfigmap)._0 }}
+                  key: {{ (split "/" .Values.cookieNameConfigmap)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: cookie-name
+                  {{- end }}
+                {{- end }}
+            - name: OAUTH2_PROXY_COOKIE_DOMAIN
+              valueFrom:
+              {{- if .Values.cookieDomainSecret }}
+                secretKeyRef:
+                  name: {{ (split "/" .Values.cookieDomainSecret)._0 }}
+                  key: {{ (split "/" .Values.cookieDomainSecret)._1 }}
+                {{- else }}
+                configMapKeyRef:
+                  {{- if .Values.cookieDomainConfigmap }}
+                  name: {{ (split "/" .Values.cookieDomainConfigmap)._0 }}
+                  key: {{ (split "/" .Values.cookieDomainConfigmap)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: cookie-domain
+                  {{- end }}
+                {{- end }}
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.clientIdSecret }}
+                  name: {{ (split "/" .Values.clientIdSecret)._0 }}
+                  key: {{ (split "/" .Values.clientIdSecret)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: client-id
+                  {{- end }}
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.clientSecretSecret }}
+                  name: {{ (split "/" .Values.clientSecretSecret)._0 }}
+                  key: {{ (split "/" .Values.clientSecretSecret)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: client-secret
+                  {{- end }}
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.cookieSecretSecret }}
+                  name: {{ (split "/" .Values.cookieSecretSecret)._0 }}
+                  key: {{ (split "/" .Values.cookieSecretSecret)._1 }}
+                  {{- else }}
+                  name: {{ include "oauth2proxy-external.fullname" . }}
+                  key: cookie-secret
+                  {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 4180
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
