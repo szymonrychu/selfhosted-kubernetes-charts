@@ -88,7 +88,6 @@ templates:
         - 'date_time_iso'
         - 'time_date'
         - 'time_utc'
-        - 'beat'
   switch.yaml: ""
   device_tracker.yaml: ""
 
