@@ -10,28 +10,20 @@ data:
     #!/bin/bash
     set -euo nounset
 
+    mkdir -p /home/${USER_NAME}/.ssh
+
     if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
       gpg --import /secrets/private.rsa
     fi
-    
-    grep "chmod 0600 /home/${USER_NAME}/.gnupg" "/home/${USER_NAME}/.zshrc" || \
-      echo "chmod 0600 /home/${USER_NAME}/.gnupg" >> "/home/${USER_NAME}/.zshrc"
-
-    if [[ ! -e "/home/${USER_NAME}/.ssh" ]]; then
-      mkdir -p /home/${USER_NAME}/.ssh
-      if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
-        cp /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
-      fi
-      if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
-        cp /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
-      fi
-      if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
-        cp /secrets/known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
-      fi
+    if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
+      cp /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
     fi
-      
-    grep "chmod 0600 /home/${USER_NAME}/.ssh/id_rsa" "/home/${USER_NAME}/.zshrc" || \
-      echo "chmod 0600 /home/${USER_NAME}/.ssh/id_rsa" >> "/home/${USER_NAME}/.zshrc"
+    if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
+      cp /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
+    fi
+    if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
+      cp /secrets/known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
+    fi
 {{- range $name, $content := .Values.extraEntrypointScripts -}}
   {{ $name | nindent 2 }}: |
     {{- $content | nindent 4 }}
