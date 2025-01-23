@@ -17,6 +17,7 @@ data:
     fi
     if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
       cp --remove-destination /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
+      chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
     fi
     if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
       cp --remove-destination /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
