@@ -16,13 +16,13 @@ data:
       gpg --import /secrets/private.rsa
     fi
     if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
-      cp /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
+      cp --remove-destination /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
     fi
     if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa.pub" ]]; then
-      cp /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
+      cp --remove-destination /secrets/id_rsa.pub "/home/${USER_NAME}/.ssh/id_rsa.pub"
     fi
     if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
-      cp /secrets/known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
+      cp --remove-destination /secrets/known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
     fi
 {{- range $name, $content := .Values.extraEntrypointScripts -}}
   {{ $name | nindent 2 }}: |
