@@ -25,6 +25,14 @@ data:
     if [[ ! -e "/home/${USER_NAME}/.ssh/known_hosts" ]]; then
       cp --remove-destination /secrets/known_hosts "/home/${USER_NAME}/.ssh/known_hosts"
     fi
+  01-init-kubeconfig.sh: |
+    #!/bin/bash
+
+    mkdir -p "/home/${USER_NAME}/.kube"
+    if [[ ! -e "/home/${USER_NAME}/.kube/config" ]]; then
+      cp --remove-destination /secrets/kube-config.yaml "/home/${USER_NAME}/.kube/config"
+    fi
+    chmod 0600 "/home/${USER_NAME}/.kube/config"
 {{- range $name, $content := .Values.extraEntrypointScripts -}}
   {{ $name | nindent 2 }}: |
     {{- $content | nindent 4 }}
