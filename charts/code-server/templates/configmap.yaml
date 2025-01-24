@@ -10,14 +10,11 @@ data:
     #!/bin/bash
     set -euo nounset
 
-    mkdir -p /home/${USER_NAME}/.ssh
-
     if [[ ! -e "/home/${USER_NAME}/.gnupg" ]]; then
       gpg --import /secrets/private.rsa
-    else
-      sudo chown -R "${USER_UID}:${USER_GID}" /home/${USER_NAME}/.gnupg
-      sudo chmod -R 0600 /home/${USER_NAME}/.gnupg
     fi
+
+    mkdir -p /home/${USER_NAME}/.ssh
     if [[ ! -e "/home/${USER_NAME}/.ssh/id_rsa" ]]; then
       cp --remove-destination /secrets/id_rsa "/home/${USER_NAME}/.ssh/id_rsa"
       chmod 0600 "/home/${USER_NAME}/.ssh/id_rsa"
