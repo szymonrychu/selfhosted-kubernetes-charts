@@ -2,7 +2,7 @@ apiVersion: v2
 name: gha-runner
 description: A Helm chart for Kubernetes
 type: application
-version: 2.311.21
+version: 2.311.22
 
 # renovate: image=ghcr.io/szymonrychu/gha-runner
-appVersion: 2.311.22
+appVersion: 2.311.23
