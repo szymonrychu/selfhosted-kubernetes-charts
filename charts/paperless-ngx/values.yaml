@@ -52,7 +52,7 @@ gotenberg:
     repository: gotenberg/gotenberg
     pullPolicy: IfNotPresent
     # renovate: image=gotenberg/gotenberg
-    tag: 8.22.0
+    tag: 8.23.0
 
 tika:
   podAnnotations: {}
