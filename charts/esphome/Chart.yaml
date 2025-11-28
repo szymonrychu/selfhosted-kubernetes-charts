@@ -2,6 +2,6 @@ apiVersion: v2
 name: esphome
 description: A Helm chart for Kubernetes
 type: application
-version: 3.0.66
+version: 3.0.67
 # renovate: image=esphome/esphome
-appVersion: "2025.11.1"
+appVersion: "2025.11.2"
