@@ -15,7 +15,7 @@ jobs:
     outputs:
       changed_charts: ${{ steps.changed_files.outputs.all_changed_files }}
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       
       - name: Get all test, doc and src files that have changed
         id: changed_files
@@ -44,7 +44,7 @@ jobs:
         with:
           token: ${{ secrets.SZYMONRYCHU_TOKEN }}
       
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
       - name: Helm Lint
         run: |
