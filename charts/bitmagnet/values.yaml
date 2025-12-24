@@ -36,7 +36,7 @@ gluetun:
     repository: qmcgaw/gluetun
     pullPolicy: IfNotPresent
     # renovate: image=qmcgaw/gluetun
-    tag: v3.40.3
+    tag: v3.40.4
 
 
 
