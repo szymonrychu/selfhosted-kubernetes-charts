@@ -2802,6 +2802,16 @@ entries:
     version: 0.1.0
   oauth2-proxy-admission-controller:
   - apiVersion: v2
+    appVersion: ced47ea
+    created: '2025-12-29T09:29:45.756597Z'
+    description: A Helm chart for Kubernetes
+    digest: b1e6a115ec4139582956644e4c87f663bba46ecaebf658902ce041069bf00cbd
+    name: oauth2-proxy-admission-controller
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.9-1767000501-ced47ea.tgz
+    version: 0.1.9-1767000501-ced47ea
+  - apiVersion: v2
     appVersion: 3571d40
     created: '2025-12-29T09:28:08.670781Z'
     description: A Helm chart for Kubernetes
@@ -2891,16 +2901,6 @@ entries:
     urls:
     - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.9-1766395600-b1d5637.tgz
     version: 0.1.9-1766395600-b1d5637
-  - apiVersion: v2
-    appVersion: 5d1cd37
-    created: '2025-12-22T09:26:41.082219Z'
-    description: A Helm chart for Kubernetes
-    digest: a244917fa33e5d91ce1cc7267743483b7345dbb7b3a59799f47752f48020adb1
-    name: oauth2-proxy-admission-controller
-    type: application
-    urls:
-    - https://raw.githubusercontent.com/szymonrychu/selfhosted-kubernetes-charts/gh-pages/oauth2-proxy-admission-controller-0.1.9-1766395501-5d1cd37.tgz
-    version: 0.1.9-1766395501-5d1cd37
   oauth2proxy:
   - apiVersion: v2
     appVersion: v7.5.1
