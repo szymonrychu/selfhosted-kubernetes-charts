@@ -2,6 +2,6 @@ apiVersion: v2
 name: filebrowser
 description: A Helm chart for Kubernetes
 type: application
-version: 2.0.37
+version: 2.0.38
 # renovate: image=filebrowser/filebrowser
-appVersion: v2.52.0
+appVersion: v2.53.0
