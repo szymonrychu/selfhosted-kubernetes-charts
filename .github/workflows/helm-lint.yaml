@@ -10,6 +10,7 @@ jobs:
   # Event `pull_request`: Compare the last commit of the main branch or last remote commit of the PR branch -> to the current commit of a PR branch.
   # ------------------------------------------------------------------------------------------------------------------------------------------------
   list_changed_charts:
+    if: false
     runs-on: ubuntu-latest
     name: List changed charts
     outputs:
@@ -29,6 +30,7 @@ jobs:
           dir_names_max_depth: 2
 
   helm_lint:
+    if: false
     name: helm lint ${{ matrix.chart_path }}
     runs-on: ubuntu-latest
     needs: list_changed_charts

@@ -8,6 +8,7 @@ on:
 jobs:
 
   list_changed_charts:
+    if: false
     runs-on: ubuntu-latest
     name: List changed charts
     outputs:
@@ -26,6 +27,7 @@ jobs:
           dir_names_max_depth: 1
 
   helm_release:
+    if: false
     name: helm release ${{ matrix.chart_path }}
     runs-on: ubuntu-latest
     needs: list_changed_charts
